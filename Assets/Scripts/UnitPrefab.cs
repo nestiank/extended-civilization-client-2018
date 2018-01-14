@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Hexcell : MonoBehaviour {
+public class UnitPrefab : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
+    private Sprite unitSprite;
+    // Use this for initialization
+    void Start () {
 		
 	}
 	
