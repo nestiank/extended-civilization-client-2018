@@ -1,0 +1,4 @@
+[submodule "civiii-model-proto"]
+	path = civiii-model-proto
+	url = https://git.kucatdog.net/true-history-committee/civiii-model-proto
+	branch = first-binding
