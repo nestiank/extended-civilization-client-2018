@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using CivPresenter;
 using CivModel;
+using CivModel.Common;
 
 public class CIVGameManager : MonoBehaviour, IView {
 
@@ -23,6 +24,7 @@ public class CIVGameManager : MonoBehaviour, IView {
     public void MoveSight(int dx, int dy)
     {
         mainCamera.transform.Translate(new Vector3(dx, dy, 0));
+        //버그 있음. 움직일 시 아래로 내려갈수록 지면에 가까워짐. (rotation 문제)
     }
 
     public void Refocus()
@@ -41,7 +43,7 @@ public class CIVGameManager : MonoBehaviour, IView {
     public void Shutdown()
     {
         Application.Quit();
-    }
+    } 
 
     public void Render(CivModel.Terrain map)
     {
@@ -58,15 +60,59 @@ public class CIVGameManager : MonoBehaviour, IView {
     }
 
     private GameObject cellSelected = null;
+    private bool readyToClick = false;
+
+    public void CastRay()
+    {
+        cellSelected = null;
+        Vector2 pos = mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x,Input.mousePosition.y,20f));
+        
+        /* 현재 버그 존재 : camera가 orthographic이 아닌 perspective일 경우 정확한 거리값을 Vector3 값의 세 번째 자리에 넣어야 함. 
+        Camera가 Rotate 되어 있을 경우 계산이 필요한지 다른 방식으로 변경할지는 추후 고려*/
+
+        RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero, 0f);
+
+
+        if (hit.collider != null)
+        {
+            Debug.Log(hit.collider.name + "Castray");
+            SelectCell(hit.collider.gameObject);
+            readyToClick = false;
+        }
+        else
+            Debug.Log("notselected");
+
+    }
 
     public void SelectCell(GameObject go)
     {
         cellSelected = go;
-    }
+        CivModel.Terrain.Point point = FindCell(cellSelected);
 
+    }
+    public CivModel.Terrain.Point FindCell(GameObject go)
+    {
+        if (go == null)
+        {
+            Debug.Log("no Gameobject");
+            throw new ArgumentNullException();
+        }
+        for (int i = 0; i < Width; i++)
+        {
+            for (int j = 0; j < Height; j++)
+            {
+                if (cells[i, j] == go)
+                {
+                    return mPresenter.Game.Terrain.GetPoint(i, j);
+                }
+            }
+        }
+        throw new ArgumentNullException();
+    }
     public void Skill()
     {
-        mPresenter.CommandSpecialAct(0);
+        if(mPresenter.SelectedActor.GetType() == typeof(Pioneer))
+            mPresenter.SelectedActor.SpecialActs[0].Act(mPresenter.SelectedActor.PlacedPoint);
     }
 
     private void CameraChange(Vector3 vec)
@@ -104,8 +150,8 @@ public class CIVGameManager : MonoBehaviour, IView {
         if (gameManager == null)
         {
             gameManager = this.gameObject;
-            Width = 100;
-            Height = 100;
+            Width = 10;
+            Height = 10;
             mPresenter = new Presenter(this);
             //gameMapModel = mPresenter.Game.Terrain;
             //players = mPresenter.Game.Players;
@@ -136,7 +182,7 @@ public class CIVGameManager : MonoBehaviour, IView {
 
             cells = new GameObject[Width, Height];
             DrawMap();
-            Focus(new Position { X = 50, Y = 50 }); //testcase
+            Focus(new Position { X = 5, Y = 5 }); //testcase
         }
         else
         {
@@ -153,6 +199,11 @@ public class CIVGameManager : MonoBehaviour, IView {
 
     // Update is called once per frame
     void Update() {
+        if (Input.GetMouseButtonDown(0))
+        {
+            CastRay();
+            Debug.Log("mouseDown");
+        }
         if (Input.GetKeyDown(KeyCode.Escape))
             mPresenter.CommandCancel();
         if (Input.GetKey(KeyCode.UpArrow))
