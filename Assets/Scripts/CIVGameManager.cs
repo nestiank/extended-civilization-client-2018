@@ -3,11 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using CivPresenter;
 using CivModel;
 using CivModel.Common;
 
 public class CIVGameManager : MonoBehaviour, IView {
+
+    private const float cameraSpeed = 4.0f;
 
     public enum DistrictSprite { None, CityCenter }
     public static Sprite[] DistrictSprites => districtSprites;
@@ -21,19 +24,33 @@ public class CIVGameManager : MonoBehaviour, IView {
     public static Sprite[] TileSprites => tileSprites;
     private static Sprite[] tileSprites;
 
-    public void MoveSight(int dx, int dy)
+    /*public void MoveSight(int dx, int dy)
     {
         mainCamera.transform.Translate(new Vector3(dx, dy, 0));
         //버그 있음. 움직일 시 아래로 내려갈수록 지면에 가까워짐. (rotation 문제)
-    }
+    }*/
 
     public void Refocus()
-    {
+    { 
+        if (pointSelected.HasValue)
+        {
+            Focus(pointSelected);
+        }
     }
     public void Focus(Unit unit)
     {
+        if(unit.PlacedPoint.HasValue)
+        {
+            Focus(unit.PlacedPoint.Value);
+        }
     }
-
+    public void Focus(CivModel.Terrain.Point? pt)
+    {
+        if(pt.HasValue)
+        {
+            Focus(pt.Value.Position);
+        }
+    }
     public void Focus(Position pos)
     {
         CameraChange(cells[pos.X, pos.Y].transform.position);
@@ -60,6 +77,7 @@ public class CIVGameManager : MonoBehaviour, IView {
     }
 
     private GameObject cellSelected = null;
+    private CivModel.Terrain.Point? pointSelected;
     private bool readyToClick = false;
 
     public void CastRay()
@@ -87,8 +105,7 @@ public class CIVGameManager : MonoBehaviour, IView {
     public void SelectCell(GameObject go)
     {
         cellSelected = go;
-        CivModel.Terrain.Point point = FindCell(cellSelected);
-
+        pointSelected = FindCell(cellSelected);
     }
     public CivModel.Terrain.Point FindCell(GameObject go)
     {
@@ -199,23 +216,42 @@ public class CIVGameManager : MonoBehaviour, IView {
 
     // Update is called once per frame
     void Update() {
+        float delt = Time.deltaTime;
+        
         if (Input.GetMouseButtonDown(0))
         {
-            CastRay();
-            Debug.Log("mouseDown");
+            if (EventSystem.current.IsPointerOverGameObject() == false)
+            {
+                CastRay();
+                if(cellSelected != null)
+                {
+                    Focus(pointSelected);
+                }
+            }
+                
         }
         if (Input.GetKeyDown(KeyCode.Escape))
             mPresenter.CommandCancel();
         if (Input.GetKey(KeyCode.UpArrow))
-            mPresenter.CommandArrowKey(Direction.Down);
-        if (Input.GetKey(KeyCode.DownArrow))
+        {
             mPresenter.CommandArrowKey(Direction.Up);
+            mainCamera.transform.Translate(new Vector3(0, cameraSpeed * delt, 0));
+        }
+        if (Input.GetKey(KeyCode.DownArrow))
+        {
+            mPresenter.CommandArrowKey(Direction.Down);
+            mainCamera.transform.Translate(new Vector3(0, -cameraSpeed * delt, 0));
+        }
         if (Input.GetKey(KeyCode.LeftArrow))
+        {
             mPresenter.CommandArrowKey(Direction.Left);
+            mainCamera.transform.Translate(new Vector3(-cameraSpeed * delt, 0, 0));
+        }
         if (Input.GetKey(KeyCode.RightArrow))
+        {
             mPresenter.CommandArrowKey(Direction.Right);
-
-
+            mainCamera.transform.Translate(new Vector3(cameraSpeed * delt, 0, 0));
+        }
         if (Input.GetKey(KeyCode.F))
             mPresenter.CommandRefocus();
 
