@@ -76,8 +76,20 @@ public class CIVGameManager : MonoBehaviour, IView {
         }
     }
 
-    private GameObject cellSelected = null;
-    private CivModel.Terrain.Point? pointSelected;
+    public static GameObject GetGameManager()
+    {
+        if(gameManager == null)
+        {
+            throw new NullReferenceException();
+        }
+        else
+        {
+            return gameManager;
+        }
+    }
+
+    public GameObject cellSelected = null;
+    public CivModel.Terrain.Point? pointSelected;
     private bool readyToClick = false;
 
     public void CastRay()
@@ -98,7 +110,11 @@ public class CIVGameManager : MonoBehaviour, IView {
             readyToClick = false;
         }
         else
+        {
             Debug.Log("notselected");
+            cellSelected = null;
+            pointSelected = null;
+        }
 
     }
 
@@ -106,6 +122,7 @@ public class CIVGameManager : MonoBehaviour, IView {
     {
         cellSelected = go;
         pointSelected = FindCell(cellSelected);
+        Debug.Log(pointSelected);
     }
     public CivModel.Terrain.Point FindCell(GameObject go)
     {
@@ -158,15 +175,24 @@ public class CIVGameManager : MonoBehaviour, IView {
     public Text gold, population, happiness, labor, technology, ultimate;
     private int goldnum, popnum, happynum, labnum, technum, ultnum;
 
-
-    // Use this for initialization
-    void Start()
+    void Awake()
     {
         DontDestroyOnLoad(this);
-        //System.Diagnostics.Debug.Assert(gameObject == null);
         if (gameManager == null)
         {
             gameManager = this.gameObject;
+        }
+        else
+        {
+            Destroy(this);
+        }
+    }
+        // Use this for initialization
+     void Start()
+    {
+        //System.Diagnostics.Debug.Assert(gameObject == null);
+        if (gameManager == this.gameObject)
+        {
             Width = 10;
             Height = 10;
             mPresenter = new Presenter(this);
@@ -262,7 +288,50 @@ public class CIVGameManager : MonoBehaviour, IView {
         labor.text = "노동력: " + labnum.ToString();
         technology.text = "기술력: " + technum.ToString();
         ultimate.text = "궁극기: " + ultnum.ToString() + " %";
+        /*switch(mPresenter.State)
+        {
+            case CivPresenter.Presenter.States.Normal:
+                {
+                    std::string msg = "Turn: " + std::to_string(m_presenter->Game->TurnNumber);
+                    if (m_presenter->IsThereTodos)
+                    {
+                        msg += " %c\x0f""waiting for command %c\x07(";
+                        msg += "%c\x0f""m%c\x07: move ";
+                        msg += "%c\x0f""q%c\x07: moving attack ";
+                        msg += "%c\x0f""w%c\x07: holding attack ";
+                        msg += "%c\x0f""1-9%c\x07 : special acts ";
+                        msg += "%c\x0f""p%c\x07: production ";
+                        msg += "%c\x0f""z%c\x07: skip)";
+                    }
+                    else
+                    {
+                        msg += " %c\x0fpress Enter for the next turn";
+                    }
+                    m_screen->PrintStringEx(0, scrsz.height - 1, 0b00000111, msg);
+                    break;
+                }
 
+            case CivPresenter.Presenter.States.Move:
+                m_screen->PrintString(0, scrsz.height - 1, 0b00001111, "Move");
+                break;
+
+            case CivPresenter.Presenter.States.MovingAttack:
+                m_screen->PrintString(0, scrsz.height - 1, 0b00001111, "Moving Attack");
+                break;
+
+            case CivPresenter.Presenter.States.HoldingAttack:
+                m_screen->PrintString(0, scrsz.height - 1, 0b00001111, "Holding Attack");
+                break;
+
+            case CivPresenter.Presenter.States.SpecialAct:
+                m_screen->PrintString(0, scrsz.height - 1, 0b00001111,
+                    "SpecialAct: " + std::to_string(m_presenter->StateParam));
+                break;
+
+            case CivPresenter.Presenter.States.Deploy:
+                m_screen->PrintString(0, scrsz.height - 1, 0b00001111, "Deploy");
+                break;
+        }*/
         Render(mPresenter.Game.Terrain);
     }
 
@@ -284,7 +353,10 @@ public class CIVGameManager : MonoBehaviour, IView {
         }
     }
 
-
+    public Presenter GetPresenter()
+    {
+        return mPresenter;
+    }
     
     public void TurnEndSignal()
     {

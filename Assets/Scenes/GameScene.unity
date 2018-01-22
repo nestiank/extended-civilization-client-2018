@@ -1779,6 +1779,7 @@ GameObject:
   - component: {fileID: 1096861574}
   - component: {fileID: 1096861573}
   - component: {fileID: 1096861572}
+  - component: {fileID: 1096861576}
   m_Layer: 5
   m_Name: CameraUI
   m_TagString: Untagged
@@ -1865,6 +1866,23 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1096861576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1096861571}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef0f0d5d7f216094195cf0463442d75e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CameraCanvas: {fileID: 1096861574}
+  tempManagementUI: {fileID: 2074330600}
+  MoveButton: {fileID: 1334617258}
+  AttackButton: {fileID: 1727812862}
+  SkillButton: {fileID: 901706016}
+  WaitButton: {fileID: 1126363246}
 --- !u!1 &1115068180
 GameObject:
   m_ObjectHideFlags: 0
@@ -2447,7 +2465,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1334617259}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1096861576}
+        m_MethodName: MoveButtonMethod
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1334617259
@@ -3808,6 +3837,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b51e0c0f81024746977ba754d547c94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cellSelected: {fileID: 0}
   cellPrefab: {fileID: 1334406944157384, guid: 5c7cd0aa3d8e4e84ebbe79c9371c9361, type: 2}
   mainCamera: {fileID: 1122781158}
   focusObject: {fileID: 0}
