@@ -14,13 +14,15 @@ public class ManagementUIController : MonoBehaviour {
     public LinkedList<Production> mProduction;
     public LinkedList<Production> mDeployment;
 
+    private Player mPlayer;
+
     private GameObject gameManagerObject;
     private CIVGameManager gameManager;
     private Presenter mPresenter;
 
     public Transform newProduction;
-    public Transform newPlacement;
-    public Button pioneer;
+    public Transform newPlacement;      // prefabs
+    public Button pioneer;              // new unit production when clicked
 
     public void setControlUI ()
     {
@@ -57,6 +59,7 @@ public class ManagementUIController : MonoBehaviour {
 
         void Update()
     {
-        mProduction = 
+        mProduction = mPlayer.Production;       // The list of the not-finished productions of this player
+        mDeployment = mPlayer.Deployment;       // The list of the ready-to-deploy productions of this player
     }
 }
