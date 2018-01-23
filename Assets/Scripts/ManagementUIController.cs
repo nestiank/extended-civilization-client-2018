@@ -20,8 +20,11 @@ public class ManagementUIController : MonoBehaviour {
     private CIVGameManager gameManager;
     private Presenter mPresenter;
 
-    public Transform newProduction;
-    public Transform newPlacement;      // prefabs
+    public GameObject[] PQlist;
+    public GameObject[] DQlist;
+
+    public GameObject proPrefab;
+    public GameObject depPrefab;        // prefab templates
     public Button pioneer;              // new unit production when clicked
 
     public void setControlUI ()
@@ -32,23 +35,6 @@ public class ManagementUIController : MonoBehaviour {
             managementUI.gameObject.SetActive(false);
     }
 
-    public void productionQ (CivModel.Production produce)
-    {
-        if (pioneer == true)
-        {
-            Instantiate(newProduction);
-        }
-
-        if (produce.Completed == true)
-            Destroy(newProduction);
-    }
-
-    public void placementQ (CivModel.Production produce)
-    {
-        if (produce.Completed == true)
-            Instantiate(newPlacement);
-
-    }
 
     void Start()
     {
@@ -57,9 +43,30 @@ public class ManagementUIController : MonoBehaviour {
         mPresenter = gameManager.GetPresenter();
     }
 
-        void Update()
+    void Update()
     {
         mProduction = mPlayer.Production;       // The list of the not-finished productions of this player
         mDeployment = mPlayer.Deployment;       // The list of the ready-to-deploy productions of this player
+    }
+    
+
+    public void productionQ()
+    {
+        for (int i = 0; i < mProduction.Count; i++)
+        {
+            PQlist[i] = Instantiate(proPrefab) as GameObject;
+            PQlist[i].GetComponent<Text>().text = 3 + "턴 이후 종료";        // need to calculate how many turns are left
+        }
+        
+        
+    }
+
+    public void deploymentQ()
+    {
+        for (int i = 0; i < mDeployment.Count; i++)
+        {
+            DQlist[i] = Instantiate(depPrefab) as GameObject;
+        }
+
     }
 }
