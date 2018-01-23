@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Sprites;
+using CivModel;
 
 public class TilePrefab : MonoBehaviour {
     [SerializeField]
@@ -21,17 +22,48 @@ public class TilePrefab : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
+
+    }
+    public void MovableTile()
+    {
+        string color = "Magenta";
+        ChangeTile(color);
+    }
     public void ChangeTile(CivModel.Terrain.Point terrainPoint)
     {
-        var t1 = terrainPoint.Type1;
-        var t2 = terrainPoint.Type2;
+        var t1 = terrainPoint.Type;
         string color = "None";
-        string[] colors = new string[]{ "Blue", "Green", "Yellow", "Red", "None" };
+        string[] colors = new string[]{ "Blue", "Green", "Yellow", "Red", "Orange","Magenta", "Gray", "IronGreen", "DarkPurple", "None" };
+        
+        switch (t1)
+        {
+            case TerrainType.Plain:
+                color = colors[1];
+                break;
+            case TerrainType.Ocean:
+                color = colors[0];
+                break;
+            case TerrainType.Mount:
+                color = colors[4];
+                break;
+            case TerrainType.Forest:
+                color = colors[8];
+                break;
+            case TerrainType.Swamp:
+                color = colors[7];
+                break;
+            case TerrainType.Tundra:
+                color = colors[6];
+                break;
+            case TerrainType.Ice:
+                color = colors[9];
+                break;
+            case TerrainType.Hill:
+                color = colors[2];
+                break;
 
-        color = colors[((int)t1 + (int)t2) % 5];
-
+                //3 , 5 not used (RED, MAGENTA) - prototype
+        }
         ChangeTile(color);
     }
     public void ChangeTile(string tile)

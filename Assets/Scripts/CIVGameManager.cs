@@ -20,9 +20,32 @@ public class CIVGameManager : MonoBehaviour, IView {
     public static Sprite[] UnitSprites => unitSprites;
     private static Sprite[] unitSprites;
 
-    public enum TileSprite { None, Blue, Green, Red, Yellow }
+    public enum TileSprite { None, Blue, Green, Red, Yellow, Orange, Magenta, Gray, IronGreen, DarkPurple }
     public static Sprite[] TileSprites => tileSprites;
     private static Sprite[] tileSprites;
+
+    public GameObject cellSelected = null;
+    public CivModel.Terrain.Point? pointSelected;
+    private bool readyToClick = false;
+    
+    public int Width { get; set; }
+    public int Height { get; set; }
+
+    public GameObject cellPrefab;
+    public Camera mainCamera;
+    public GameObject focusObject;
+    private GameObject[,] cells;
+
+    private Presenter mPresenter;
+    private Game game;
+    private IReadOnlyList<CivModel.Player> players;
+    private Player mainPlayer;
+    //private CivModel.Terrain gameMapModel;
+
+    private static GameObject gameManager;
+
+    public Text gold, population, happiness, labor, technology, ultimate;
+    private int goldnum, popnum, happynum, labnum, technum, ultnum;
 
     /*public void MoveSight(int dx, int dy)
     {
@@ -31,10 +54,12 @@ public class CIVGameManager : MonoBehaviour, IView {
     }*/
 
     public void Refocus()
-    { 
+    {
+        Debug.Log("Refocus Called");
         if (pointSelected.HasValue)
         {
             Focus(pointSelected);
+            Debug.Log("Focusing" + pointSelected);
         }
     }
     public void Focus(Unit unit)
@@ -88,9 +113,6 @@ public class CIVGameManager : MonoBehaviour, IView {
         }
     }
 
-    public GameObject cellSelected = null;
-    public CivModel.Terrain.Point? pointSelected;
-    private bool readyToClick = false;
 
     public void CastRay()
     {
@@ -143,44 +165,33 @@ public class CIVGameManager : MonoBehaviour, IView {
         }
         throw new ArgumentNullException();
     }
-    public void Skill()
+    public GameObject FindCell(CivModel.Terrain.Point pt)
+    {
+        if (pt == null)
+        {
+            Debug.Log("no Gameobject");
+            throw new ArgumentNullException();
+        }
+        return cells[pt.Position.X, pt.Position.Y];
+    }
+    /*public void Skill()
     {
         if(mPresenter.SelectedActor.GetType() == typeof(Pioneer))
             mPresenter.SelectedActor.SpecialActs[0].Act(mPresenter.SelectedActor.PlacedPoint);
-    }
+    }*/
 
     private void CameraChange(Vector3 vec)
     {
         mainCamera.transform.position = new Vector3(vec.x, vec.y, -20);
         Debug.Log(vec);
     }
-
-    public int Width { get; set; }
-    public int Height { get; set; }
-
-    public GameObject cellPrefab;
-    public Camera mainCamera;
-    public GameObject focusObject;
-
-
-    private GameObject[,] cells;
-
-    private Presenter mPresenter;
-    //private CivModel.Terrain gameMapModel;
-    //private IReadOnlyList<CivModel.Player> players;
-
-
-    private static GameObject gameManager;
-
-    public Text gold, population, happiness, labor, technology, ultimate;
-    private int goldnum, popnum, happynum, labnum, technum, ultnum;
-
     void Awake()
     {
         DontDestroyOnLoad(this);
         if (gameManager == null)
         {
             gameManager = this.gameObject;
+            mPresenter = new Presenter(this);
         }
         else
         {
@@ -193,11 +204,12 @@ public class CIVGameManager : MonoBehaviour, IView {
         //System.Diagnostics.Debug.Assert(gameObject == null);
         if (gameManager == this.gameObject)
         {
-            Width = 10;
-            Height = 10;
-            mPresenter = new Presenter(this);
+            game = mPresenter.Game;
+            players = game.Players;
+            mainPlayer = players[0];
+            Width = game.Terrain.Width;
+            Height = game.Terrain.Height;
             //gameMapModel = mPresenter.Game.Terrain;
-            //players = mPresenter.Game.Players;
 
             var dss = Enum.GetValues(typeof(DistrictSprite));
             districtSprites = new Sprite[dss.Length];
@@ -232,29 +244,77 @@ public class CIVGameManager : MonoBehaviour, IView {
             Destroy(this);
         }
 
-        goldnum = 10000;
-        popnum = 1482;
-        happynum = 42;
-        labnum = 0;
-        technum = 124;
-        ultnum = 0;
+        goldnum = Convert.ToInt32(mainPlayer.Gold);
+        popnum = 0; // not Implemented
+        happynum = Convert.ToInt32(mainPlayer.Happiness);
+        labnum = Convert.ToInt32(mainPlayer.Labor);
+        technum = 0;  // not Implemented
+        ultnum = 0; //not Implemented
     }
 
     // Update is called once per frame
-    void Update() {
+    void Update()
+    {
         float delt = Time.deltaTime;
-        
+        pointSelected = mPresenter.FocusedPoint;
+
         if (Input.GetMouseButtonDown(0))
         {
             if (EventSystem.current.IsPointerOverGameObject() == false)
             {
-                CastRay();
-                if(cellSelected != null)
+                switch (mPresenter.State)
                 {
-                    Focus(pointSelected);
+                    case CivPresenter.Presenter.States.Normal:
+                        {
+                            CastRay();
+                            if (cellSelected != null)
+                            {
+                                //Focus(pointSelected);
+                            }
+                            break;
+                        }
+                    case CivPresenter.Presenter.States.Move:
+                        {
+                            break;
+                        }
+
+                    case CivPresenter.Presenter.States.MovingAttack:
+                        {
+                            break;
+                        }
+                    case CivPresenter.Presenter.States.HoldingAttack:
+                        {
+                            break;
+                        }
+
+                    case CivPresenter.Presenter.States.SpecialAct:
+                        {
+                            break;
+                        }
+
+                    case CivPresenter.Presenter.States.Deploy:
+                        {
+                            break;
+                        }
+                    case CivPresenter.Presenter.States.ProductUI:
+                        {
+                            break;
+                        }
+                    case CivPresenter.Presenter.States.ProductAdd:
+                        {
+                            break;
+                        }
+                    case CivPresenter.Presenter.States.Victory:
+                        {
+                            break;
+                        }
+                    case CivPresenter.Presenter.States.Defeated:
+                        {
+                            break;
+                        }
+                    default: throw new NotImplementedException();
                 }
             }
-                
         }
         if (Input.GetKeyDown(KeyCode.Escape))
             mPresenter.CommandCancel();
@@ -279,8 +339,52 @@ public class CIVGameManager : MonoBehaviour, IView {
             mainCamera.transform.Translate(new Vector3(cameraSpeed * delt, 0, 0));
         }
         if (Input.GetKey(KeyCode.F))
+        {
             mPresenter.CommandRefocus();
+            Debug.Log("refocus request");
+        }
+        if(Input.GetKey(KeyCode.S))
+            mPresenter.CommandSelect();
 
+        if (Input.GetKey(KeyCode.D))
+            mPresenter.CommandRemove();
+        if (Input.GetKey(KeyCode.M))
+            mPresenter.CommandMove();
+        if (Input.GetKey(KeyCode.Z))
+            mPresenter.CommandSkip();
+        if (Input.GetKey(KeyCode.Q))
+            mPresenter.CommandMovingAttack();
+        if (Input.GetKey(KeyCode.W))
+            mPresenter.CommandHoldingAttack();
+        if(Input.GetKey(KeyCode.P))
+            mPresenter.CommandProductUI();
+
+
+        if (Input.GetKey(KeyCode.Keypad1))
+            mPresenter.CommandNumeric(0);
+        if (Input.GetKey(KeyCode.Keypad2))
+            mPresenter.CommandNumeric(1);
+        if (Input.GetKey(KeyCode.Keypad3))
+            mPresenter.CommandNumeric(2);
+        if (Input.GetKey(KeyCode.Keypad4))
+            mPresenter.CommandNumeric(3);
+        if (Input.GetKey(KeyCode.Keypad5))
+            mPresenter.CommandNumeric(4);
+        if (Input.GetKey(KeyCode.Keypad6))
+            mPresenter.CommandNumeric(5);
+        if (Input.GetKey(KeyCode.Keypad7))
+            mPresenter.CommandNumeric(6);
+        if (Input.GetKey(KeyCode.Keypad8))
+            mPresenter.CommandNumeric(7);
+        if (Input.GetKey(KeyCode.Keypad9))
+            mPresenter.CommandNumeric(8);
+
+        goldnum = Convert.ToInt32(mainPlayer.Gold);
+        popnum = 0; // not Implemented
+        happynum = Convert.ToInt32(mainPlayer.Happiness);
+        labnum = Convert.ToInt32(mainPlayer.Labor);
+        technum = 0;  // not Implemented
+        ultnum = 0; //not Implemented
 
         gold.text = "금: " + goldnum.ToString();
         population.text = "인구: " + popnum.ToString();
@@ -288,51 +392,78 @@ public class CIVGameManager : MonoBehaviour, IView {
         labor.text = "노동력: " + labnum.ToString();
         technology.text = "기술력: " + technum.ToString();
         ultimate.text = "궁극기: " + ultnum.ToString() + " %";
-        /*switch(mPresenter.State)
+        
+        Render(mPresenter.Game.Terrain);
+
+
+         
+        switch (mPresenter.State)//for debug
         {
             case CivPresenter.Presenter.States.Normal:
                 {
-                    std::string msg = "Turn: " + std::to_string(m_presenter->Game->TurnNumber);
-                    if (m_presenter->IsThereTodos)
+                    Debug.Log("State : Normal");
+                    break;
+                }
+            case CivPresenter.Presenter.States.Move:
+                {
+                    Debug.Log("State : Move");
+                    CivModel.Terrain.Point?[] adj = mPresenter.SelectedActor.PlacedPoint.Value.Adjacents();
+                    for(int i = 0; i < adj.Length; i++)
                     {
-                        msg += " %c\x0f""waiting for command %c\x07(";
-                        msg += "%c\x0f""m%c\x07: move ";
-                        msg += "%c\x0f""q%c\x07: moving attack ";
-                        msg += "%c\x0f""w%c\x07: holding attack ";
-                        msg += "%c\x0f""1-9%c\x07 : special acts ";
-                        msg += "%c\x0f""p%c\x07: production ";
-                        msg += "%c\x0f""z%c\x07: skip)";
+                        if(adj[i].HasValue)
+                        {
+                            //if(!(adj[i].Value.Type == TerrainType.Ocean || adj[i].Value.Type == TerrainType.Mount))
+                            FindCell(adj[i].Value).GetComponent<TilePrefab>().MovableTile();
+                        }
                     }
-                    else
-                    {
-                        msg += " %c\x0fpress Enter for the next turn";
-                    }
-                    m_screen->PrintStringEx(0, scrsz.height - 1, 0b00000111, msg);
                     break;
                 }
 
-            case CivPresenter.Presenter.States.Move:
-                m_screen->PrintString(0, scrsz.height - 1, 0b00001111, "Move");
-                break;
-
             case CivPresenter.Presenter.States.MovingAttack:
-                m_screen->PrintString(0, scrsz.height - 1, 0b00001111, "Moving Attack");
-                break;
-
+                {
+                    Debug.Log("State : MovingAttack");
+                    break;
+                }
             case CivPresenter.Presenter.States.HoldingAttack:
-                m_screen->PrintString(0, scrsz.height - 1, 0b00001111, "Holding Attack");
-                break;
+                {
+                    Debug.Log("State : HoldingAttack");
+                    break;
+                }
 
             case CivPresenter.Presenter.States.SpecialAct:
-                m_screen->PrintString(0, scrsz.height - 1, 0b00001111,
-                    "SpecialAct: " + std::to_string(m_presenter->StateParam));
-                break;
+                {
+                    Debug.Log("State : SpecialAct");
+                    break;
+                }
 
             case CivPresenter.Presenter.States.Deploy:
-                m_screen->PrintString(0, scrsz.height - 1, 0b00001111, "Deploy");
-                break;
-        }*/
-        Render(mPresenter.Game.Terrain);
+                {
+                    Debug.Log("State : Deploy");
+                    break;
+                }
+            case CivPresenter.Presenter.States.ProductUI:
+                {
+                    Debug.Log("State : ProductUI");
+                    break;
+                }
+            case CivPresenter.Presenter.States.ProductAdd:
+                {
+                    Debug.Log("State : ProductAdd");
+                    break;
+                }
+            case CivPresenter.Presenter.States.Victory:
+                {
+                    Debug.Log("State : Deploy");
+                    break;
+                }
+            case CivPresenter.Presenter.States.Defeated:
+                {
+                    Debug.Log("State : Deploy");
+                    break;
+                }
+            default:
+                throw new NotImplementedException();
+        }
     }
 
     // HEX Tiling 
@@ -345,7 +476,7 @@ public class CIVGameManager : MonoBehaviour, IView {
                 Vector2 pos = new Vector2(2 * i * HexMatrix.innerRadius, (-j) * HexMatrix.outerRadius * 1.5f);
                 if (j % 2 != 0)
                 {
-                    pos.x += HexMatrix.innerRadius;
+                    pos.x -= HexMatrix.innerRadius;
                 }
                 cells[i, j] = Instantiate(cellPrefab, pos, Quaternion.identity);
                 cells[i, j].name = String.Format("HexCell({0},{1})", i, j);
@@ -360,7 +491,15 @@ public class CIVGameManager : MonoBehaviour, IView {
     
     public void TurnEndSignal()
     {
-        mPresenter.CommandApply();
+        if(!mPresenter.IsThereTodos)
+        {
+            Debug.Log("End_CommandApply");
+            mPresenter.CommandApply();
+        }
+        else
+        {
+            Debug.Log("Todo is remaining");
+        }
     }
     
 }
