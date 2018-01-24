@@ -11,14 +11,15 @@ public class ManagementUIController : MonoBehaviour {
     public Canvas managementUI;
     public Button managementTab;
 
-    public LinkedList<Production> mProduction;
-    public LinkedList<Production> mDeployment;
+    private LinkedList<Production> mProduction;
+    private LinkedList<Production> mDeployment;
 
-    private Player mPlayer;
+    private IReadOnlyList<Player> mPlayers;
 
     private GameObject gameManagerObject;
     private CIVGameManager gameManager;
     private Presenter mPresenter;
+    private Game mGame;
 
     public GameObject[] PQlist;
     public GameObject[] DQlist;
@@ -27,50 +28,81 @@ public class ManagementUIController : MonoBehaviour {
     public GameObject depPrefab;        // prefab templates
     public Button pioneer;              // new unit production when clicked
 
-    public void setControlUI ()
+    public void SetManagementUI (bool val)
     {
-        if (managementTab == true)
-            managementUI.enabled = true;//            managementUI.gameObject.SetActive(true);
-        else
-            managementUI.enabled = false;//            managementUI.gameObject.SetActive(false);
+        Debug.Log("manUI : " + val);
+        managementUI.enabled = val;//            managementUI.gameObject.SetActive(true);//            managementUI.gameObject.SetActive(false);
     }
 
+    public void ManageButton()                                      // Management tab on/off button
+    {
+        if (mPresenter.State == Presenter.States.Normal)
+        {
+            mPresenter.CommandProductUI();
+        }
+        else if (mPresenter.State == Presenter.States.ProductUI)
+        {
+            mPresenter.CommandCancel();
+        }
+    }
 
     void Start()
     {
         gameManagerObject = CIVGameManager.GetGameManager();
         gameManager = gameManagerObject.GetComponent<CIVGameManager>();
         mPresenter = gameManager.GetPresenter();
+
+        mPlayers = mPresenter.Game.Players;
     }
 
     void Update()
     {
-        if (managementTab == true)
-            managementUI.enabled = true;
-        else
-            managementUI.enabled = false;
+        mProduction = mPresenter.Game.PlayerInTurn.Production;
+        mDeployment = mPresenter.Game.PlayerInTurn.Deployment;
 
-        mProduction = mPlayer.Production;       // The list of the not-finished productions of this player
-        mDeployment = mPlayer.Deployment;       // The list of the ready-to-deploy productions of this player
+        switch (mPresenter.State)//for debug
+        {
+            case CivPresenter.Presenter.States.Deploy:
+                {
+                    SetManagementUI(true);
+                    Debug.Log("State : Deploy");
+                    break;
+                }
+            case CivPresenter.Presenter.States.ProductUI:
+                {
+                    SetManagementUI(true);
+                    Debug.Log("State : ProductUI");
+                    break;
+                }
+            case CivPresenter.Presenter.States.ProductAdd:
+                {
+                    SetManagementUI(true);
+                    Debug.Log("State : ProductAdd");
+                    break;
+                }
+            default:
+                SetManagementUI(false);
+                break;
+        }
     }
     
 
-    public void productionQ()
+    public void MakeProductionQ()
     {
         for (int i = 0; i < mProduction.Count; i++)
         {
-            PQlist[i] = Instantiate(proPrefab) as GameObject;
+            PQlist[i] = Instantiate(proPrefab);
             PQlist[i].GetComponent<Text>().text = 3 + "턴 이후 종료";        // need to calculate how many turns are left
         }
         
         
     }
 
-    public void deploymentQ()
+    public void MakeDeploymentQ()
     {
         for (int i = 0; i < mDeployment.Count; i++)
         {
-            DQlist[i] = Instantiate(depPrefab) as GameObject;
+            DQlist[i] = Instantiate(depPrefab);
         }
 
     }
