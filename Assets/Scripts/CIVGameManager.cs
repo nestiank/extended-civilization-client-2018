@@ -305,6 +305,8 @@ public class CIVGameManager : MonoBehaviour, IView {
                         }
                     case CivPresenter.Presenter.States.ProductUI:
                         {
+
+
                             break;
                         }
                     case CivPresenter.Presenter.States.ProductAdd:

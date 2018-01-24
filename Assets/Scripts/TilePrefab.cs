@@ -83,7 +83,12 @@ public class TilePrefab : MonoBehaviour {
     }
     public void BuildDistrict(CivModel.TileBuilding building)
     {
-        BuildDistrict(building?.ToString().Split('.').Last());
+        if (building == null)
+        {
+            BuildDistrict("None");
+        }
+        else
+            BuildDistrict(building?.ToString().Split('.').Last());
     }
     public void BuildDistrict(string dist)
     {
@@ -95,13 +100,17 @@ public class TilePrefab : MonoBehaviour {
     }
     public void DrawUnit(CivModel.Unit unit)
     {
-        DrawUnit(unit?.ToString().Split('.').Last());
+        if(unit == null)
+        {
+            DrawUnit("None");
+        }
+        else
+            DrawUnit(unit?.ToString().Split('.').Last());
     }
     public void DrawUnit(string unit)
     {
         CIVGameManager.UnitSprite us = CIVGameManager.UnitSprite.None;
         Enum.TryParse(unit, out us);
-
         unitSprite = CIVGameManager.UnitSprites[(int)us];
         GetComponentsInChildren<SpriteRenderer>()[2].sprite = unitSprite;
     }
