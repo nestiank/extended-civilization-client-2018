@@ -18,6 +18,8 @@ public class CameraUIController : MonoBehaviour {
     public Button WaitButton;
 
     public GameObject UnitInfo;
+    public GameObject Actions;
+    public GameObject TurnEnd;
 
     public Image Portrait;
     public Text UnitName;
@@ -40,9 +42,10 @@ public class CameraUIController : MonoBehaviour {
     public void SkillButtonMethod()
     {
         Debug.Log("SkillButton");
+        Debug.Log(mPresenter.SelectedActor.GetType());
         if (mPresenter.SelectedActor.GetType() == typeof(Pioneer))
         {
-            mPresenter.SelectedActor.SpecialActs[0].Act(mPresenter.SelectedActor.PlacedPoint);
+            mPresenter.CommandNumeric(0);
             Debug.Log("Pioneer set City");
         }
     }
@@ -59,6 +62,13 @@ public class CameraUIController : MonoBehaviour {
            else(caseA)
             mPresenter.CommandHoldingAttack
         */
+    }
+
+    public void ActiveCameraUI(bool value)
+    {
+        UnitInfo.SetActive(value);
+        Actions.SetActive(value);
+        TurnEnd.SetActive(value);
     }
     // Use this for initialization
     void Start ()

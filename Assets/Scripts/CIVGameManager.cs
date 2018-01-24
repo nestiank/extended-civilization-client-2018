@@ -275,6 +275,12 @@ public class CIVGameManager : MonoBehaviour, IView {
                         }
                     case CivPresenter.Presenter.States.Move:
                         {
+                            CastRay();
+                            if (cellSelected != null)
+                            {
+                                mPresenter.FocusedPoint = pointSelected.Value;
+                            }
+                            mPresenter.CommandApply();
                             break;
                         }
 
@@ -289,6 +295,7 @@ public class CIVGameManager : MonoBehaviour, IView {
 
                     case CivPresenter.Presenter.States.SpecialAct:
                         {
+
                             break;
                         }
 
