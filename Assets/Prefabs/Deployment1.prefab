@@ -56,7 +56,7 @@ GameObject:
   - component: {fileID: 222753816676270096}
   - component: {fileID: 114644775417974404}
   m_Layer: 5
-  m_Name: Placement1
+  m_Name: Deployment1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

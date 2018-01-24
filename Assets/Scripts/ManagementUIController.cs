@@ -8,7 +8,7 @@ using CivModel.Common;
 
 public class ManagementUIController : MonoBehaviour {
 
-    public GameObject managementUI;
+    public Canvas managementUI;
     public Button managementTab;
 
     public LinkedList<Production> mProduction;
@@ -30,9 +30,9 @@ public class ManagementUIController : MonoBehaviour {
     public void setControlUI ()
     {
         if (managementTab == true)
-            managementUI.gameObject.SetActive(true);
+            managementUI.enabled = true;//            managementUI.gameObject.SetActive(true);
         else
-            managementUI.gameObject.SetActive(false);
+            managementUI.enabled = false;//            managementUI.gameObject.SetActive(false);
     }
 
 
@@ -45,6 +45,11 @@ public class ManagementUIController : MonoBehaviour {
 
     void Update()
     {
+        if (managementTab == true)
+            managementUI.enabled = true;
+        else
+            managementUI.enabled = false;
+
         mProduction = mPlayer.Production;       // The list of the not-finished productions of this player
         mDeployment = mPlayer.Deployment;       // The list of the ready-to-deploy productions of this player
     }
