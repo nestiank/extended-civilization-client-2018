@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UnitPrefab : MonoBehaviour {
+public class ProPrefab : MonoBehaviour {
 
-    private Sprite unitSprite;
-    // Use this for initialization
-    void Start () {
+	// Use this for initialization
+	void Start () {
 		
 	}
 	

@@ -1,0 +1,210 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CivPresenter</name>
+    </assembly>
+    <members>
+        <member name="T:CivPresenter.Direction">
+            <summary>
+            Represents a direction.
+            </summary>
+        </member>
+        <member name="F:CivPresenter.Direction.Up">
+            <summary>
+            Up direction
+            </summary>
+        </member>
+        <member name="F:CivPresenter.Direction.Down">
+            <summary>
+            Down direction
+            </summary>
+        </member>
+        <member name="F:CivPresenter.Direction.Left">
+            <summary>
+            Left direction
+            </summary>
+        </member>
+        <member name="F:CivPresenter.Direction.Right">
+            <summary>
+            Right direction
+            </summary>
+        </member>
+        <member name="T:CivPresenter.IView">
+            <summary>
+            The interface represents a View.
+            </summary>
+        </member>
+        <member name="M:CivPresenter.IView.Refocus">
+            <summary>
+            Called when view should refocus on <see cref="P:CivPresenter.Presenter.FocusedPoint"/>
+            </summary>
+        </member>
+        <member name="M:CivPresenter.IView.Shutdown">
+            <summary>
+            Called when the game should be shutdown.
+            </summary>
+        </member>
+        <member name="T:CivPresenter.Presenter">
+            <summary>
+            Represents a presenter.
+            </summary>
+            <remarks>
+            The presenter works like a Finite State Machine.
+            <see cref="P:CivPresenter.Presenter.State"/> is changed by Command~~~ operations.
+            </remarks>
+        </member>
+        <member name="P:CivPresenter.Presenter.View">
+            <summary>
+            The <see cref="T:CivPresenter.IView"/> object
+            </summary>
+        </member>
+        <member name="P:CivPresenter.Presenter.Game">
+            <summary>
+            The <see cref="P:CivPresenter.Presenter.Game"/> object
+            </summary>
+        </member>
+        <member name="P:CivPresenter.Presenter.SelectedActor">
+            <summary>
+            The selected <see cref="T:CivModel.Actor"/>.
+            </summary>
+        </member>
+        <member name="P:CivPresenter.Presenter.FocusedPoint">
+            <summary>
+            The focused <see cref="T:CivModel.Terrain.Point"/>.
+            This point can be changed by [arrow key] command, or View's calling setter.
+            </summary>
+        </member>
+        <member name="P:CivPresenter.Presenter.IsThereTodos">
+            <summary>
+            Whether there is something to do in this turn.
+            If this value is <c>false</c>, user can go to the next turn
+            </summary>
+        </member>
+        <member name="P:CivPresenter.Presenter.RunningAction">
+            <summary>
+            The <see cref="T:CivModel.IReadOnlyActorAction"/> object used now.
+            <c>null</c> if no action is being done.
+            </summary>
+        </member>
+        <member name="P:CivPresenter.Presenter.SelectedDeploy">
+            <summary>
+            Index of the selected deploy to <see cref="P:CivModel.Player.Deployment"/> list.
+            <c>-1</c> if there is no selected deploy.
+            If <see cref="P:CivPresenter.Presenter.SelectedProduction"/> is not <c>-1</c>, this value is <c>-1</c>.
+            This value is valid iff <c><see cref="P:CivPresenter.Presenter.State"/> == <see cref="F:CivPresenter.Presenter.States.ProductUI"/></c>
+            </summary>
+        </member>
+        <member name="P:CivPresenter.Presenter.SelectedProduction">
+            <summary>
+            Index of the selected production to <see cref="P:CivModel.Player.Production"/> list.
+            <c>-1</c> if there is no selected production.
+            If <see cref="P:CivPresenter.Presenter.SelectedDeploy"/> is not <c>-1</c>, this value is <c>-1</c>
+            This value is valid iff <c><see cref="P:CivPresenter.Presenter.State"/> == <see cref="F:CivPresenter.Presenter.States.ProductUI"/> || <see cref="P:CivPresenter.Presenter.State"/> == <see cref="F:CivPresenter.Presenter.States.ProductAdd"/></c>
+            </summary>
+        </member>
+        <member name="P:CivPresenter.Presenter.IsProductManipulating">
+            <summary>
+            Whether user is manipulating a production.
+            This value is valid iff <c><see cref="P:CivPresenter.Presenter.State"/> == <see cref="F:CivPresenter.Presenter.States.ProductUI"/></c>
+            </summary>
+        </member>
+        <member name="P:CivPresenter.Presenter.AvailableProduction">
+            <summary>
+            The list of the available production, retrieved by <see cref="M:CivModel.Player.GetAvailableProduction"/>
+            This value is valid iff <c><see cref="P:CivPresenter.Presenter.State"/> == <see cref="F:CivPresenter.Presenter.States.ProductAdd"/></c>
+            </summary>
+        </member>
+        <member name="P:CivPresenter.Presenter.DeployProduction">
+            <summary>
+            The production to deploy.
+            This value is valid iff <c><see cref="P:CivPresenter.Presenter.State"/> == <see cref="F:CivPresenter.Presenter.States.Deploy"/></c>
+            </summary>
+        </member>
+        <member name="T:CivPresenter.Presenter.States">
+            <summary>
+            Indicates the state of <see cref="T:CivPresenter.Presenter"/>.
+            </summary>
+        </member>
+        <member name="P:CivPresenter.Presenter.State">
+            <summary>
+            The state of <see cref="T:CivPresenter.Presenter"/>.
+            </summary>
+        </member>
+        <member name="P:CivPresenter.Presenter.StateParam">
+            <summary>
+            The parameter of this <see cref="P:CivPresenter.Presenter.State"/>.
+            This value is valid iff <c><see cref="P:CivPresenter.Presenter.State"/> == <see cref="F:CivPresenter.Presenter.States.SpecialAct"/></c>,
+            and the value is the number of a special action.
+            </summary>
+        </member>
+        <member name="M:CivPresenter.Presenter.#ctor(CivPresenter.IView)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CivPresenter.Presenter"/> class.
+            </summary>
+            <param name="view">The <see cref="T:CivPresenter.IView"/> object.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="view"/> is <c>null</c></exception>
+        </member>
+        <member name="M:CivPresenter.Presenter.CommandApply">
+            <summary>
+            Gives the command [apply].
+            </summary>
+        </member>
+        <member name="M:CivPresenter.Presenter.CommandCancel">
+            <summary>
+            Gives the command [cancel].
+            </summary>
+        </member>
+        <member name="M:CivPresenter.Presenter.CommandArrowKey(CivPresenter.Direction)">
+            <summary>
+            Gives the command [arrow key].
+            </summary>
+            <param name="direction">The direction.</param>
+        </member>
+        <member name="M:CivPresenter.Presenter.CommandNumeric(System.Int32)">
+            <summary>
+            Gives the command [numeric].
+            </summary>
+            <param name="index">The index.</param>
+        </member>
+        <member name="M:CivPresenter.Presenter.CommandRemove">
+            <summary>
+            Gives the command [remove].
+            </summary>
+        </member>
+        <member name="M:CivPresenter.Presenter.CommandSkip">
+            <summary>
+            Gives the command [skip].
+            </summary>
+        </member>
+        <member name="M:CivPresenter.Presenter.CommandRefocus">
+            <summary>
+            Gives the command [refocus].
+            </summary>
+        </member>
+        <member name="M:CivPresenter.Presenter.CommandSelect">
+            <summary>
+            Gives the command [select].
+            </summary>
+        </member>
+        <member name="M:CivPresenter.Presenter.CommandMove">
+            <summary>
+            Gives the command [move].
+            </summary>
+        </member>
+        <member name="M:CivPresenter.Presenter.CommandMovingAttack">
+            <summary>
+            Gives the command [moving attack].
+            </summary>
+        </member>
+        <member name="M:CivPresenter.Presenter.CommandHoldingAttack">
+            <summary>
+            Gives the command [holding attack].
+            </summary>
+        </member>
+        <member name="M:CivPresenter.Presenter.CommandProductUI">
+            <summary>
+            Gives the command [product UI].
+            </summary>
+        </member>
+    </members>
+</doc>

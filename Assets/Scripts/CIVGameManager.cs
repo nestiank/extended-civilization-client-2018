@@ -512,3 +512,16 @@ public class CIVGameManager : MonoBehaviour, IView {
     }
     
 }
+
+public class ProductionFactoryTraits
+{
+    public static string GetFactoryName(IProductionFactory factory)
+    {
+        if (factory == PioneerProductionFactory.Instance)
+            return "Pioneer";
+        else if (factory == JediKnightProductionFactory.Instance)
+            return "JediKnight";
+        else
+            return "null";
+    }
+}
