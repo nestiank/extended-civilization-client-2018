@@ -237,7 +237,7 @@ public class CIVGameManager : MonoBehaviour, IView {
 
             cells = new GameObject[Width, Height];
             DrawMap();
-            Focus(new Position { X = 5, Y = 5 }); //testcase
+            ManagementUIController.PrefabsSetting();
         }
         else
         {

@@ -8,18 +8,24 @@ using CivPresenter;
 
 public class DepPrefab : MonoBehaviour
 {
+    private static Presenter presenter;
 
-    private Text unitName;
+    private Text[] textarguments;
     private Image unitPrt;
+    private Button[] buttons;
     // Use this for initialization
 
     void Awake()
     {
-        Debug.Log("call DepPre");
-        unitName = gameObject.GetComponentsInChildren<Text>()[2];
-        unitName.text = "초기";
-
-        unitPrt = gameObject.GetComponentsInChildren<Image>()[0];
+        Debug.Log("call ProPre");
+        textarguments = gameObject.GetComponentsInChildren<Text>();
+        foreach (Image unt in gameObject.GetComponentsInChildren<Image>())
+        {
+            if (unt.name == "Image")
+            {
+                unitPrt = unt;
+            }
+        }
     }
 
     void Start()
@@ -33,23 +39,42 @@ public class DepPrefab : MonoBehaviour
 
     }
 
-    public GameObject MakeItem(IProductionFactory fact)
+    public GameObject MakeItem(Production prod)
     {
-        string nameofFactory = ProductionFactoryTraits.GetFactoryName(fact);
-        unitPrt.sprite = Resources.Load<Sprite>("Unit_portrait/" + nameofFactory);
-        unitName.text = nameofFactory;
+        string nameofProduction = ProductionFactoryTraits.GetFactoryName(prod.Factory);
+        unitPrt.sprite = Resources.Load<Sprite>("Unit_portrait/" + nameofProduction + "_portrait");
+        foreach (Text txt in textarguments)
+        {
+            switch (txt.name)
+            {
+                case "UnitName":
+                    txt.text = nameofProduction;
+                    break;
+            }
+        }
         return this.gameObject;
     }
 
     public GameObject MakeItem()
     {
-        if (unitName == null)
+        unitPrt.enabled = false;
+        foreach (Text txt in textarguments)
         {
-            Debug.Log("Noname");
+            switch (txt.name)
+            {
+                case "UnitName":
+                    txt.text = "비었음";
+                    break;
+            }
         }
-        unitName.text = "배치 가능 유닛 없음";
-        unitName.fontSize = 10;
         return this.gameObject;
+    }
+    public void SetButton(int i)
+    {
+    }
+    public static void SetPresenter()
+    {
+        presenter = CIVGameManager.GetGameManager().GetComponent<CIVGameManager>().GetPresenter();
     }
 }
 

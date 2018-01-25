@@ -8,11 +8,14 @@ using CivModel.Common;
 
 public class ManagementUIController : MonoBehaviour {
 
+    private static ManagementUIController managementUIController;
+
     public Canvas managementUI;
     public Button managementTab;
 
     private LinkedList<Production> mProduction;
     private LinkedList<Production> mDeployment;
+    private IReadOnlyList<IProductionFactory> facList;
 
     private IReadOnlyList<Player> mPlayers;
 
@@ -33,7 +36,6 @@ public class ManagementUIController : MonoBehaviour {
     public GameObject depQueue;
     public GameObject productableQueue;
 
-    private IReadOnlyList<IProductionFactory> facList;
 
     
 
@@ -42,31 +44,6 @@ public class ManagementUIController : MonoBehaviour {
     {
         Debug.Log("manUI : " + val);
         managementUI.enabled = val;
-    }
-
-    public GameObject MakeDeploymentItem(GameObject prefab, Unit unit)
-    {
-        GameObject item = Instantiate(prefab);
-        item.GetComponents<Text>()[1].text = unit.GetType().ToString();
-        return item;
-    }
-    public GameObject MakeProductItem(GameObject prefab, Unit unit)
-    {
-        GameObject item = Instantiate(prefab);
-        item.GetComponents<Text>()[1].text = unit.GetType().ToString();
-        return item;
-    }
-    public GameObject MakeSelectionItem(GameObject prefab, Unit unit)
-    {
-        GameObject item = Instantiate(prefab);
-        item.GetComponents<Text>()[1].text = unit.GetType().ToString();
-        return item;
-    }
-    public void InitiateSelectionTap(Player player)
-    {
-        mPresenter.CommandApply();
-        var factoryList = mPresenter.AvailableProduction;
-
     }
 
 
@@ -108,23 +85,47 @@ public class ManagementUIController : MonoBehaviour {
                 }
                 SQlist = tempList;
                 mPresenter.CommandCancel();
+                MakeProductionQ();
+                MakeDeploymentQ();
+                foreach(GameObject sq in SQlist)
+                {
+                    sq.GetComponent<SelPrefab>().SetButton(SQlist.IndexOf(sq));
+                }
             }
         }
+
         else if (mPresenter.State == Presenter.States.ProductUI)
         {
             mPresenter.CommandCancel();
         }
     }
+    void Awake()
+    {
+        DontDestroyOnLoad(this);
+        if (managementUIController == null)
+        {
+            managementUIController = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
+    }
 
     void Start()
     {
-        gameManagerObject = CIVGameManager.GetGameManager();
-        gameManager = gameManagerObject.GetComponent<CIVGameManager>();
-        mPresenter = gameManager.GetPresenter();
-
-        mPlayers = mPresenter.Game.Players;
-        SQlist = new List<GameObject>();
-
+        if (managementUIController == this)
+        {
+            gameManagerObject = CIVGameManager.GetGameManager();
+            gameManager = gameManagerObject.GetComponent<CIVGameManager>();
+            mPresenter = gameManager.GetPresenter();
+            mGame = mPresenter.Game;
+            mPlayers = mGame.Players;
+        }
+        else
+        {
+            Destroy(this);
+        }
     }
 
     void Update()
@@ -154,31 +155,86 @@ public class ManagementUIController : MonoBehaviour {
                 break;
         }
     }
-    
-
-    public void AddNewProduction(bool val)
-    {
-        Debug.Log("new production in queue");
-
-    }
 
     public void MakeProductionQ()
     {
-        for (int i = 0; i < mProduction.Count; i++)
+        List<GameObject> tempList = new List<GameObject>();
+        Debug.Log("ProductionList startMaking");
+        foreach (GameObject pq in PQlist)
         {
-            PQlist[i] = Instantiate(proPrefab);
-            PQlist[i].GetComponent<Text>().text = 3 + "턴 이후 종료";        // need to calculate how many turns are left
+            Destroy(pq);
         }
-        
+        PQlist.Clear();
+        mProduction = mGame.PlayerInTurn.Production;
+        Debug.Log("ProList : " + mProduction.Count);
+        Debug.Log("ProductionList Updated");
+        foreach (Production prod in mProduction)
+        {
+            var PPrefab = Instantiate(proPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
+            PPrefab.transform.SetParent(proQueue.transform);
+            PPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
+            PPrefab.transform.localPosition = new Vector3(0f, 0f, 0f);
+            tempList.Add(PPrefab.GetComponent<ProPrefab>().MakeItem(prod));
+        }
+        if (mProduction.Count == 0)
+        {
+            Debug.Log("ProductionList null");
+            var PPrefab = Instantiate(proPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
+            PPrefab.transform.SetParent(proQueue.transform);
+            PPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
+            PPrefab.transform.localPosition = new Vector3(0f, 0f, 0f);
+            PPrefab.GetComponent<ProPrefab>().MakeItem();
+            tempList.Add(PPrefab);
+        }
+        PQlist = tempList;
         
     }
 
     public void MakeDeploymentQ()
     {
-        for (int i = 0; i < mDeployment.Count; i++)
+        List<GameObject> tempList = new List<GameObject>();
+        Debug.Log("DeploymentList startMaking");
+        foreach (GameObject dq in DQlist)
         {
-            DQlist[i] = Instantiate(depPrefab);
+            Destroy(dq);
         }
-
+        DQlist.Clear();
+        mDeployment = mGame.PlayerInTurn.Deployment;
+        Debug.Log("DepList : " + mDeployment.Count);
+        Debug.Log("DeploymentList Updated");
+        foreach (Production prod in mDeployment)
+        {
+            var DPrefab = Instantiate(depPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
+            DPrefab.transform.SetParent(depQueue.transform);
+            DPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
+            DPrefab.transform.localPosition = new Vector3(0f, 0f, 0f);
+            tempList.Add(DPrefab.GetComponent<DepPrefab>().MakeItem(prod));
+        }
+        if (mDeployment.Count == 0)
+        {
+            Debug.Log("DeploymentList null");
+            var DPrefab = Instantiate(depPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
+            DPrefab.transform.SetParent(depQueue.transform);
+            DPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
+            DPrefab.transform.localPosition = new Vector3(0f, 0f, 0f);
+            tempList.Add(DPrefab.GetComponent<DepPrefab>().MakeItem());
+            tempList.Add(DPrefab);
+        }
+        DQlist = tempList;
+    }
+    public static void PrefabsSetting()
+    {
+        ProPrefab.SetPresenter();
+        DepPrefab.SetPresenter();
+        SelPrefab.SetPresenter();
+    }
+    public static ManagementUIController GetManagementUIController()
+    {
+        if(managementUIController == null)
+        {
+            Debug.Log("managementUIController not made");
+            throw new MissingComponentException();
+        }
+        return managementUIController;
     }
 }
