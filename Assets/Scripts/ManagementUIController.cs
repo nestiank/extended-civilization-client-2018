@@ -17,7 +17,7 @@ public class ManagementUIController : MonoBehaviour {
     private LinkedList<Production> mDeployment;
     private IReadOnlyList<IProductionFactory> facList;
 
-    private IReadOnlyList<Player> mPlayers;
+    //private IReadOnlyList<Player> mPlayers;
 
     private GameObject gameManagerObject;
     private CIVGameManager gameManager;
@@ -91,6 +91,10 @@ public class ManagementUIController : MonoBehaviour {
                 {
                     sq.GetComponent<SelPrefab>().SetButton(SQlist.IndexOf(sq));
                 }
+                foreach (GameObject dq in DQlist)
+                {
+                    dq.GetComponent<DepPrefab>().SetButton(DQlist.IndexOf(dq));
+                }
             }
         }
 
@@ -120,7 +124,7 @@ public class ManagementUIController : MonoBehaviour {
             gameManager = gameManagerObject.GetComponent<CIVGameManager>();
             mPresenter = gameManager.GetPresenter();
             mGame = mPresenter.Game;
-            mPlayers = mGame.Players;
+            //mPlayers = mGame.Players;
         }
         else
         {
@@ -135,11 +139,6 @@ public class ManagementUIController : MonoBehaviour {
 
         switch (mPresenter.State)//for debug
         {
-            case CivPresenter.Presenter.States.Deploy:
-                {
-                    SetManagementUI(true);
-                    break;
-                }
             case CivPresenter.Presenter.States.ProductUI:
                 {
                     SetManagementUI(true);
@@ -224,7 +223,7 @@ public class ManagementUIController : MonoBehaviour {
     }
     public static void PrefabsSetting()
     {
-        ProPrefab.SetPresenter();
+        //ProPrefab.SetPresenter();
         DepPrefab.SetPresenter();
         SelPrefab.SetPresenter();
     }

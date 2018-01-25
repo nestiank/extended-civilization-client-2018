@@ -26,7 +26,6 @@ public class CIVGameManager : MonoBehaviour, IView {
 
     public GameObject cellSelected = null;
     public CivModel.Terrain.Point? pointSelected;
-    private bool readyToClick = false;
     
     public int Width { get; set; }
     public int Height { get; set; }
@@ -34,6 +33,8 @@ public class CIVGameManager : MonoBehaviour, IView {
     public GameObject cellPrefab;
     public Camera mainCamera;
     public GameObject focusObject;
+    public Button turnEndButton;
+
     private GameObject[,] cells;
 
     private Presenter mPresenter;
@@ -129,7 +130,6 @@ public class CIVGameManager : MonoBehaviour, IView {
         {
             Debug.Log(hit.collider.name + "Castray");
             SelectCell(hit.collider.gameObject);
-            readyToClick = false;
         }
         else
         {
@@ -167,11 +167,6 @@ public class CIVGameManager : MonoBehaviour, IView {
     }
     public GameObject FindCell(CivModel.Terrain.Point pt)
     {
-        if (pt == null)
-        {
-            Debug.Log("no Gameobject");
-            throw new ArgumentNullException();
-        }
         return cells[pt.Position.X, pt.Position.Y];
     }
     /*public void Skill()
@@ -244,10 +239,10 @@ public class CIVGameManager : MonoBehaviour, IView {
             Destroy(this);
         }
 
-        goldnum = Convert.ToInt32(mainPlayer.Gold);
+        goldnum = Convert.ToInt32(game.PlayerInTurn.Gold);
         popnum = 0; // not Implemented
-        happynum = Convert.ToInt32(mainPlayer.Happiness);
-        labnum = Convert.ToInt32(mainPlayer.Labor);
+        happynum = Convert.ToInt32(game.PlayerInTurn.Happiness);
+        labnum = Convert.ToInt32(game.PlayerInTurn.Labor);
         technum = 0;  // not Implemented
         ultnum = 0; //not Implemented
     }
@@ -301,6 +296,12 @@ public class CIVGameManager : MonoBehaviour, IView {
 
                     case CivPresenter.Presenter.States.Deploy:
                         {
+                            CastRay();
+                            if (cellSelected != null)
+                            {
+                                mPresenter.FocusedPoint = pointSelected.Value;
+                            }
+                            mPresenter.CommandApply();
                             break;
                         }
                     case CivPresenter.Presenter.States.ProductUI:
@@ -329,22 +330,22 @@ public class CIVGameManager : MonoBehaviour, IView {
             mPresenter.CommandCancel();
         if (Input.GetKey(KeyCode.UpArrow))
         {
-            mPresenter.CommandArrowKey(Direction.Up);
+            //mPresenter.CommandArrowKey(Direction.Up);
             mainCamera.transform.Translate(new Vector3(0, cameraSpeed * delt, 0));
         }
         if (Input.GetKey(KeyCode.DownArrow))
         {
-            mPresenter.CommandArrowKey(Direction.Down);
+            //mPresenter.CommandArrowKey(Direction.Down);
             mainCamera.transform.Translate(new Vector3(0, -cameraSpeed * delt, 0));
         }
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            mPresenter.CommandArrowKey(Direction.Left);
+            //mPresenter.CommandArrowKey(Direction.Left);
             mainCamera.transform.Translate(new Vector3(-cameraSpeed * delt, 0, 0));
         }
         if (Input.GetKey(KeyCode.RightArrow))
         {
-            mPresenter.CommandArrowKey(Direction.Right);
+            //mPresenter.CommandArrowKey(Direction.Right);
             mainCamera.transform.Translate(new Vector3(cameraSpeed * delt, 0, 0));
         }
         if (Input.GetKey(KeyCode.F))
@@ -352,24 +353,24 @@ public class CIVGameManager : MonoBehaviour, IView {
             mPresenter.CommandRefocus();
             Debug.Log("refocus request");
         }
-        if(Input.GetKey(KeyCode.S))
-            mPresenter.CommandSelect();
+        /*if(Input.GetKey(KeyCode.S))
+            //mPresenter.CommandSelect();
 
         if (Input.GetKey(KeyCode.D))
-            mPresenter.CommandRemove();
+            //mPresenter.CommandRemove();
         if (Input.GetKey(KeyCode.M))
-            mPresenter.CommandMove();
+            //mPresenter.CommandMove();
         if (Input.GetKey(KeyCode.Z))
-            mPresenter.CommandSkip();
+            //mPresenter.CommandSkip();
         if (Input.GetKey(KeyCode.Q))
-            mPresenter.CommandMovingAttack();
+            //mPresenter.CommandMovingAttack();
         if (Input.GetKey(KeyCode.W))
-            mPresenter.CommandHoldingAttack();
+            //mPresenter.CommandHoldingAttack();
         if(Input.GetKey(KeyCode.P))
-            mPresenter.CommandProductUI();
+            //mPresenter.CommandProductUI();*/
 
 
-        if (Input.GetKey(KeyCode.Keypad1))
+        /*if (Input.GetKey(KeyCode.Keypad1))
             mPresenter.CommandNumeric(0);
         if (Input.GetKey(KeyCode.Keypad2))
             mPresenter.CommandNumeric(1);
@@ -386,12 +387,12 @@ public class CIVGameManager : MonoBehaviour, IView {
         if (Input.GetKey(KeyCode.Keypad8))
             mPresenter.CommandNumeric(7);
         if (Input.GetKey(KeyCode.Keypad9))
-            mPresenter.CommandNumeric(8);
+            mPresenter.CommandNumeric(8);*/
 
-        goldnum = Convert.ToInt32(mainPlayer.Gold);
+        goldnum = Convert.ToInt32(game.PlayerInTurn.Gold);
         popnum = 0; // not Implemented
-        happynum = Convert.ToInt32(mainPlayer.Happiness);
-        labnum = Convert.ToInt32(mainPlayer.Labor);
+        happynum = Convert.ToInt32(game.PlayerInTurn.Happiness);
+        labnum = Convert.ToInt32(game.PlayerInTurn.Labor);
         technum = 0;  // not Implemented
         ultnum = 0; //not Implemented
 
@@ -404,8 +405,8 @@ public class CIVGameManager : MonoBehaviour, IView {
         
         Render(mPresenter.Game.Terrain);
 
-
-         
+        Debug.Log("Turn : " + game.TurnNumber + ", Player : " + game.PlayerNumberInTurn);
+        Debug.Log(mPresenter.SelectedActor);
         switch (mPresenter.State)//for debug
         {
             case CivPresenter.Presenter.States.Normal:
@@ -448,6 +449,16 @@ public class CIVGameManager : MonoBehaviour, IView {
             case CivPresenter.Presenter.States.Deploy:
                 {
                     Debug.Log("State : Deploy");
+                    for (int i = 0; i < Width; i++)
+                    {
+                        for (int j = 0; j < Height; j++)
+                        {
+                            if(mPresenter.DeployProduction.IsPlacable(mPresenter.Game.Terrain.GetPoint(i,j)))
+                            {
+                                cells[i,j].GetComponent<TilePrefab>().MovableTile();
+                            }
+                        }
+                    }
                     break;
                 }
             case CivPresenter.Presenter.States.ProductUI:
@@ -472,6 +483,14 @@ public class CIVGameManager : MonoBehaviour, IView {
                 }
             default:
                 throw new NotImplementedException();
+        }
+        if (!mPresenter.IsThereTodos)
+        {
+            turnEndButton.GetComponentInChildren<Text>().text = "턴 종료";
+        }
+        else
+        {
+            turnEndButton.GetComponentInChildren<Text>().text = "다음 캐릭터";
         }
     }
 
@@ -508,6 +527,7 @@ public class CIVGameManager : MonoBehaviour, IView {
         else
         {
             Debug.Log("Todo is remaining");
+            mPresenter.CommandApply();
         }
     }
     

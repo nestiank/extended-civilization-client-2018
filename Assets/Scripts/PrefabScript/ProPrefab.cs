@@ -9,7 +9,7 @@ using CivPresenter;
 
 public class ProPrefab : MonoBehaviour
 {
-    private static Presenter presenter;
+    //private static Presenter presenter;
 
     private Text[] textarguments;
     private Image unitPrt;
@@ -83,8 +83,8 @@ public class ProPrefab : MonoBehaviour
     public void SetButton(int i)
     {
     }
-    public static void SetPresenter()
+    /*public static void SetPresenter()
     {
         presenter = CIVGameManager.GetGameManager().GetComponent<CIVGameManager>().GetPresenter();
-    }
+    }*/
 }

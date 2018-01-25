@@ -9,6 +9,7 @@ using CivPresenter;
 public class DepPrefab : MonoBehaviour
 {
     private static Presenter presenter;
+    private static ManagementUIController uicontroller;
 
     private Text[] textarguments;
     private Image unitPrt;
@@ -17,20 +18,21 @@ public class DepPrefab : MonoBehaviour
 
     void Awake()
     {
-        Debug.Log("call ProPre");
+        Debug.Log("call DepPre");
         textarguments = gameObject.GetComponentsInChildren<Text>();
         foreach (Image unt in gameObject.GetComponentsInChildren<Image>())
         {
-            if (unt.name == "Image")
+            if (unt.name == "Portrait")
             {
                 unitPrt = unt;
             }
         }
+        buttons = gameObject.GetComponentsInChildren<Button>();
     }
 
     void Start()
     {
-
+        uicontroller = ManagementUIController.GetManagementUIController();
     }
 
     // Update is called once per frame
@@ -71,10 +73,30 @@ public class DepPrefab : MonoBehaviour
     }
     public void SetButton(int i)
     {
+        foreach (Button but in buttons)
+        {
+            if (but.name == "Deploy")
+            {
+                but.onClick.AddListener(delegate () { DeployItem(i); });
+            }
+        }
+
     }
     public static void SetPresenter()
     {
         presenter = CIVGameManager.GetGameManager().GetComponent<CIVGameManager>().GetPresenter();
+    }
+
+
+    private void DeployItem(int i)
+    {
+        if (presenter.State == Presenter.States.ProductUI)
+        {
+            presenter.CommandNumeric(i);
+            presenter.CommandApply();
+            uicontroller.MakeProductionQ();
+            uicontroller.MakeDeploymentQ();
+        }
     }
 }
 

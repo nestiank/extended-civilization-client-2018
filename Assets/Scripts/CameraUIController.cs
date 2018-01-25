@@ -42,6 +42,10 @@ public class CameraUIController : MonoBehaviour {
     public void SkillButtonMethod()
     {
         Debug.Log("SkillButton");
+        if(mPresenter.SelectedActor == null)
+        {
+            return;
+        }
         Debug.Log(mPresenter.SelectedActor.GetType());
         if (mPresenter.SelectedActor.GetType() == typeof(Pioneer))
         {
