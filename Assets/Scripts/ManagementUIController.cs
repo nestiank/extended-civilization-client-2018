@@ -21,19 +21,28 @@ public class ManagementUIController : MonoBehaviour {
     private Presenter mPresenter;
     private Game mGame;
 
-    public GameObject[] PQlist;
-    public GameObject[] DQlist;
+    public List<GameObject> PQlist;
+    public List<GameObject> DQlist;
 
     public GameObject proPrefab;
-    public GameObject depPrefab;        // prefab templates
-    public Button pioneer;              // new unit production when clicked
+    public GameObject depPrefab;            // prefab templates
+    public Button newPioneer;              // new unit production when clicked
 
-    public void SetManagementUI (bool val)
+    public void SetManagementUI(bool val)
     {
         Debug.Log("manUI : " + val);
-        managementUI.enabled = val;//            managementUI.gameObject.SetActive(true);//            managementUI.gameObject.SetActive(false);
+        managementUI.enabled = val;
     }
 
+    public GameObject MakeDeploymentItem(GameObject prefab, Unit unit)
+    {
+        GameObject item = Instantiate(prefab);
+        item.GetComponents<Text>()[1].text = unit.GetType().ToString();
+        return item;
+    }
+
+
+                
     public void ManageButton()                                      // Management tab on/off button
     {
         if (mPresenter.State == Presenter.States.Normal)
@@ -86,6 +95,12 @@ public class ManagementUIController : MonoBehaviour {
         }
     }
     
+
+    public void AddNewProduction(bool val)
+    {
+        Debug.Log("new production in queue");
+
+    }
 
     public void MakeProductionQ()
     {
