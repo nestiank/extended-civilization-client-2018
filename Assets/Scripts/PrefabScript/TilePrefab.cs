@@ -114,6 +114,7 @@ public class TilePrefab : MonoBehaviour {
     }
     public void DrawUnit(string unit)
     {
+        Debug.Log(">>>>>>>>>>>>>>>>>>"+unit);
         CIVGameManager.UnitSprite us = CIVGameManager.UnitSprite.None;
         Enum.TryParse(unit, out us);
         unitSprite = CIVGameManager.UnitSprites[(int)us];

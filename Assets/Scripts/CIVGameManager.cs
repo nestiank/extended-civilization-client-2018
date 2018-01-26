@@ -16,7 +16,7 @@ public class CIVGameManager : MonoBehaviour, IView {
     public static Sprite[] DistrictSprites => districtSprites;
     private static Sprite[] districtSprites;
 
-    public enum UnitSprite { None, Pioneer }
+    public enum UnitSprite { None, Pioneer, JediKnight}
     public static Sprite[] UnitSprites => unitSprites;
     private static Sprite[] unitSprites;
 
@@ -258,6 +258,10 @@ public class CIVGameManager : MonoBehaviour, IView {
         labnum = Convert.ToInt32(game.PlayerInTurn.Labor);
         technum = 0;  // not Implemented
         ultnum = 0; //not Implemented
+
+        //test Code
+        mPresenter.Game.PlayerInTurn.AdditionalAvailableProduction.Add(CivModel.Common.JediKnightProductionFactory.Instance);
+        
         ButtonSetup();
     }
 

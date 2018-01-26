@@ -63,6 +63,7 @@ public class ManagementUIController : MonoBehaviour {
                 }
                 SQlist.Clear();
                 facList = mPresenter.AvailableProduction;
+                Debug.Log(mPresenter.AvailableProduction + " " + mPresenter.AvailableProduction.Count);
                 Debug.Log("facList : " + facList.Count);
                 Debug.Log("SelectList Updated");
                 foreach (IProductionFactory fac in facList)
