@@ -10,7 +10,7 @@ using CivModel.Common;
 
 public class CIVGameManager : MonoBehaviour, IView {
 
-    private const float cameraSpeed = 4.0f;
+    private const float cameraSpeed = 12.0f;
 
     public enum DistrictSprite { None, CityCenter }
     public static Sprite[] DistrictSprites => districtSprites;
@@ -30,8 +30,11 @@ public class CIVGameManager : MonoBehaviour, IView {
     public int Width { get; set; }
     public int Height { get; set; }
 
+    private Button[] cameraButtons;
+
     public GameObject cellPrefab;
     public Camera mainCamera;
+    private Canvas cameraUI;
     public GameObject focusObject;
     public Button turnEndButton;
 
@@ -204,6 +207,16 @@ public class CIVGameManager : MonoBehaviour, IView {
             mainPlayer = players[0];
             Width = game.Terrain.Width;
             Height = game.Terrain.Height;
+            Canvas[] acanvas = FindObjectsOfType<Canvas>();
+            foreach(Canvas can in acanvas)
+            {
+                switch(can.name)
+                {
+                    case "CameraUI": cameraUI = can;
+                        break;
+                }
+            }
+            cameraButtons = cameraUI.GetComponentsInChildren<Button>();
             //gameMapModel = mPresenter.Game.Terrain;
 
             var dss = Enum.GetValues(typeof(DistrictSprite));
@@ -245,6 +258,7 @@ public class CIVGameManager : MonoBehaviour, IView {
         labnum = Convert.ToInt32(game.PlayerInTurn.Labor);
         technum = 0;  // not Implemented
         ultnum = 0; //not Implemented
+        ButtonSetup();
     }
 
     // Update is called once per frame
@@ -281,10 +295,22 @@ public class CIVGameManager : MonoBehaviour, IView {
 
                     case CivPresenter.Presenter.States.MovingAttack:
                         {
+                            CastRay();
+                            if (cellSelected != null)
+                            {
+                                mPresenter.FocusedPoint = pointSelected.Value;
+                            }
+                            mPresenter.CommandApply();
                             break;
                         }
                     case CivPresenter.Presenter.States.HoldingAttack:
                         {
+                            CastRay();
+                            if (cellSelected != null)
+                            {
+                                mPresenter.FocusedPoint = pointSelected.Value;
+                            }
+                            mPresenter.CommandApply();
                             break;
                         }
 
@@ -432,11 +458,31 @@ public class CIVGameManager : MonoBehaviour, IView {
             case CivPresenter.Presenter.States.MovingAttack:
                 {
                     Debug.Log("State : MovingAttack");
+                    for (int i = 0; i < Width; i++)
+                    {
+                        for (int j = 0; j < Height; j++)
+                        {
+                            if (mPresenter.RunningAction.IsActable(mPresenter.Game.Terrain.GetPoint(i, j)))
+                            {
+                                cells[i, j].GetComponent<TilePrefab>().AttackableTile();
+                            }
+                        }
+                    }
                     break;
                 }
             case CivPresenter.Presenter.States.HoldingAttack:
                 {
                     Debug.Log("State : HoldingAttack");
+                    for (int i = 0; i < Width; i++)
+                    {
+                        for (int j = 0; j < Height; j++)
+                        {
+                            if (mPresenter.RunningAction.IsActable(mPresenter.Game.Terrain.GetPoint(i, j)))
+                            {
+                                cells[i, j].GetComponent<TilePrefab>().AttackableTile();
+                            }
+                        }
+                    }
                     break;
                 }
 
@@ -473,12 +519,12 @@ public class CIVGameManager : MonoBehaviour, IView {
                 }
             case CivPresenter.Presenter.States.Victory:
                 {
-                    Debug.Log("State : Deploy");
+                    Debug.Log("State : Victory");
                     break;
                 }
             case CivPresenter.Presenter.States.Defeated:
                 {
-                    Debug.Log("State : Deploy");
+                    Debug.Log("State : Defeated");
                     break;
                 }
             default:
@@ -530,7 +576,35 @@ public class CIVGameManager : MonoBehaviour, IView {
             mPresenter.CommandApply();
         }
     }
-    
+
+    public void ButtonSetup()
+    {
+        foreach(Button btn in cameraButtons)
+        {
+            switch(btn.name)
+            {
+                case "Attack":
+                    Debug.Log(btn.name + " onclick addlistener");
+                    btn.onClick.AddListener(delegate () { AttackButtonMethod(); });
+                    break;
+                default:
+                    Debug.Log(btn.name);break;
+            }
+        }   
+    }
+
+    public void AttackButtonMethod()
+    {
+        if (mPresenter.State == CivPresenter.Presenter.States.Normal)
+        {
+            Debug.Log("Attack Button");
+            mPresenter.CommandMovingAttack();
+            if (mPresenter.State != CivPresenter.Presenter.States.MovingAttack)
+            {
+                mPresenter.CommandHoldingAttack();
+            }
+        }
+    }
 }
 
 public class ProductionFactoryTraits

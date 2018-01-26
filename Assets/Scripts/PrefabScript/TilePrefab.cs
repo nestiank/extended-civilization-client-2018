@@ -29,6 +29,11 @@ public class TilePrefab : MonoBehaviour {
         string color = "Magenta";
         ChangeTile(color);
     }
+    public void AttackableTile()
+    {
+        string color = "Red";
+        ChangeTile(color);
+    }
     public void ChangeTile(CivModel.Terrain.Point terrainPoint)
     {
         var t1 = terrainPoint.Type;

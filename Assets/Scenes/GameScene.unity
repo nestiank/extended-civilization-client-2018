@@ -1209,6 +1209,7 @@ GameObject:
   - component: {fileID: 401960986}
   - component: {fileID: 401960985}
   - component: {fileID: 401960984}
+  - component: {fileID: 401960988}
   m_Layer: 5
   m_Name: Ending
   m_TagString: Untagged
@@ -1291,6 +1292,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &401960988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 401960983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca9207f97859836459f163b292d5721c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WinPrefab: {fileID: 1946831146169316, guid: 73e38289c8dbdcf4692905a270249884, type: 2}
+  LosePrefab: {fileID: 1904362418469180, guid: 6749e11b9d4ea6d4cb8d74a73a5b9184, type: 2}
 --- !u!1 &460949051
 GameObject:
   m_ObjectHideFlags: 0
@@ -2427,8 +2441,8 @@ MonoBehaviour:
   SkillButton: {fileID: 901706016}
   WaitButton: {fileID: 1126363246}
   UnitInfo: {fileID: 1474852284}
-  Actions: {fileID: 0}
-  TurnEnd: {fileID: 0}
+  Actions: {fileID: 685271388}
+  TurnEnd: {fileID: 2068104999}
   Portrait: {fileID: 109918048}
   UnitName: {fileID: 1172741147}
   UnitAttack: {fileID: 1442304659}
@@ -4054,7 +4068,7 @@ GameObject:
   - component: {fileID: 1913802877}
   - component: {fileID: 1913802879}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Information
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
