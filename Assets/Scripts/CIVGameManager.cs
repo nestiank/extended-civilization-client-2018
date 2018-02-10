@@ -17,6 +17,8 @@ public class CIVGameManager : MonoBehaviour {
     // Use this for initialization
     void Start() {
         innerRadius = outerRadius * Mathf.Sqrt(3.0f) / 2;
+        _cells = new GameObject[width, height];
+        DrawMap();
 	}
 	
 	// Update is called once per frame
@@ -30,7 +32,7 @@ public class CIVGameManager : MonoBehaviour {
         {
             for (int j = 0; j < height; j++)
             {
-                Vector3 pos = new Vector3(2 * i * innerRadius, -j * outerRadius * 1.5f);
+                Vector3 pos = new Vector3(2 * i * innerRadius, -0.05f, -j * outerRadius * 1.5f);
                 if (j % 2 != 0)
                 {
                     pos.x -= innerRadius;
