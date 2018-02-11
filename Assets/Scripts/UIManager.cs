@@ -10,7 +10,14 @@ public class UIManager : MonoBehaviour {
     public GameObject QuestUI;
 
     public GameObject SpecialSpec;
-
+/*
+    public GameObject SkillSpec1;
+    public GameObject SkillSpec2;
+    public GameObject SkillSpec3;
+    public GameObject SkillSpec4;
+    public GameObject SkillSpec5;
+    public GameObject SkillSpec6;
+*/
     //// Map UI ////
     public GameObject SkillSet;
 
@@ -41,7 +48,7 @@ public class UIManager : MonoBehaviour {
         ManagementUI.SetActive(false);
     }
 
-    public void SpecialMouseOver()
+    public void SpecialMouseOver()              // 특수 자원
     {
         SpecialSpec.SetActive(true);
     }
@@ -49,7 +56,56 @@ public class UIManager : MonoBehaviour {
     {
         SpecialSpec.SetActive(false);
     }
-
+/*
+    public void SkillSpec1MouseOver()           // 특수 명령
+    {
+        SkillSpec1.SetActive(true);
+    }
+    public void SkillSpec1MouseExit()
+    {
+        SkillSpec1.SetActive(false);
+    }
+    public void SkillSpec2MouseOver()
+    {
+        SkillSpec2.SetActive(true);
+    }
+    public void SkillSpec2MouseExit()
+    {
+        SkillSpec2.SetActive(false);
+    }
+    public void SkillSpec3MouseOver()
+    {
+        SkillSpec3.SetActive(true);
+    }
+    public void SkillSpec3MouseExit()
+    {
+        SkillSpec3.SetActive(false);
+    }
+    public void SkillSpec4MouseOver()
+    {
+        SkillSpec4.SetActive(true);
+    }
+    public void SkillSpec4MouseExit()
+    {
+        SkillSpec4.SetActive(false);
+    }
+    public void SkillSpec5MouseOver()
+    {
+        SkillSpec5.SetActive(true);
+    }
+    public void SkillSpec5MouseExit()
+    {
+        SkillSpec5.SetActive(false);
+    }
+    public void SkillSpec6MouseOver()
+    {
+        SkillSpec6.SetActive(true);
+    }
+    public void SkillSpec6MouseExit()
+    {
+        SkillSpec6.SetActive(false);
+    }
+*/
     //// Map UI ////
     public void SkillSetActive()
     {
