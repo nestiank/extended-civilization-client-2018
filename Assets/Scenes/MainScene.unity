@@ -13533,8 +13533,8 @@ Camera:
   m_GameObject: {fileID: 1006940696}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0.30882353, g: 0.30882353, b: 0.30882353, a: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -14237,8 +14237,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outerRadius: 1
   innerRadius: 0
-  width: 80
-  height: 20
   cellPrefab: {fileID: 1839775916168536, guid: 900341537233caf489d432cff5440dd3, type: 2}
 --- !u!4 &1056054509
 Transform:
