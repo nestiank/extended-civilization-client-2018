@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour {
 
@@ -27,6 +28,17 @@ public class UIManager : MonoBehaviour {
     public GameObject EpicTab, HighTab, IntermediateTab, LowTab;    // Unit production
     public GameObject CityTab, CityBuildingTab, NormalBuildingTab;  // Building production
 
+    void Update()
+    {
+        if (GameManager.I.IsThereTodos)
+        {
+            MapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().text = "유닛이 명령을 기다리고 있습니다";
+        }
+        else
+        {
+            MapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().text = "다음 턴";
+        }
+    }
 
     //// Resource bar UI ////
     public void MapUIActive()                   // Map UI tab
@@ -110,6 +122,13 @@ public class UIManager : MonoBehaviour {
     public void SkillSetActive()
     {
         SkillSet.SetActive(!SkillSet.activeSelf);
+    }
+    public void EndTurnActive()
+    {
+        if (GameManager.I.IsThereTodos)
+        {
+            GameManager.I.SelectNextUnit();
+        }
     }
 
     //// Management UI (Production Selection) ////
