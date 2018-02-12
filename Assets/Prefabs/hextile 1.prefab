@@ -40,6 +40,7 @@ GameObject:
   - component: {fileID: 33382563896309128}
   - component: {fileID: 23842930406273546}
   - component: {fileID: 114528188812766900}
+  - component: {fileID: 64357967316059052}
   m_Layer: 0
   m_Name: hextile 1
   m_TagString: Untagged
@@ -229,6 +230,20 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1823159130722898}
   m_Mesh: {fileID: 4300000, guid: 93b23d960c7fd2645bed567627e2e6db, type: 3}
+--- !u!64 &64357967316059052
+MeshCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1823159130722898}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 1
+  m_CookingOptions: 14
+  m_SkinWidth: 0.01
+  m_Mesh: {fileID: 4300000, guid: 93b23d960c7fd2645bed567627e2e6db, type: 3}
 --- !u!65 &65133615766084452
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -237,7 +252,7 @@ BoxCollider:
   m_GameObject: {fileID: 1864306018844118}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -249,7 +264,7 @@ BoxCollider:
   m_GameObject: {fileID: 1187391223902348}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}

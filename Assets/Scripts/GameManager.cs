@@ -1,6 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using CivModel;
 using CivModel.Common;
 
@@ -18,8 +21,12 @@ public class GameManager : MonoBehaviour {
 
     // Current game
     private CivModel.Game _game;
-    // Selected unit
-    private CivModel.Unit _currentUnit;
+    // Selected actor
+    private CivModel.Unit _selectedActor = null;
+
+    public bool IsThereTodos;
+    private CivModel.Unit[] _standbyUnits;
+    private int _standbyUnitIndex;
 
     public float outerRadius = 1f;  // Outer&inner radius of hex tile.
     public float innerRadius;       // These variables can be deleted if there are no use.
@@ -54,6 +61,20 @@ public class GameManager : MonoBehaviour {
 	void Update() {
         Render(_game.Terrain);
 
+        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit))
+            {
+                Unit unit = hit.collider.gameObject.GetComponent<HexTile>().point.Unit;
+                if (unit != null)
+                {
+                    SelectUnit(unit);
+                }
+            }
+        }
         // Camera movement
         Vector3 mousePos = Input.mousePosition;
         if (mousePos.x < 10)
@@ -72,11 +93,10 @@ public class GameManager : MonoBehaviour {
         {
             CameraMove(CameraMoveDirection.Up);
         }
-        Debug.Log("width, height: " + Screen.width + ", " + Screen.height);
-        Debug.Log(Input.mousePosition);
 	}
 
-    void DrawMap()      // Instantiate hex tiles
+    // Instantiate hex tiles
+    void DrawMap()
     {
         _cells = new GameObject[GameInfo.mapWidth, GameInfo.mapHeight];
 
@@ -91,6 +111,7 @@ public class GameManager : MonoBehaviour {
                 }
                 _cells[i, j] = Instantiate(cellPrefab, pos, Quaternion.identity);
                 _cells[i, j].name = Pos2Str(i, j);
+                _cells[i, j].GetComponent<HexTile>().point = _game.Terrain.GetPoint(i, j);
             }
         }
     }
@@ -111,7 +132,61 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+    // Make unit array and iterate while all units consume all AP
+    // From Presenter.cs
+    void SelectNextUnit()
+    {
+        int tryNumber = (_standbyUnitIndex == -1) ? 1 : 2;
+
+        for (int j = 0; j < tryNumber; ++j)
+        {
+            if (_standbyUnitIndex == -1)
+            {
+                _standbyUnits = _game.PlayerInTurn.Units.ToArray();
+            }
+
+            int idx = _standbyUnitIndex + 1;
+            for (; idx < _standbyUnits.Length; ++idx)
+            {
+                var unit = _standbyUnits[idx];
+                if (unit.RemainAP > 0 && !unit.SkipFlag && unit.PlacedPoint.HasValue)
+                {
+                    _standbyUnitIndex = idx;
+                    _selectedActor = _standbyUnits[idx];
+                    IsThereTodos = true;
+                    Focus();
+                    return;
+                }
+            }
+
+            _selectedActor = null;
+            _standbyUnitIndex = -1;
+            IsThereTodos = false;
+        }
+    }
+    void SelectUnit(Unit unit)
+    {
+        Debug.Log(unit.ToString() + " selected");
+        var units = _game.PlayerInTurn.Units.ToArray();
+        int idx = Array.IndexOf(units, unit);
+
+        if (idx == -1)
+            return;
+
+        _selectedActor = unit;
+        unit.SkipFlag = false;
+
+        _standbyUnits = units;
+        _standbyUnitIndex = idx;
+        IsThereTodos = true;
+        Focus();
+    }
+
     // Camera focus
+    void Focus()
+    {
+        Focus(_selectedActor);
+    }
     void Focus(CivModel.Unit unit)
     {
         if (unit == null)
@@ -140,6 +215,7 @@ public class GameManager : MonoBehaviour {
         return "(" + x + "," + y + ")";
     }
 
+    // Camera move
     void CameraMove(CameraMoveDirection moveDirection)
     {
         switch (moveDirection)
