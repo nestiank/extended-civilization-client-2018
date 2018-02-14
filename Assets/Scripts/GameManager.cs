@@ -24,13 +24,20 @@ public class GameManager : MonoBehaviour {
     // Selected actor
     private CivModel.Unit _selectedActor = null;
 
+    // For unit order
+    public bool isMoveState = false;
+    public bool isAttackState = false;
+    public bool isSkillState = false;
+
+    // Variables from Presenter.cs
     public bool IsThereTodos;
     private CivModel.Unit[] _standbyUnits;
-    private int _standbyUnitIndex;
+    private int _standbyUnitIndex = -1;
 
     public float outerRadius = 1f;  // Outer&inner radius of hex tile.
     public float innerRadius;       // These variables can be deleted if there are no use.
 
+    // Hex tile cells
     public GameObject cellPrefab;
     private GameObject[,] _cells;
 
@@ -51,15 +58,24 @@ public class GameManager : MonoBehaviour {
 
         // Instantiate game
         _game = new CivModel.Game( GameInfo.mapWidth, GameInfo.mapHeight, GameInfo.numOfPlayer, new CivModel.Common.GameSchemeFactory());
+        _game.StartTurn();
+        Debug.Log(_game.PlayerNumberInTurn);
 
         // Map tiling
         innerRadius = outerRadius * Mathf.Sqrt(3.0f) / 2;
         DrawMap();
-	}
+
+        SelectNextUnit();
+    }
 	
 	// Update is called once per frame
 	void Update() {
         Render(_game.Terrain);
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Focus();
+        }
 
         if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
         {
@@ -125,7 +141,7 @@ public class GameManager : MonoBehaviour {
             {
                 CivModel.Terrain.Point point = terrain.GetPoint(i, j);
                 // TODO: Make prefab component
-                // _cells[i, j].GetComponent<HexTile>().ChangeTile(point);
+                 _cells[i, j].GetComponent<HexTile>().ChangeTile();
                 // _cells[i, j].GetComponent<HexTile>().BuildDistrict(point.TileBuilding);
                 _cells[i, j].GetComponent<HexTile>().DrawUnit(point.Unit);
             }
@@ -134,18 +150,20 @@ public class GameManager : MonoBehaviour {
 
     // Make unit array and iterate while all units consume all AP
     // From Presenter.cs
-    void SelectNextUnit()
+    public void SelectNextUnit()
     {
         int tryNumber = (_standbyUnitIndex == -1) ? 1 : 2;
 
         for (int j = 0; j < tryNumber; ++j)
         {
+            Debug.Log(_standbyUnitIndex);
             if (_standbyUnitIndex == -1)
             {
                 _standbyUnits = _game.PlayerInTurn.Units.ToArray();
             }
 
             int idx = _standbyUnitIndex + 1;
+            Debug.Log(_standbyUnits);
             for (; idx < _standbyUnits.Length; ++idx)
             {
                 var unit = _standbyUnits[idx];
@@ -154,6 +172,7 @@ public class GameManager : MonoBehaviour {
                     _standbyUnitIndex = idx;
                     _selectedActor = _standbyUnits[idx];
                     IsThereTodos = true;
+                    Debug.Log(_selectedActor.PlacedPoint);
                     Focus();
                     return;
                 }

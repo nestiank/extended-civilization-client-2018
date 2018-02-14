@@ -119,6 +119,15 @@ public class UIManager : MonoBehaviour {
     }
 */
     //// Map UI ////
+    public void MoveActive()
+    {
+        
+    }
+    public void AttackActive()
+    {
+
+    }
+
     public void SkillSetActive()
     {
         SkillSet.SetActive(!SkillSet.activeSelf);
