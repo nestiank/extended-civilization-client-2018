@@ -11,6 +11,8 @@ public class HexTile : MonoBehaviour {
     Transform terrains;
     Transform units;
 
+    public bool isFlickering;
+
 	// Use this for initialization
 	void Start () {
         terrains = transform.GetChild(0).transform;
@@ -25,14 +27,7 @@ public class HexTile : MonoBehaviour {
     // Render tile terrain
     public void ChangeTile()
     {
-        if (point.Type == CivModel.TerrainType.Hill)
-        {
-            terrains.Find("Hill").gameObject.SetActive(true);
-        }
-        else if (point.Type == CivModel.TerrainType.Mount)
-        {
-            terrains.Find("Mount").gameObject.SetActive(true);
-        }
+        terrains.GetChild((int)point.Type).gameObject.SetActive(true);
     }
 
     // This method should be changed when unit type increses
@@ -59,5 +54,25 @@ public class HexTile : MonoBehaviour {
                 }
             }
         }
+    }
+
+    // Flicker with blue color. This is used for parametered move and skill.
+    public void FlickerBlue()
+    {
+        isFlickering = true;
+        Debug.Log(GameManager.I.Pos2Str(point.Position) + " is flickering with blue");
+    }
+
+    // Blink with red color. This is used for attack.
+    public void FlickerRed()
+    {
+        isFlickering = true;
+        Debug.Log(GameManager.I.Pos2Str(point.Position) + " is flickering with red");
+    }
+
+    public void StopFlickering()
+    {
+        isFlickering = false;
+        Debug.Log(GameManager.I.Pos2Str(point.Position) + " stopped flickering");
     }
 }

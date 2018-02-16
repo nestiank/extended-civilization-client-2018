@@ -19,27 +19,30 @@ public class GameManager : MonoBehaviour {
     float cameraMoveSpeed;
     enum CameraMoveDirection { Up, Down, Left, Right }
 
-    // Current game
-    private CivModel.Game _game;
-    // Selected actor
-    private CivModel.Unit _selectedActor = null;
-
-    // For unit order
-    public bool isMoveState = false;
-    public bool isAttackState = false;
-    public bool isSkillState = false;
-
-    // Variables from Presenter.cs
-    public bool IsThereTodos;
-    private CivModel.Unit[] _standbyUnits;
-    private int _standbyUnitIndex = -1;
-
+    // For drawing hex tile
     public float outerRadius = 1f;  // Outer&inner radius of hex tile.
     public float innerRadius;       // These variables can be deleted if there are no use.
 
     // Hex tile cells
     public GameObject cellPrefab;
     private GameObject[,] _cells;
+
+    // Current game
+    private CivModel.Game _game;
+    // Selected actor
+    private CivModel.Unit _selectedActor = null;
+
+    // Variables from Presenter.cs
+    public bool IsThereTodos;
+    private CivModel.Unit[] _standbyUnits;
+    private int _standbyUnitIndex = -1;
+
+    // For pseudo-FSM
+    public bool onMoveState = false;
+    public bool onAttackState = false;
+    public bool onSkillState = false;
+
+    private CivModel.Terrain.Point?[] _parameterPoints;
 
     // Use this for initialization
     void Start() {
@@ -84,7 +87,17 @@ public class GameManager : MonoBehaviour {
 
             if (Physics.Raycast(ray, out hit))
             {
-                Unit unit = hit.collider.gameObject.GetComponent<HexTile>().point.Unit;
+                HexTile tile = hit.collider.gameObject.GetComponent<HexTile>();
+
+                if (onMoveState)
+                {
+                    if (tile.isFlickering)
+                    {
+                        Move(tile.point);
+                    }
+                }
+
+                Unit unit = tile.point.Unit;
                 if (unit != null)
                 {
                     SelectUnit(unit);
@@ -225,11 +238,11 @@ public class GameManager : MonoBehaviour {
     }
 
     // Method that gives "(x,y)" string with input of CivModel.Position or 2 ints
-    string Pos2Str(CivModel.Position pos)
+    public string Pos2Str(CivModel.Position pos)
     {
         return Pos2Str(pos.X, pos.Y);
     }
-    string Pos2Str(int x, int y)
+    public string Pos2Str(int x, int y)
     {
         return "(" + x + "," + y + ")";
     }
@@ -252,5 +265,69 @@ public class GameManager : MonoBehaviour {
                 mainCamera.transform.Translate(Vector3.right * cameraMoveSpeed * Time.deltaTime, Space.World);
                 break;
         }
+    }
+
+    // For state change of pseudo-FSM
+    // There are enter, exit methods for move and attack states. Enter methods are public, exit methods are default.
+    // NormalStateEnter() simply resets all state condition.
+    public void NormalStateEnter()
+    {
+        if (onMoveState)        MoveStateExit();
+        if (onAttackState)      AttackStateExit();
+        if (onSkillState)       SkillStateExit();
+    }
+
+    // When move state, coloring movable adjacent tiles
+    // Current MoveStateEnter() shows only adjacent tiles. If moving mechanism of model changes, this should be changed.
+    public void MoveStateEnter()
+    {
+        // State change
+        if (onAttackState)      AttackStateExit();
+        if (onSkillState)       SkillStateExit();
+        onMoveState = true;
+
+        // Select movable adjacent tiles
+        _parameterPoints = _selectedActor.PlacedPoint.Value.Adjacents();
+        for (int i = 0; i < _parameterPoints.Length; i++)
+        {
+            if (_selectedActor.MoveAct.IsActable(_parameterPoints[i]))
+            {
+                CivModel.Position pos = _parameterPoints[i].Value.Position;
+                _cells[pos.X, pos.Y].GetComponent<HexTile>().FlickerBlue();
+            }
+        }
+    }
+    void MoveStateExit()
+    {
+        for (int i = 0; i < _parameterPoints.Length; i++)
+        {
+            if (_parameterPoints != null)
+            {
+                CivModel.Position pos = _parameterPoints[i].Value.Position;
+                _cells[pos.X, pos.Y].GetComponent<HexTile>().StopFlickering();
+            }
+        }
+        _parameterPoints = null;
+        onMoveState = false;
+        // TODO
+    }
+
+    void AttackStateExit()
+    {
+        onAttackState = false;
+        // TODO
+    }
+
+    void SkillStateExit()
+    {
+        onSkillState = false;
+        // TODO
+    }
+
+    // Move _selectedActor
+    void Move(CivModel.Terrain.Point point)
+    {
+        _selectedActor.MoveAct.Act(point);
+        NormalStateEnter();
     }
 }

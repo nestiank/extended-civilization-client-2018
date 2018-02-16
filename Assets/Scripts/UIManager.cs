@@ -49,12 +49,14 @@ public class UIManager : MonoBehaviour {
     }
     public void ManagementUIActive()            // Management UI tab
     {
+        SkillSet.SetActive(false);
         ManagementUI.SetActive(true);
         MapUI.SetActive(false);
         QuestUI.SetActive(false);
     }
     public void QuestUIActive()                 // Quest UI tab
     {
+        SkillSet.SetActive(false);
         QuestUI.SetActive(true);
         MapUI.SetActive(false);
         ManagementUI.SetActive(false);
@@ -121,10 +123,13 @@ public class UIManager : MonoBehaviour {
     //// Map UI ////
     public void MoveActive()
     {
-        
+        SkillSet.SetActive(false);
+        GameManager.I.MoveStateEnter();
     }
+
     public void AttackActive()
     {
+        SkillSet.SetActive(false);
 
     }
 
@@ -134,9 +139,14 @@ public class UIManager : MonoBehaviour {
     }
     public void EndTurnActive()
     {
+        SkillSet.SetActive(false);
         if (GameManager.I.IsThereTodos)
         {
             GameManager.I.SelectNextUnit();
+        }
+        else
+        {
+            
         }
     }
 
