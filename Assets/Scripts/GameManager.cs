@@ -14,17 +14,19 @@ public class GameManager : MonoBehaviour {
     // Main Camera for Focus()
     [SerializeField]
     Camera mainCamera;
-    // Camera move speed
+    // For camera controll
     [SerializeField]
     float cameraMoveSpeed;
-    enum CameraMoveDirection { Up, Down, Left, Right }
+    [SerializeField]
+    float cameraZoomSpeed;
 
     // For drawing hex tile
     public float outerRadius = 1f;  // Outer&inner radius of hex tile.
     public float innerRadius;       // These variables can be deleted if there are no use.
 
     // Hex tile cells
-    public GameObject cellPrefab;
+    [SerializeField]
+    GameObject cellPrefab;
     private GameObject[,] _cells;
 
     // Current game
@@ -104,25 +106,38 @@ public class GameManager : MonoBehaviour {
                 }
             }
         }
+
         // Camera movement
         Vector3 mousePos = Input.mousePosition;
         if (mousePos.x < 10)
         {
-            CameraMove(CameraMoveDirection.Left);
+            CameraMove(Vector3.left);
         }
         else if (mousePos.x > Screen.width - 10)
         {
-            CameraMove(CameraMoveDirection.Right);
+            CameraMove(Vector3.right);
         }
         if (mousePos.y < 10)
         {
-            CameraMove(CameraMoveDirection.Down);
+            CameraMove(Vector3.back);
         }
         else if (mousePos.y > Screen.height - 10)
         {
-            CameraMove(CameraMoveDirection.Up);
+            CameraMove(Vector3.forward);
         }
-	}
+
+        CameraZoom();
+    }
+
+    // Method that gives "(x,y)" string with input of CivModel.Position or 2 ints
+    public string Pos2Str(CivModel.Position pos)
+    {
+        return Pos2Str(pos.X, pos.Y);
+    }
+    public string Pos2Str(int x, int y)
+    {
+        return "(" + x + "," + y + ")";
+    }
 
     // Instantiate hex tiles
     void DrawMap()
@@ -237,35 +252,17 @@ public class GameManager : MonoBehaviour {
         mainCamera.transform.position = new Vector3(x, 6.75f, z);
     }
 
-    // Method that gives "(x,y)" string with input of CivModel.Position or 2 ints
-    public string Pos2Str(CivModel.Position pos)
+    // Camera controllings
+    void CameraMove(Vector3 vec)
     {
-        return Pos2Str(pos.X, pos.Y);
+        mainCamera.transform.Translate(vec * cameraMoveSpeed * Time.deltaTime, Space.World);
     }
-    public string Pos2Str(int x, int y)
+    void CameraZoom()
     {
-        return "(" + x + "," + y + ")";
-    }
-
-    // Camera move
-    void CameraMove(CameraMoveDirection moveDirection)
-    {
-        switch (moveDirection)
-        {
-            case CameraMoveDirection.Up:
-                mainCamera.transform.Translate(Vector3.forward * cameraMoveSpeed * Time.deltaTime, Space.World);
-                break;
-            case CameraMoveDirection.Down:
-                mainCamera.transform.Translate(Vector3.back * cameraMoveSpeed * Time.deltaTime, Space.World);
-                break;
-            case CameraMoveDirection.Left:
-                mainCamera.transform.Translate(Vector3.left * cameraMoveSpeed * Time.deltaTime, Space.World);
-                break;
-            case CameraMoveDirection.Right:
-                mainCamera.transform.Translate(Vector3.right * cameraMoveSpeed * Time.deltaTime, Space.World);
-                break;
-        }
-    }
+        Vector2 vec2 = Input.mouseScrollDelta;
+        Vector3 vec3 = new Vector3(vec2.x, 0, vec2.y);
+        mainCamera.transform.Translate(vec3 * cameraZoomSpeed * Time.deltaTime, Space.Self);
+    } 
 
     // For state change of pseudo-FSM
     // There are enter, exit methods for move and attack states. Enter methods are public, exit methods are default.
