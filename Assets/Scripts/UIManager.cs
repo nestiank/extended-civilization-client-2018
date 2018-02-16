@@ -130,7 +130,7 @@ public class UIManager : MonoBehaviour {
     public void AttackActive()
     {
         SkillSet.SetActive(false);
-
+        GameManager.I.AttackStateEnter();
     }
 
     public void SkillSetActive()

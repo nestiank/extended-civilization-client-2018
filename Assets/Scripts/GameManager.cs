@@ -252,7 +252,7 @@ public class GameManager : MonoBehaviour {
         mainCamera.transform.position = new Vector3(x, 6.75f, z);
     }
 
-    // Camera controllings
+    // Camera controlls
     void CameraMove(Vector3 vec)
     {
         mainCamera.transform.Translate(vec * cameraMoveSpeed * Time.deltaTime, Space.World);
@@ -279,6 +279,7 @@ public class GameManager : MonoBehaviour {
     public void MoveStateEnter()
     {
         // State change
+        if (onMoveState)        return;
         if (onAttackState)      AttackStateExit();
         if (onSkillState)       SkillStateExit();
         onMoveState = true;
@@ -296,23 +297,61 @@ public class GameManager : MonoBehaviour {
     }
     void MoveStateExit()
     {
+        onMoveState = false;
+
+        if (_parameterPoints == null)
+            return;
+
         for (int i = 0; i < _parameterPoints.Length; i++)
         {
-            if (_parameterPoints != null)
+            if (_parameterPoints[i] != null)
             {
                 CivModel.Position pos = _parameterPoints[i].Value.Position;
                 _cells[pos.X, pos.Y].GetComponent<HexTile>().StopFlickering();
             }
         }
         _parameterPoints = null;
-        onMoveState = false;
-        // TODO
     }
 
+    public void AttackStateEnter()
+    {
+        // State change
+        if (onAttackState)      return;
+        if (onMoveState)        MoveStateExit();
+        if (onSkillState)       SkillStateExit();
+        onAttackState = true;
+
+        // If _selectedActor cannot attack
+        if (_selectedActor.MovingAttackAct == null)
+            return;
+
+        // Select attackable adjacent tiles
+        _parameterPoints = _selectedActor.PlacedPoint.Value.Adjacents();
+        for (int i = 0; i < _parameterPoints.Length; i++)
+        {
+            if (_selectedActor.MovingAttackAct.IsActable(_parameterPoints[i]))
+            {
+                CivModel.Position pos = _parameterPoints[i].Value.Position;
+                _cells[pos.X, pos.Y].GetComponent<HexTile>().FlickerRed();
+            }
+        }
+    }
     void AttackStateExit()
     {
         onAttackState = false;
-        // TODO
+
+        if (_parameterPoints == null)
+            return;
+
+        for (int i = 0; i < _parameterPoints.Length; i++)
+        {
+            if (_parameterPoints[i] != null)
+            {
+                CivModel.Position pos = _parameterPoints[i].Value.Position;
+                _cells[pos.X, pos.Y].GetComponent<HexTile>().StopFlickering();
+            }
+        }
+        _parameterPoints = null;
     }
 
     void SkillStateExit()
