@@ -30,7 +30,7 @@ public class UIManager : MonoBehaviour {
 
     void Update()
     {
-        if (GameManager.I.IsThereTodos)
+        if (GameManager.I.isThereTodos)
         {
             MapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().text = "유닛이 명령을 기다리고 있습니다";
         }
@@ -140,7 +140,7 @@ public class UIManager : MonoBehaviour {
     public void EndTurnActive()
     {
         SkillSet.SetActive(false);
-        if (GameManager.I.IsThereTodos)
+        if (GameManager.I.isThereTodos)
         {
             GameManager.I.SelectNextUnit();
         }

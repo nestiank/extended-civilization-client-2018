@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviour {
     private CivModel.Unit _selectedActor = null;
 
     // Variables from Presenter.cs
-    public bool IsThereTodos;
+    public bool isThereTodos;
     private CivModel.Unit[] _standbyUnits;
     private int _standbyUnitIndex = -1;
 
@@ -199,7 +199,7 @@ public class GameManager : MonoBehaviour {
                 {
                     _standbyUnitIndex = idx;
                     _selectedActor = _standbyUnits[idx];
-                    IsThereTodos = true;
+                    isThereTodos = true;
                     Debug.Log(_selectedActor.PlacedPoint);
                     Focus();
                     return;
@@ -208,7 +208,7 @@ public class GameManager : MonoBehaviour {
 
             _selectedActor = null;
             _standbyUnitIndex = -1;
-            IsThereTodos = false;
+            isThereTodos = false;
         }
     }
     void SelectUnit(Unit unit)
@@ -225,7 +225,7 @@ public class GameManager : MonoBehaviour {
 
         _standbyUnits = units;
         _standbyUnitIndex = idx;
-        IsThereTodos = true;
+        isThereTodos = true;
         Focus();
     }
 
