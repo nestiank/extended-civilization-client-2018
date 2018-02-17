@@ -12,6 +12,7 @@ public class HexTile : MonoBehaviour {
     Transform units;
 
     public bool isFlickering;
+    private IEnumerator _coroutine;
 
 	// Use this for initialization
 	void Start () {
@@ -61,6 +62,10 @@ public class HexTile : MonoBehaviour {
     {
         isFlickering = true;
         Debug.Log(gameObject.name + " is flickering with blue");
+        if (terrains.GetChild((int)point.Type).GetComponent<Renderer>() == null)
+            return;
+        _coroutine = Flicker(Color.blue);
+        StartCoroutine(_coroutine);
     }
 
     // Blink with red color. This is used for attack.
@@ -68,11 +73,51 @@ public class HexTile : MonoBehaviour {
     {
         isFlickering = true;
         Debug.Log(gameObject.name + " is flickering with red");
+        if (terrains.GetChild((int)point.Type).GetComponent<Renderer>() == null)
+            return;
+        _coroutine = Flicker(Color.red);
+        StartCoroutine(_coroutine);
     }
 
     public void StopFlickering()
     {
         isFlickering = false;
         Debug.Log(gameObject.name + " stopped flickering");
+        if (terrains.GetChild((int)point.Type).GetComponent<Renderer>() == null)
+            return;
+        StopCoroutine(_coroutine);
+        Material mat = terrains.GetChild((int)point.Type).GetComponent<Renderer>().material;
+        mat.SetColor("_Color", Color.white);
+    }
+
+    // Make tile flicker with color c. Don't need to read this method.
+    IEnumerator Flicker(Color c)
+    {
+        Material mat = terrains.GetChild((int)point.Type).GetComponent<Renderer>().material;
+        Color delta = Color.white - c;
+
+        while(true)
+        {
+            // From white to c
+            for (float i = 0; i <= 1f; i += 1.5f * Time.deltaTime)
+            {
+                mat.SetColor("_Color", Color.white - delta * (1 - Mathf.Cos(Mathf.PI * i)) / 2);
+                yield return null;
+            }
+            mat.SetColor("_Color", c);
+            // From c to white
+            for (float i = 0; i <= 1f; i += 1.5f * Time.deltaTime)
+            {
+                mat.SetColor("_Color", c + delta * (1 - Mathf.Cos(Mathf.PI * i)) / 2);
+                yield return null;
+            }
+            mat.SetColor("_Color", Color.white);
+
+            if (!isFlickering)
+            {
+                break;
+            }
+            yield return new WaitForSeconds(0.2f);
+        }
     }
 }

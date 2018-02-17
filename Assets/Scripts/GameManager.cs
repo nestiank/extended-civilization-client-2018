@@ -65,7 +65,6 @@ public class GameManager : MonoBehaviour {
         // Instantiate game
         _game = new CivModel.Game( GameInfo.mapWidth, GameInfo.mapHeight, GameInfo.numOfPlayer, new CivModel.Common.GameSchemeFactory());
         _game.StartTurn();
-        Debug.Log(_game.PlayerNumberInTurn);
 
         // Map tiling
         innerRadius = outerRadius * Mathf.Sqrt(3.0f) / 2;
@@ -182,7 +181,7 @@ public class GameManager : MonoBehaviour {
             }
 
             int idx = _standbyUnitIndex + 1;
-            Debug.Log(_standbyUnits);
+            Debug.Log(_standbyUnits.Length);
             for (; idx < _standbyUnits.Length; ++idx)
             {
                 var unit = _standbyUnits[idx];
