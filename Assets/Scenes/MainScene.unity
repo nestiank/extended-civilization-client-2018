@@ -14241,7 +14241,7 @@ MonoBehaviour:
   outerRadius: 1
   innerRadius: 0
   cellPrefab: {fileID: 1823159130722898, guid: ef12b8f6d512e104b979d4a75f3e60c0, type: 2}
-  IsThereTodos: 0
+  isThereTodos: 0
   onMoveState: 0
   onAttackState: 0
   onSkillState: 0
@@ -23352,12 +23352,12 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 1056054507}
-          m_MethodName: 
+        - m_Target: {fileID: 1056054510}
+          m_MethodName: Skill1Active
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: 
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
@@ -27951,7 +27951,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2085815513}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1056054510}
+        m_MethodName: AttackActive
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &2085815513

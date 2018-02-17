@@ -43,6 +43,7 @@ public class GameManager : MonoBehaviour {
     public bool onMoveState = false;
     public bool onAttackState = false;
     public bool onSkillState = false;
+    private int _currentSkill = -1;
 
     private CivModel.Terrain.Point?[] _parameterPoints;
 
@@ -129,16 +130,6 @@ public class GameManager : MonoBehaviour {
         CameraZoom();
     }
 
-    // Method that gives "(x,y)" string with input of CivModel.Position or 2 ints
-    public string Pos2Str(CivModel.Position pos)
-    {
-        return Pos2Str(pos.X, pos.Y);
-    }
-    public string Pos2Str(int x, int y)
-    {
-        return "(" + x + "," + y + ")";
-    }
-
     // Instantiate hex tiles
     void DrawMap()
     {
@@ -154,7 +145,7 @@ public class GameManager : MonoBehaviour {
                     pos.x -= innerRadius;
                 }
                 _cells[i, j] = Instantiate(cellPrefab, pos, Quaternion.identity);
-                _cells[i, j].name = Pos2Str(i, j);
+                _cells[i, j].name = String.Format("({0},{1})", i, j);
                 _cells[i, j].GetComponent<HexTile>().point = _game.Terrain.GetPoint(i, j);
             }
         }
@@ -236,7 +227,7 @@ public class GameManager : MonoBehaviour {
     }
     void Focus(CivModel.Unit unit)
     {
-        if (unit == null)
+        if (unit.PlacedPoint == null)
         {
             return;
         }
@@ -244,7 +235,7 @@ public class GameManager : MonoBehaviour {
     }
     void Focus(CivModel.Terrain.Point point)
     {
-        GameObject tile = GameObject.Find(Pos2Str(point.Position));
+        GameObject tile = _cells[point.Position.X, point.Position.Y];
         Vector3 tilePos = tile.transform.position;
         float x = tilePos.x;
         float z = tilePos.z - (6.75f / Mathf.Tan(40 * Mathf.Deg2Rad));
@@ -354,10 +345,63 @@ public class GameManager : MonoBehaviour {
         _parameterPoints = null;
     }
 
+    public void SkillStateEnter(int index)
+    {
+        // State change
+        if (onSkillState && _currentSkill == index) return;
+        if (onMoveState) MoveStateExit();
+        if (onAttackState) AttackStateExit();
+        onSkillState = true;
+        _currentSkill = index;
+
+        // If SpecialActs[_currentSkill] is not parametered skill, this skill is immediately activated.
+        if (!_selectedActor.SpecialActs[_currentSkill].IsParametered)
+        {
+            _selectedActor.SpecialActs[_currentSkill].Act(null);
+            SkillStateExit();
+            return;
+        }
+        else
+        {
+            for (int i = 0; i < GameInfo.mapWidth; i++)
+            {
+                for (int j = 0; j < GameInfo.mapHeight; j++)
+                {
+                    CivModel.Terrain.Point? point = _game.Terrain.GetPoint(i, j);
+                    if (_selectedActor.SpecialActs[_currentSkill].IsActable(point))
+                    {
+                        CivModel.Position pos = point.Value.Position;
+                        _cells[pos.X, pos.Y].GetComponent<HexTile>().FlickerBlue();
+                    }
+                }
+            }
+        }
+    }
     void SkillStateExit()
     {
+        int index = _currentSkill;
         onSkillState = false;
-        // TODO
+        _currentSkill = -1;
+
+        if (!_selectedActor.SpecialActs[index].IsParametered)
+        {
+            return;
+        }
+        else
+        {
+            for (int i = 0; i < GameInfo.mapWidth; i++)
+            {
+                for (int j = 0; j < GameInfo.mapHeight; j++)
+                {
+                    CivModel.Terrain.Point? point = _game.Terrain.GetPoint(i, j);
+                    if (_selectedActor.SpecialActs[index].IsActable(point))
+                    {
+                        CivModel.Position pos = point.Value.Position;
+                        _cells[pos.X, pos.Y].GetComponent<HexTile>().StopFlickering();
+                    }
+                }
+            }
+        }
     }
 
     // Move _selectedActor

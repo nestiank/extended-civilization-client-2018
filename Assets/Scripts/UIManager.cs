@@ -70,7 +70,30 @@ public class UIManager : MonoBehaviour {
     {
         SpecialSpec.SetActive(false);
     }
-/*
+
+    //// Map UI ////
+    public void MoveActive()
+    {
+        SkillSet.SetActive(false);
+        GameManager.I.MoveStateEnter();
+    }
+
+    public void AttackActive()
+    {
+        SkillSet.SetActive(false);
+        GameManager.I.AttackStateEnter();
+    }
+
+    public void SkillSetActive()
+    {
+        SkillSet.SetActive(!SkillSet.activeSelf);
+    }
+
+    public void Skill1Active()
+    {
+        GameManager.I.SkillStateEnter(0);
+    }
+    /*
     public void SkillSpec1MouseOver()           // 특수 명령
     {
         SkillSpec1.SetActive(true);
@@ -119,24 +142,7 @@ public class UIManager : MonoBehaviour {
     {
         SkillSpec6.SetActive(false);
     }
-*/
-    //// Map UI ////
-    public void MoveActive()
-    {
-        SkillSet.SetActive(false);
-        GameManager.I.MoveStateEnter();
-    }
-
-    public void AttackActive()
-    {
-        SkillSet.SetActive(false);
-        GameManager.I.AttackStateEnter();
-    }
-
-    public void SkillSetActive()
-    {
-        SkillSet.SetActive(!SkillSet.activeSelf);
-    }
+    */
     public void EndTurnActive()
     {
         SkillSet.SetActive(false);

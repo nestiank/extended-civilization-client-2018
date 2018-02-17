@@ -60,19 +60,19 @@ public class HexTile : MonoBehaviour {
     public void FlickerBlue()
     {
         isFlickering = true;
-        Debug.Log(GameManager.I.Pos2Str(point.Position) + " is flickering with blue");
+        Debug.Log(gameObject.name + " is flickering with blue");
     }
 
     // Blink with red color. This is used for attack.
     public void FlickerRed()
     {
         isFlickering = true;
-        Debug.Log(GameManager.I.Pos2Str(point.Position) + " is flickering with red");
+        Debug.Log(gameObject.name + " is flickering with red");
     }
 
     public void StopFlickering()
     {
         isFlickering = false;
-        Debug.Log(GameManager.I.Pos2Str(point.Position) + " stopped flickering");
+        Debug.Log(gameObject.name + " stopped flickering");
     }
 }
