@@ -70,7 +70,7 @@ public class GameManager : MonoBehaviour {
         innerRadius = outerRadius * Mathf.Sqrt(3.0f) / 2;
         DrawMap();
 
-        SelectNextUnit();
+        ProceedTurn();
     }
 	
 	// Update is called once per frame
@@ -217,6 +217,25 @@ public class GameManager : MonoBehaviour {
         _standbyUnitIndex = idx;
         isThereTodos = true;
         Focus();
+    }
+    public void ProceedTurn()
+    {
+        if (_game.IsInsideTurn)
+            _game.EndTurn();
+        _game.StartTurn();
+
+        SelectNextUnit();
+        if (_selectedActor == null)
+        {
+            if (_game.PlayerInTurn.Cities.FirstOrDefault() is CivModel.Common.CityCenter)
+            {
+                CivModel.Common.CityCenter city = _game.PlayerInTurn.Cities.FirstOrDefault();
+                if (city.PlacedPoint is CivModel.Terrain.Point)
+                    Focus(city.PlacedPoint.Value);
+            }
+        }
+
+        NormalStateEnter();
     }
 
     // Camera focus

@@ -152,7 +152,7 @@ public class UIManager : MonoBehaviour {
         }
         else
         {
-            
+            GameManager.I.ProceedTurn();
         }
     }
 
