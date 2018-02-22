@@ -72,7 +72,7 @@ GameObject:
   - component: {fileID: 224370154200431468}
   - component: {fileID: 222753816676270096}
   - component: {fileID: 114644775417974404}
-  - component: {fileID: 114964981432633434}
+  - component: {fileID: 114259291661999178}
   m_Layer: 5
   m_Name: Deployment
   m_TagString: Untagged
@@ -148,6 +148,17 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: '>>'
+--- !u!114 &114259291661999178
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1800725053202814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9642702daf79c1240b7c6a4c15881e8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114319455215444200
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -336,17 +347,6 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Hwan Jedi Knights
---- !u!114 &114964981432633434
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1800725053202814}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bdf0fa739872652438abde0f4b5f6f2a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!222 &222307349340161390
 CanvasRenderer:
   m_ObjectHideFlags: 1

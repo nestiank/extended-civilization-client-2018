@@ -43,7 +43,8 @@ public class GameManager : MonoBehaviour {
     private int _standbyUnitIndex = -1;
 
     // Use this for initialization
-    void Start() {
+    void Awake()
+    {
         // Singleton
         if (_manager != null)
         {
@@ -56,10 +57,12 @@ public class GameManager : MonoBehaviour {
         }
         // Use this when scene changing exists
         // DontDestroyOnLoad(gameObject);
-
-        // Instantiate game
-        _game = new CivModel.Game( GameInfo.mapWidth, GameInfo.mapHeight, GameInfo.numOfPlayer, new CivModel.Common.GameSchemeFactory());
+        _game = new CivModel.Game(GameInfo.mapWidth, GameInfo.mapHeight, GameInfo.numOfPlayer, new CivModel.Common.GameSchemeFactory());
         _game.StartTurn();
+
+    }
+    void Start() {
+        // Instantiate game
 
         // Map tiling
         innerRadius = outerRadius * Mathf.Sqrt(3.0f) / 2;
@@ -229,7 +232,6 @@ public class GameManager : MonoBehaviour {
                     Focus(city.PlacedPoint.Value);
             }
         }
-
         PseudoFSM.I.NormalStateEnter();
     }
 
@@ -273,5 +275,13 @@ public class GameManager : MonoBehaviour {
     {
         _selectedActor.MoveAct.Act(point);
         PseudoFSM.I.NormalStateEnter();
+    }
+}
+
+public static class ProductionFactoryTraits
+{
+    public static string GetFactoryName(CivModel.IProductionFactory Factory)
+    {
+        return Factory.ToString();
     }
 }

@@ -20,7 +20,7 @@ public class PseudoFSM : MonoBehaviour {
     private CivModel.Terrain.Point?[] _parameterPoints;
 
     // Use this for initialization
-    void Start () {
+    void Awake () {
         // Singleton
         if (_fsm != null)
         {
@@ -186,5 +186,9 @@ public class PseudoFSM : MonoBehaviour {
                 }
             }
         }
+    }
+    public bool CheckNormalState()
+    {
+        return !(_inMoveState || _inAttackState || _inSkillState);
     }
 }

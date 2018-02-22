@@ -28,6 +28,12 @@ public class UIManager : MonoBehaviour {
     public GameObject EpicTab, HighTab, IntermediateTab, LowTab;    // Unit production
     public GameObject CityTab, CityBuildingTab, NormalBuildingTab;  // Building production
 
+    private ManagementUIController uicontroller;
+
+    void Start()
+    {
+        uicontroller = ManagementUIController.GetManagementUIController();   
+    }
     void Update()
     {
         if (GameManager.I.isThereTodos)
@@ -51,6 +57,7 @@ public class UIManager : MonoBehaviour {
     {
         SkillSet.SetActive(false);
         ManagementUI.SetActive(true);
+        uicontroller.ManageFunction();
         MapUI.SetActive(false);
         QuestUI.SetActive(false);
     }
