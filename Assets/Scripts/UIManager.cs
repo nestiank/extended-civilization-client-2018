@@ -75,13 +75,13 @@ public class UIManager : MonoBehaviour {
     public void MoveActive()
     {
         SkillSet.SetActive(false);
-        GameManager.I.MoveStateEnter();
+        PseudoFSM.I.MoveStateEnter();
     }
 
     public void AttackActive()
     {
         SkillSet.SetActive(false);
-        GameManager.I.AttackStateEnter();
+        PseudoFSM.I.AttackStateEnter();
     }
 
     public void SkillSetActive()
@@ -91,7 +91,7 @@ public class UIManager : MonoBehaviour {
 
     public void Skill1Active()
     {
-        GameManager.I.SkillStateEnter(0);
+        PseudoFSM.I.SkillStateEnter(0);
     }
     /*
     public void SkillSpec1MouseOver()           // 특수 명령
