@@ -49,384 +49,6 @@
             <exception cref="T:System.ArgumentException">parameter is invalid</exception>
             <exception cref="T:System.InvalidOperationException">Actor is not placed yet</exception>
         </member>
-        <member name="T:CivModel.Common.CityCenterProductionFactory">
-            <summary>
-            The factory interface for <see cref="T:CivModel.Common.CityCenter"/>.
-            </summary>
-            <seealso cref="T:CivModel.ITileObjectProductionFactory" />
-        </member>
-        <member name="P:CivModel.Common.CityCenterProductionFactory.Instance">
-            <summary>
-            The singleton instance.of <see cref="T:CivModel.Common.CityCenterProductionFactory"/>
-            </summary>
-        </member>
-        <member name="M:CivModel.Common.CityCenterProductionFactory.Create(CivModel.Player)">
-            <summary>
-            Creates the <see cref="T:CivModel.Production" /> object
-            </summary>
-            <param name="owner">The player who owns the <see cref="T:CivModel.Production" /> object.</param>
-            <returns>
-            the created <see cref="T:CivModel.Production" /> object
-            </returns>
-        </member>
-        <member name="M:CivModel.Common.CityCenterProductionFactory.IsPlacable(CivModel.TileObjectProduction,CivModel.Terrain.Point)">
-            <summary>
-            Determines whether the production result is placable at the specified point.
-            </summary>
-            <param name="production">The production.</param>
-            <param name="point">The point to test to place the production result.</param>
-            <returns>
-              <c>true</c> if the production is placable; otherwise, <c>false</c>.
-            </returns>
-        </member>
-        <member name="M:CivModel.Common.CityCenterProductionFactory.CreateTileObject(CivModel.Player,CivModel.Terrain.Point)">
-            <summary>
-            Creates the <see cref="T:CivModel.TileObject" /> which is the production result.
-            </summary>
-            <param name="owner">The <see cref="T:CivModel.Player" /> who owns the result.</param>
-            <param name="point">The tile where the object will be.</param>
-            <returns>
-            the created <see cref="T:CivModel.TileObject" /> result.
-            </returns>
-        </member>
-        <member name="T:CivModel.Common.FactoryBuilding">
-            <summary>
-            Represents [factory] interior building.
-            </summary>
-            <seealso cref="T:CivModel.InteriorBuilding"/>
-        </member>
-        <member name="P:CivModel.Common.FactoryBuilding.ClassGuid">
-            <summary>
-            The unique identifier of this class.
-            </summary>
-        </member>
-        <member name="P:CivModel.Common.FactoryBuilding.Guid">
-            <summary>
-            The unique identifier of this class.
-            </summary>
-        </member>
-        <member name="M:CivModel.Common.FactoryBuilding.#ctor(CivModel.Common.CityCenter)">
-            <summary>
-            Initializes a new instance of the <see cref="T:CivModel.Common.FactoryBuilding"/> class.
-            </summary>
-            <param name="city">The <see cref="T:CivModel.Common.CityCenter" /> who will own the building.</param>
-        </member>
-        <member name="T:CivModel.Common.FactoryBuildingProductionFactory">
-            <summary>
-            The factory interface for <see cref="T:CivModel.Common.FactoryBuilding"/>.
-            </summary>
-            <seealso cref="T:CivModel.IInteriorBuildingProductionFactory" />
-        </member>
-        <member name="P:CivModel.Common.FactoryBuildingProductionFactory.Instance">
-            <summary>
-            The singleton instance.of <see cref="T:CivModel.Common.FactoryBuildingProductionFactory"/>
-            </summary>
-        </member>
-        <member name="M:CivModel.Common.FactoryBuildingProductionFactory.Create(CivModel.Player)">
-            <summary>
-            Creates the <see cref="T:CivModel.Production" /> object
-            </summary>
-            <param name="owner">The player who owns the <see cref="T:CivModel.Production" /> object.</param>
-            <returns>
-            the created <see cref="T:CivModel.Production" /> object
-            </returns>
-        </member>
-        <member name="M:CivModel.Common.FactoryBuildingProductionFactory.IsPlacable(CivModel.InteriorBuildingProduction,CivModel.Common.CityCenter)">
-            <summary>
-            Determines whether the production result is placable in the specified city.
-            </summary>
-            <param name="production">The production.</param>
-            <param name="city">The city to test to place the production result.</param>
-            <returns>
-              <c>true</c> if the production is placable; otherwise, <c>false</c>.
-            </returns>
-        </member>
-        <member name="M:CivModel.Common.FactoryBuildingProductionFactory.CreateInteriorBuilding(CivModel.Common.CityCenter)">
-            <summary>
-            Creates the <see cref="T:CivModel.InteriorBuilding"/> which is the production result.
-            </summary>
-            <param name="city">The <see cref="T:CivModel.Common.CityCenter"/> who will own the building.</param>
-            <returns>the created <see cref="T:CivModel.InteriorBuilding"/> result.</returns>
-        </member>
-        <member name="T:CivModel.Common.NamespaceDoc">
-            <summary>
-            The <see cref="N:CivModel.Common"/> namespace of CivModel.dll module
-             provides core, basic common actors such as <see cref="T:CivModel.Common.CityCenter"/>.
-            </summary>
-            <remarks>
-            Most of common actors are provided by CivModel.Common.dll module.
-            The purpose of CivModel.dll module is to provide core features of CivModel.
-            </remarks>
-            <seealso cref="N:CivModel"/>
-        </member>
-        <member name="T:CivModel.Common.CityCenter">
-            <summary>
-            Represents a city as <see cref="T:CivModel.TileBuilding"/>.
-            </summary>
-            <seealso cref="T:CivModel.TileBuilding" />
-        </member>
-        <member name="P:CivModel.Common.CityCenter.ClassGuid">
-            <summary>
-            The unique identifier of this class.
-            </summary>
-        </member>
-        <member name="P:CivModel.Common.CityCenter.Guid">
-            <summary>
-            The unique identifier of this class.
-            </summary>
-        </member>
-        <member name="P:CivModel.Common.CityCenter.Name">
-            <summary>
-            The name of this city.
-            </summary>
-            <remarks>
-            <see cref="P:CivModel.Common.CityCenter.Name"/> cannot have newline characters and cannot be empty string.
-            See the list of newline characters at <see href="https://en.wikipedia.org/wiki/Newline#Unicode"/>.
-            </remarks>
-            <exception cref="T:System.ArgumentException">the name is invalid or already used.</exception>
-            <seealso cref="M:CivModel.Common.CityCenter.SetCityName(System.String)"/>
-            <seealso cref="M:CivModel.Common.CityCenter.TrySetCityName(System.String)"/>
-        </member>
-        <member name="P:CivModel.Common.CityCenter.MaxHP">
-            <summary>
-            The maximum HP. <c>0</c> if this actor is not a combattant.
-            </summary>
-        </member>
-        <member name="P:CivModel.Common.CityCenter.MaxHealPerTurn">
-            <summary>
-            The maximum heal per turn.
-            </summary>
-            <seealso cref="P:CivModel.Actor.RemainHP" />
-        </member>
-        <member name="P:CivModel.Common.CityCenter.AttackPower">
-            <summary>
-            The attack power.
-            </summary>
-        </member>
-        <member name="P:CivModel.Common.CityCenter.DefencePower">
-            <summary>
-            The defence power.
-            </summary>
-        </member>
-        <member name="P:CivModel.Common.CityCenter.HoldingAttackAct">
-            <summary>
-            The action performing movement. <c>null</c> if this actor cannot do.
-            </summary>
-        </member>
-        <member name="P:CivModel.Common.CityCenter.AvailableProduction">
-            <summary>
-            The list of available production from this city.
-            </summary>
-            <seealso cref="M:CivModel.Player.GetAvailableProduction"/>
-        </member>
-        <member name="P:CivModel.Common.CityCenter.Population">
-            <summary>
-            The population of this city.
-            </summary>
-            <exception cref="T:System.ArgumentOutOfRangeException">Population must be bigger or equal than 1</exception>
-            <seealso cref="P:CivModel.Player.Population"/>
-            <seealso cref="P:CivModel.Common.CityCenter.PopulationIncome"/>
-        </member>
-        <member name="P:CivModel.Common.CityCenter.PopulationIncome">
-            <summary>
-            The population income of this city.
-            </summary>
-            <seealso cref="P:CivModel.IGameScheme.PopulationCoefficient"/>
-            <seealso cref="P:CivModel.IGameScheme.PopulationHappinessConstant"/>
-        </member>
-        <member name="P:CivModel.Common.CityCenter.Labor">
-            <summary>
-            The labor per turn which this city offers.
-            </summary>
-            <seealso cref="P:CivModel.Player.Labor"/>
-            <seealso cref="P:CivModel.IGameScheme.LaborCoefficient"/>
-            <seealso cref="P:CivModel.IGameScheme.LaborHappinessConstant"/>
-        </member>
-        <member name="P:CivModel.Common.CityCenter.InteriorBuildings">
-            <summary>
-            The list of <see cref="T:CivModel.InteriorBuilding"/> this city owns.
-            </summary>
-        </member>
-        <member name="M:CivModel.Common.CityCenter.#ctor(CivModel.Player,CivModel.Terrain.Point)">
-            <summary>
-            Initializes a new instance of the <see cref="T:CivModel.Common.CityCenter"/> class.
-            </summary>
-            <param name="owner">The player who owns this city.</param>
-            <param name="point">The tile where the object will be.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="owner"/> is <c>null</c>.</exception>
-        </member>
-        <member name="M:CivModel.Common.CityCenter.TrySetCityName(System.String)">
-            <summary>
-            Sets <see cref="P:CivModel.Common.CityCenter.Name"/> of the city. A return value indicates whether the setting is succeeded.
-            </summary>
-            <param name="value">The value.</param>
-            <returns><c>true</c> if succeded. otherwise, <c>false</c>.</returns>
-            <seealso cref="P:CivModel.Common.CityCenter.Name"/>
-            <seealso cref="M:CivModel.Common.CityCenter.SetCityName(System.String)"/>
-        </member>
-        <member name="M:CivModel.Common.CityCenter.SetCityName(System.String)">
-            <summary>
-            Sets <see cref="P:CivModel.Common.CityCenter.Name"/> of the city. The behavior of this method is equal to the setter of <see cref="P:CivModel.Common.CityCenter.Name"/>.
-            </summary>
-            <param name="value">The value to set.</param>
-            <exception cref="T:System.ArgumentException">the name is invalid or already used.</exception>
-            <seealso cref="P:CivModel.Common.CityCenter.Name"/>
-            <seealso cref="M:CivModel.Common.CityCenter.TrySetCityName(System.String)"/>
-        </member>
-        <member name="M:CivModel.Common.CityCenter.AddBuilding(CivModel.InteriorBuilding)">
-            <summary>
-            This method is used by <see cref="P:CivModel.InteriorBuilding.City"/>
-            </summary>
-        </member>
-        <member name="M:CivModel.Common.CityCenter.RemoveBuilding(CivModel.InteriorBuilding)">
-            <summary>
-            This method is used by <see cref="P:CivModel.InteriorBuilding.City"/>
-            </summary>
-        </member>
-        <member name="M:CivModel.Common.CityCenter.OnBeforeChangeOwner(CivModel.Player)">
-            <summary>
-            Called before [change owner], by <see cref="M:CivModel.Actor.ChangeOwner(CivModel.Player)" />.
-            </summary>
-            <param name="newOwner">The new owner.</param>
-        </member>
-        <member name="M:CivModel.Common.CityCenter.OnBeforeDestroy">
-            <summary>
-            Called before [destroy], by <see cref="M:CivModel.Actor.Destroy" />
-            </summary>
-        </member>
-        <member name="M:CivModel.Common.CityCenter.OnDie(CivModel.Player)">
-            <summary>
-            Called when [die] by <see cref="M:CivModel.Actor.Die(CivModel.Player)" />.
-            The default implementation calls <see cref="M:CivModel.Actor.Destroy" />.
-            </summary>
-            <param name="opposite">The opposite who caused the dying of this actor. If not exists, <c>null</c>.</param>
-        </member>
-        <member name="M:CivModel.Common.CityCenter.PostTurn">
-            <summary>
-            Called after a turn.
-            </summary>
-        </member>
-        <member name="T:CivModel.IGameSchemeFactory">
-            <summary>
-            The factory interface of <see cref="T:CivModel.IGameScheme"/>
-            </summary>
-        </member>
-        <member name="P:CivModel.IGameSchemeFactory.Guid">
-            <summary>
-            The unique identifier of this factory.
-            </summary>
-        </member>
-        <member name="M:CivModel.IGameSchemeFactory.Create">
-            <summary>
-            Creates the <see cref="T:CivModel.IGameScheme"/> object
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="T:CivModel.IGameScheme">
-            <summary>
-            The interface represents a scheme of a <see cref="T:CivModel.Game"/>.
-            </summary>
-        </member>
-        <member name="P:CivModel.IGameScheme.Factory">
-            <summary>
-            The factory object of this instance.
-            </summary>
-        </member>
-        <member name="P:CivModel.IGameScheme.OnlyDefaultPlayers">
-            <summary>
-            Whether the number of players must be equal to default value or not.
-            </summary>
-            <seealso cref="P:CivModel.IGameScheme.DefaultNumberOfPlayers"/>
-        </member>
-        <member name="P:CivModel.IGameScheme.DefaultNumberOfPlayers">
-            <summary>
-            The default number of players. It must be positive.
-            </summary>
-        </member>
-        <member name="P:CivModel.IGameScheme.OnlyDefaultTerrain">
-            <summary>
-            Whether <see cref="T:CivModel.Terrain"/> size must be equal to default value or not. It must be positive.
-            </summary>
-            <seealso cref="P:CivModel.IGameScheme.DefaultTerrainWidth"/>
-            <seealso cref="P:CivModel.IGameScheme.DefaultTerrainHeight"/>
-        </member>
-        <member name="P:CivModel.IGameScheme.DefaultTerrainWidth">
-            <summary>
-            The default width of the <see cref="T:CivModel.Terrain"/>. It must be positive.
-            </summary>
-        </member>
-        <member name="P:CivModel.IGameScheme.DefaultTerrainHeight">
-            <summary>
-            The default height of the <see cref="T:CivModel.Terrain"/>. It must be positive.
-            </summary>
-        </member>
-        <member name="P:CivModel.IGameScheme.GoldCoefficient">
-            <summary>
-            Coefficient for <see cref="P:CivModel.Player.GoldIncome"/>.
-            </summary>
-        </member>
-        <member name="P:CivModel.IGameScheme.PopulationCoefficient">
-            <summary>
-            Coefficient for <see cref="P:CivModel.Common.CityCenter.Population"/>.
-            </summary>
-        </member>
-        <member name="P:CivModel.IGameScheme.PopulationHappinessConstant">
-            <summary>
-            Constant amount of <see cref="P:CivModel.Player.Happiness"/> for <see cref="P:CivModel.Player.Population"/>.
-            </summary>
-        </member>
-        <member name="P:CivModel.IGameScheme.HappinessCoefficient">
-            <summary>
-            Coefficient for <see cref="P:CivModel.Player.HappinessIncome"/>.
-            </summary>
-        </member>
-        <member name="P:CivModel.IGameScheme.LaborCoefficient">
-            <summary>
-            Coefficient for <see cref="P:CivModel.Player.Labor"/>.
-            </summary>
-        </member>
-        <member name="P:CivModel.IGameScheme.LaborHappinessConstant">
-            <summary>
-            Constant amount of <see cref="P:CivModel.Player.Happiness"/> for <see cref="P:CivModel.Player.Labor"/>.
-            </summary>
-        </member>
-        <member name="P:CivModel.IGameScheme.EconomicRequireCoefficient">
-            <summary>
-            Coefficient for <see cref="P:CivModel.Player.BasicEconomicRequire"/>.
-            </summary>
-        </member>
-        <member name="P:CivModel.IGameScheme.EconomicRequireTaxRateConstant">
-            <summary>
-            Constant amount of <see cref="P:CivModel.Player.TaxRate"/> for <see cref="P:CivModel.Player.BasicEconomicRequire"/>.
-            </summary>
-        </member>
-        <member name="P:CivModel.IGameScheme.ResearchRequireCoefficient">
-            <summary>
-            Coefficient for <see cref="P:CivModel.Player.BasicResearchRequire"/>.
-            </summary>
-        </member>
-        <member name="M:CivModel.IGameScheme.RegisterGuid(CivModel.Game)">
-            <summary>
-            Registers <see cref="T:CivModel.IGuidTaggedObject"/> for this scheme.
-            This method is called before <see cref="M:CivModel.IGameScheme.InitializeGame(CivModel.Game,System.Boolean)"/>.
-            </summary>
-            <param name="game">The <see cref="T:CivModel.Game"/> object.</param>
-        </member>
-        <member name="M:CivModel.IGameScheme.InitializeGame(CivModel.Game,System.Boolean)">
-            <summary>
-            Initializes the game
-            </summary>
-            <param name="game">The game to initialize.</param>
-            <param name="isNewGame"><c>true</c> if initializing a new game. <c>false</c> if initializing a game loaded from a save file.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="game"/> is <c>null</c>.</exception>
-        </member>
-        <member name="M:CivModel.IGameScheme.InitializeNewCity(CivModel.Common.CityCenter)">
-            <summary>
-            Initializes a newly created city
-            </summary>
-            <param name="city">The city to initialize.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="city"/> is <c>null</c>.</exception>
-        </member>
         <member name="T:CivModel.IReadOnlyActorAction">
             <summary>
             The read-only version of <see cref="T:CivModel.IActorAction"/>.
@@ -480,176 +102,6 @@
             <returns>
               <c>true</c> if the action is actable; otherwise, <c>false</c>.
             </returns>
-        </member>
-        <member name="T:CivModel.IGuidTaggedObject">
-            <summary>
-            The interface represents an object which can be created and class-level distinguished from <see cref="T:System.Guid"/>.
-            </summary>
-            <remarks>
-            To enable object creation from Guid, <see cref="M:CivModel.GuidTaggedObjectManager.RegisterGuid(System.Guid,System.Func{CivModel.Player,CivModel.Terrain.Point,CivModel.IGuidTaggedObject})"/> must be called.
-            </remarks>
-            <seealso cref="T:CivModel.GuidTaggedObjectManager"/>
-        </member>
-        <member name="P:CivModel.IGuidTaggedObject.Guid">
-            <summary>
-            The unique identifier of this class.
-            </summary>
-        </member>
-        <member name="T:CivModel.GuidTaggedObjectManager">
-            <summary>
-            Provides object creation of <see cref="T:CivModel.IGuidTaggedObject"/> from Guid
-            </summary>
-            <seealso cref="T:CivModel.IGuidTaggedObject"/>
-        </member>
-        <member name="M:CivModel.GuidTaggedObjectManager.RegisterGuid(System.Guid,System.Func{CivModel.Player,CivModel.Terrain.Point,CivModel.IGuidTaggedObject})">
-            <summary>
-            Registers a Guid with <see cref="T:CivModel.IGuidTaggedObject"/> supplier.
-            </summary>
-            <remarks>
-            <paramref name="supplier"/> creates an object from arguments. If arguments are invalid, supplier can return <c>null</c>.
-            </remarks>
-            <param name="guid">The Guid.</param>
-            <param name="supplier">The supplier.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="supplier"/> is <c>null</c>.</exception>
-            <exception cref="T:System.ArgumentException">The same Guid is already registered.</exception>
-        </member>
-        <member name="M:CivModel.GuidTaggedObjectManager.Create(System.Guid,CivModel.Player,CivModel.Terrain.Point)">
-            <summary>
-            Creates the <see cref="T:CivModel.IGuidTaggedObject"/> from a specified Guid. If arguments are invalid, returns <c>null</c>.
-            </summary>
-            <param name="guid">The Guid.</param>
-            <param name="owner">The <see cref="T:CivModel.Player"/> who will own the object.</param>
-            <param name="point">The tile where the object will be.</param>
-            <returns>the created <see cref="T:CivModel.IGuidTaggedObject"/> object. If arguments are invalid, <c>null</c>.</returns>
-            <exception cref="T:System.Collections.Generic.KeyNotFoundException">the value of <paramref name="guid"/> is not registered.</exception>
-        </member>
-        <member name="T:CivModel.InteriorBuilding">
-            <summary>
-            Represents a building which must be built in <see cref="T:CivModel.Common.CityCenter"/>.
-            </summary>
-            <seealso cref="T:CivModel.TileBuilding"/>
-        </member>
-        <member name="P:CivModel.InteriorBuilding.Guid">
-            <summary>
-            The unique identifier of this class.
-            </summary>
-        </member>
-        <member name="P:CivModel.InteriorBuilding.Owner">
-            <summary>
-            The <see cref="T:CivModel.Player"/> who owns this building.
-            </summary>
-        </member>
-        <member name="P:CivModel.InteriorBuilding.City">
-            <summary>
-            The <see cref="T:CivModel.Common.CityCenter"/> where this building is.
-            </summary>
-        </member>
-        <member name="M:CivModel.InteriorBuilding.#ctor(CivModel.Common.CityCenter)">
-            <summary>
-            Initializes a new instance of the <see cref="T:CivModel.InteriorBuilding"/> class.
-            </summary>
-            <param name="city">The <see cref="T:CivModel.Common.CityCenter"/> who will own the building.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="city"/> is <c>null</c>.</exception>
-        </member>
-        <member name="M:CivModel.InteriorBuilding.Destroy">
-            <summary>
-            Destroys this building. <see cref="M:CivModel.InteriorBuilding.OnBeforeDestroy"/> is called before the building is destroyed.
-            </summary>
-            <remarks>
-            <strong>postcondition</strong>:
-            <c><see cref="P:CivModel.TileObject.PlacedPoint"/> == null &amp;&amp; <see cref="P:CivModel.InteriorBuilding.Owner"/> == null</c>
-            </remarks>
-        </member>
-        <member name="M:CivModel.InteriorBuilding.OnBeforeDestroy">
-            <summary>
-            Called before [destroy], by <see cref="M:CivModel.InteriorBuilding.Destroy"/>
-            </summary>
-        </member>
-        <member name="M:CivModel.InteriorBuilding.PostPlayerSubTurn(CivModel.Player)">
-            <summary>
-            Called after a sub turn.
-            </summary>
-            <param name="playerInTurn">The player which the sub turn is dedicated to.</param>
-        </member>
-        <member name="M:CivModel.InteriorBuilding.PostTurn">
-            <summary>
-            Called after a turn.
-            </summary>
-        </member>
-        <member name="M:CivModel.InteriorBuilding.PrePlayerSubTurn(CivModel.Player)">
-            <summary>
-            Called before a sub turn.
-            </summary>
-            <param name="playerInTurn">The player which the sub turn is dedicated to.</param>
-        </member>
-        <member name="M:CivModel.InteriorBuilding.PreTurn">
-            <summary>
-            Called before a turn.
-            </summary>
-        </member>
-        <member name="T:CivModel.IInteriorBuildingProductionFactory">
-            <summary>
-            The factory interface of <see cref="T:CivModel.InteriorBuildingProduction"/>.
-            This interface additionally provides <see cref="M:CivModel.IInteriorBuildingProductionFactory.IsPlacable(CivModel.InteriorBuildingProduction,CivModel.Common.CityCenter)"/>
-             and <see cref="M:CivModel.IInteriorBuildingProductionFactory.CreateInteriorBuilding(CivModel.Common.CityCenter)"/> methods.
-            </summary>
-            <seealso cref="T:CivModel.IProductionFactory" />
-        </member>
-        <member name="M:CivModel.IInteriorBuildingProductionFactory.IsPlacable(CivModel.InteriorBuildingProduction,CivModel.Common.CityCenter)">
-            <summary>
-            Determines whether the production result is placable in the specified city.
-            </summary>
-            <param name="production">The production.</param>
-            <param name="city">The city to test to place the production result.</param>
-            <returns>
-              <c>true</c> if the production is placable; otherwise, <c>false</c>.
-            </returns>
-        </member>
-        <member name="M:CivModel.IInteriorBuildingProductionFactory.CreateInteriorBuilding(CivModel.Common.CityCenter)">
-            <summary>
-            Creates the <see cref="T:CivModel.InteriorBuilding"/> which is the production result.
-            </summary>
-            <param name="city">The <see cref="T:CivModel.Common.CityCenter"/> who will own the building.</param>
-            <returns>the created <see cref="T:CivModel.InteriorBuilding"/> result.</returns>
-        </member>
-        <member name="T:CivModel.InteriorBuildingProduction">
-            <summary>
-            The <see cref="T:CivModel.Production"/> class for <see cref="T:CivModel.InteriorBuilding"/>
-            </summary>
-            <seealso cref="T:CivModel.Production" />
-        </member>
-        <member name="M:CivModel.InteriorBuildingProduction.#ctor(CivModel.IInteriorBuildingProductionFactory,CivModel.Player,System.Double,System.Double)">
-            <summary>
-            Initializes a new instance of the <see cref="T:CivModel.InteriorBuildingProduction"/> class.
-            </summary>
-            <param name="factory">The factory object of this production kind.</param>
-            <param name="owner">The <see cref="T:CivModel.Player"/> who will own the production.</param>
-            <param name="totalCost"><see cref="P:CivModel.Production.TotalCost"/> of the production</param>
-            <param name="capacityPerTurn"><see cref="P:CivModel.Production.CapacityPerTurn"/> of the production.</param>
-            <exception cref="T:System.ArgumentException">totalCost is not positive</exception>
-            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="capacityPerTurn"/> is not in [0, <see cref="P:CivModel.Production.TotalCost"/>]</exception>
-            <exception cref="T:System.ArgumentNullException">
-            <paramref name="factory"/> is <c>null</c>
-            or
-            <paramref name="owner"/> is <c>null</c>
-            </exception>
-        </member>
-        <member name="M:CivModel.InteriorBuildingProduction.IsPlacable(CivModel.Terrain.Point)">
-            <summary>
-            Determines whether the production result is placable at the specified point.
-            </summary>
-            <param name="point">The point to test to place the production result.</param>
-            <returns>
-              <c>true</c> if the production is placable; otherwise, <c>false</c>.
-            </returns>
-        </member>
-        <member name="M:CivModel.InteriorBuildingProduction.Place(CivModel.Terrain.Point)">
-            <summary>
-            Places the production result at the specified point.
-            </summary>
-            <param name="point">The point to place the production result.</param>
-            <exception cref="T:System.InvalidOperationException">production is not completed yet</exception>
-            <exception cref="T:System.ArgumentException">point is invalid</exception>
         </member>
         <member name="T:CivModel.ITurnObserver">
             <summary>
@@ -719,12 +171,6 @@
             <param name="pt">The parameter.</param>
             <exception cref="T:System.ArgumentException">parameter is invalid</exception>
             <exception cref="T:System.InvalidOperationException">Owner of this action is not placed yet</exception>
-        </member>
-        <member name="T:CivModel.NamespaceDoc">
-            <summary>
-            The <see cref="N:CivModel"/> namespace of CivModel.dll module
-             provides a core classes and interfaces of CivModel.
-            </summary>
         </member>
         <member name="T:CivModel.Position">
             <summary>
@@ -827,7 +273,7 @@
             <summary>
             Get norm of this position. It is equal to <c>(|A| + |B| + |C|) / 2</c>
             </summary>
-            <returns>The norm of this position.</returns>
+            <returns></returns>
         </member>
         <member name="M:CivModel.Position.Distance(CivModel.Position,CivModel.Position)">
             <summary>
@@ -836,7 +282,7 @@
             </summary>
             <param name="lhs">left hand side parameter</param>
             <param name="rhs">right hand side parameter</param>
-            <returns>The distance between two <see cref="T:CivModel.Position"/>.</returns>
+            <returns></returns>
         </member>
         <member name="M:CivModel.Position.ToString">
             <summary>
@@ -1011,17 +457,6 @@
             <see cref="T:CivModel.TerrainType"/> of the tile.
             </summary>
         </member>
-        <member name="P:CivModel.Terrain.Point.TileOwner">
-            <summary>
-            <see cref="T:CivModel.Player"/> which owns this tile. If no one owns this tile, <c>null</c>.
-            </summary>
-            <remarks>
-            The setter of this property is wrapper of <see cref="M:CivModel.Player.AddTerritory(CivModel.Terrain.Point)"/> and <see cref="M:CivModel.Player.RemoveTerritory(CivModel.Terrain.Point)"/>.
-            See these methods for more details and throwable exceptions.
-            </remarks>
-            <seealso cref="M:CivModel.Player.AddTerritory(CivModel.Terrain.Point)"/>
-            <seealso cref="M:CivModel.Player.RemoveTerritory(CivModel.Terrain.Point)"/>
-        </member>
         <member name="P:CivModel.Terrain.Point.Unit">
             <summary>
             The <see cref="P:CivModel.Terrain.Point.Unit"/> placed at the tile.
@@ -1030,6 +465,21 @@
         <member name="P:CivModel.Terrain.Point.TileBuilding">
             <summary>
             The <see cref="P:CivModel.Terrain.Point.TileBuilding"/> placed at the tile.
+            </summary>
+        </member>
+        <member name="M:CivModel.Terrain.Point.GetTileObject(CivModel.TileTag)">
+            <summary>
+            this function is used internally by <see cref="P:CivModel.Terrain.Point.Terrain"/> class and getters of <see cref="T:CivModel.Terrain.Point"/>.
+            </summary>
+        </member>
+        <member name="M:CivModel.Terrain.Point.SetTileObject(CivModel.TileObject)">
+            <summary>
+            this function is used internally by <see cref="P:CivModel.Terrain.Point.Terrain"/> class.
+            </summary>
+        </member>
+        <member name="M:CivModel.Terrain.Point.UnsetTileObject(CivModel.TileTag)">
+            <summary>
+            this function is used internally by <see cref="P:CivModel.Terrain.Point.Terrain"/> class.
             </summary>
         </member>
         <member name="M:CivModel.Terrain.Point.#ctor(CivModel.Terrain,CivModel.Position)">
@@ -1168,57 +618,11 @@
               <c>true</c> if the specified position is valid; otherwise, <c>false</c>.
             </returns>
         </member>
-        <member name="T:CivModel.TerrainType">
-            <summary>
-            The type of a tile of <see cref="T:CivModel.Terrain"/>.
-            </summary>
-        </member>
-        <member name="F:CivModel.TerrainType.Plain">
-            <summary>
-            [plain] Terrain Type.
-            </summary>
-        </member>
-        <member name="F:CivModel.TerrainType.Ocean">
-            <summary>
-            [Ocean] Terrain Type.
-            </summary>
-        </member>
-        <member name="F:CivModel.TerrainType.Mount">
-            <summary>
-            [Mount] Terrain Type.
-            </summary>
-        </member>
-        <member name="F:CivModel.TerrainType.Forest">
-            <summary>
-            [Forest] Terrain Type.
-            </summary>
-        </member>
-        <member name="F:CivModel.TerrainType.Swamp">
-            <summary>
-            [Swamp] Terrain Type.
-            </summary>
-        </member>
-        <member name="F:CivModel.TerrainType.Tundra">
-            <summary>
-            [Tundra] Terrain Type.
-            </summary>
-        </member>
-        <member name="F:CivModel.TerrainType.Ice">
-            <summary>
-            [Ice] Terrain Type.
-            </summary>
-        </member>
-        <member name="F:CivModel.TerrainType.Hill">
-            <summary>
-            [Hill] Terrain Type.
-            </summary>
-        </member>
         <member name="T:CivModel.TileBuilding">
             <summary>
             Represents a building which is an actor.
             </summary>
             <seealso cref="T:CivModel.Actor" />
-            <seealso cref="T:CivModel.InteriorBuilding"/>
         </member>
         <member name="P:CivModel.TileBuilding.MaxAP">
             <summary>
@@ -1230,34 +634,167 @@
             The action performing movement. <c>null</c> by default.
             </summary>
         </member>
-        <member name="M:CivModel.TileBuilding.#ctor(CivModel.Player,CivModel.Terrain.Point)">
+        <member name="M:CivModel.TileBuilding.#ctor(CivModel.Player)">
             <summary>
             Initializes a new instance of the <see cref="T:CivModel.TileBuilding"/> class.
             </summary>
             <param name="owner">The player who owns this TileBuilding.</param>
-            <param name="point">The tile where the object will be.</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="owner"/> is <c>null</c>.</exception>
         </member>
-        <member name="M:CivModel.TileBuilding.OnChangePlacedPoint(System.Nullable{CivModel.Terrain.Point})">
+        <member name="T:CivModel.Common.CityCenter">
             <summary>
-            Called after <see cref="P:CivModel.TileObject.PlacedPoint" /> is changed.
+            Represents a city as <see cref="T:CivModel.TileBuilding"/>.
             </summary>
-            <param name="oldPoint">The old value of <see cref="P:CivModel.TileObject.PlacedPoint" />.</param>
+            <seealso cref="T:CivModel.TileBuilding" />
+        </member>
+        <member name="P:CivModel.Common.CityCenter.MaxHP">
+            <summary>
+            The maximum HP. <c>0</c> if this actor is not a combattant.
+            </summary>
+        </member>
+        <member name="P:CivModel.Common.CityCenter.MaxHealPerTurn">
+            <summary>
+            The maximum heal per turn.
+            </summary>
+            <seealso cref="P:CivModel.Actor.RemainHP" />
+        </member>
+        <member name="P:CivModel.Common.CityCenter.AttackPower">
+            <summary>
+            The attack power.
+            </summary>
+        </member>
+        <member name="P:CivModel.Common.CityCenter.DefencePower">
+            <summary>
+            The defence power.
+            </summary>
+        </member>
+        <member name="P:CivModel.Common.CityCenter.HoldingAttackAct">
+            <summary>
+            The action performing movement. <c>null</c> if this actor cannot do.
+            </summary>
+        </member>
+        <member name="P:CivModel.Common.CityCenter.AvailableProduction">
+            <summary>
+            The list of available production from this city.
+            </summary>
+            <seealso cref="M:CivModel.Player.GetAvailableProduction"/>
+        </member>
+        <member name="M:CivModel.Common.CityCenter.#ctor(CivModel.Player)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CivModel.Common.CityCenter"/> class.
+            </summary>
+            <param name="owner">The player who owns this city.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="owner"/> is <c>null</c>.</exception>
+        </member>
+        <member name="M:CivModel.Common.CityCenter.OnBeforeChangeOwner(CivModel.Player)">
+            <summary>
+            Called before [change owner], by <see cref="M:CivModel.Actor.ChangeOwner(CivModel.Player)" />.
+            </summary>
+            <param name="newOwner">The new owner.</param>
+        </member>
+        <member name="M:CivModel.Common.CityCenter.OnBeforeDestroy">
+            <summary>
+            Called before [destroy], by <see cref="M:CivModel.Actor.Destroy" />
+            </summary>
+        </member>
+        <member name="M:CivModel.Common.CityCenter.OnDie(CivModel.Player)">
+            <summary>
+            Called when [die] by <see cref="M:CivModel.Actor.Die(CivModel.Player)" />.
+            The default implementation calls <see cref="M:CivModel.Actor.Destroy" />.
+            </summary>
+            <param name="opposite">The opposite who caused the dying of this actor. If not exists, <c>null</c>.</param>
+        </member>
+        <member name="T:CivModel.Common.Pioneer">
+            <summary>
+            A pionner unit who can make city.
+            </summary>
+            <seealso cref="T:CivModel.Unit" />
+        </member>
+        <member name="P:CivModel.Common.Pioneer.MaxAP">
+            <summary>
+            The maximum AP.
+            </summary>
+        </member>
+        <member name="P:CivModel.Common.Pioneer.SpecialActs">
+            <summary>
+            The list of special actions.
+            <see cref="T:CivModel.Common.Pioneer"/> have one special action "pionnering".
+            </summary>
+        </member>
+        <member name="M:CivModel.Common.Pioneer.#ctor(CivModel.Player)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CivModel.Common.Pioneer"/> class.
+            </summary>
+            <param name="owner">The <see cref="T:CivModel.Player"/> who owns this unit.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="owner"/> is <c>null</c>.</exception>
+        </member>
+        <member name="T:CivModel.Common.PioneerProductionFactory">
+            <summary>
+            The factory interface for <see cref="T:CivModel.Common.Pioneer"/>.
+            </summary>
+            <seealso cref="T:CivModel.ITileObjectProductionFactory" />
+        </member>
+        <member name="P:CivModel.Common.PioneerProductionFactory.Instance">
+            <summary>
+            The singleton instance.of <see cref="T:CivModel.Common.PioneerProductionFactory"/>
+            </summary>
+        </member>
+        <member name="M:CivModel.Common.PioneerProductionFactory.Create(CivModel.Player)">
+            <summary>
+            Creates the <see cref="T:CivModel.Production" /> object
+            </summary>
+            <param name="owner">The player who owns the <see cref="T:CivModel.Production" /> object.</param>
+            <returns>
+            the created <see cref="T:CivModel.Production" /> object
+            </returns>
+        </member>
+        <member name="M:CivModel.Common.PioneerProductionFactory.IsPlacable(CivModel.TileObjectProduction,CivModel.Terrain.Point)">
+            <summary>
+            Determines whether the production result is placable at the specified point.
+            </summary>
+            <param name="production">The production.</param>
+            <param name="point">The point to test to place the production result.</param>
+            <returns>
+              <c>true</c> if the production is placable; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:CivModel.Common.PioneerProductionFactory.CreateTileObject(CivModel.Player)">
+            <summary>
+            Creates the <see cref="T:CivModel.TileObject" /> which is the production result.
+            </summary>
+            <param name="owner">The <see cref="T:CivModel.Player" /> who owns the result.</param>
+            <returns>
+            the created <see cref="T:CivModel.TileObject" /> result.
+            </returns>
         </member>
         <member name="T:CivModel.Game">
             <summary>
             Represents one civ game.
             </summary>
         </member>
-        <member name="F:CivModel.Game.Scheme">
+        <member name="P:CivModel.Game.GoldCoefficient">
             <summary>
-            The scheme of this game.
+            Coefficient for <see cref="P:CivModel.Player.GoldIncome"/>.
             </summary>
         </member>
-        <member name="P:CivModel.Game.GuidManager">
+        <member name="P:CivModel.Game.PopulationCoefficient">
             <summary>
-            The manager object of <see cref="T:CivModel.IGuidTaggedObject"/>.
-            This property is used by model extension modules.
+            Coefficient for PopulationIncome.
+            </summary>
+        </member>
+        <member name="P:CivModel.Game.HappinessCoefficient">
+            <summary>
+            Coefficient for <see cref="P:CivModel.Player.HappinessIncome"/>.
+            </summary>
+        </member>
+        <member name="P:CivModel.Game.LaborCoefficient">
+            <summary>
+            Coefficient for <see cref="P:CivModel.Player.Labor"/>.
+            </summary>
+        </member>
+        <member name="P:CivModel.Game.LaborHappinessConstant">
+            <summary>
+            Coefficient for <see cref="P:CivModel.Player.Labor"/>, which works with <see cref="P:CivModel.Player.Happiness"/>.
             </summary>
         </member>
         <member name="P:CivModel.Game.Terrain">
@@ -1298,60 +835,25 @@
             The player who plays in this turn.
             </summary>
         </member>
-        <member name="F:CivModel.Game._guidSaveFormat">
+        <member name="M:CivModel.Game.#ctor(System.Int32,System.Int32,System.Int32)">
             <summary>
-            See remark section of <see cref="M:System.Guid.ParseExact(System.String,System.String)"/>.
+            Initializes a new instance of the <see cref="T:CivModel.Game"/> class.
             </summary>
-        </member>
-        <member name="M:CivModel.Game.#ctor(System.Int32,System.Int32,System.Int32,CivModel.IGameSchemeFactory)">
-            <summary>
-            Initializes a new instance of the <see cref="T:CivModel.Game"/> class, by creating a new game.
-            </summary>
-            <param name="width">The width of the <see cref="P:CivModel.Game.Terrain"/> of this game. It must be positive. if the value is <c>-1</c>, uses <see cref="P:CivModel.IGameScheme.DefaultTerrainWidth"/> of the scheme.</param>
-            <param name="height">The height of the <see cref="P:CivModel.Game.Terrain"/> of this game. It must be positive. if the value is <c>-1</c>, uses <see cref="P:CivModel.IGameScheme.DefaultTerrainHeight"/> of the scheme.</param>
-            <param name="numOfPlayer">The number of players. It must be positive. if the value is <c>-1</c>, uses <see cref="P:CivModel.IGameScheme.DefaultNumberOfPlayers"/> of the scheme.</param>
-            <param name="schemeFactory">The factory for <see cref="T:CivModel.IGameScheme"/> of the game.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="schemeFactory"/> is <c>null</c>.</exception>
+            <param name="width">The width of the <see cref="P:CivModel.Game.Terrain"/> of this game. It must be positive.</param>
+            <param name="height">The height of the <see cref="P:CivModel.Game.Terrain"/> of this game. It must be positive.</param>
+            <param name="numOfPlayer">The number of player. It must be positive.</param>
             <exception cref="T:System.ArgumentException">
             <paramref name="width"/> is not positive
             or
             <paramref name="height"/> is not positive
             or
             <paramref name="numOfPlayer"/> is not positive
-            or
-            parameter is not equal to default value of scheme, while scheme forces to be.
             </exception>
-        </member>
-        <member name="M:CivModel.Game.#ctor(System.String,System.Collections.Generic.IEnumerable{CivModel.IGameSchemeFactory})">
-            <summary>
-            Initializes a new instance of the <see cref="T:CivModel.Game"/> class, by loading a existing save file.
-            </summary>
-            <param name="saveFile">The path of the save file.</param>
-            <param name="schemeFactories">the candidates of factories for <see cref="T:CivModel.IGameScheme"/> of the game.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="schemeFactories"/> is <c>null</c>.</exception>
-            <exception cref="T:System.IO.InvalidDataException">
-            save file is invalid
-            or
-            there is no <see cref="T:CivModel.IGameSchemeFactory"/> for this save file.
-            </exception>
-            <remarks>
-            This constructor uses <see cref="M:System.IO.File.OpenText(System.String)"/>.
-            See the list of the exceptions <see cref="M:System.IO.File.OpenText(System.String)"/> may throw.
-            </remarks>
-        </member>
-        <member name="M:CivModel.Game.Save(System.String)">
-            <summary>
-            Saves current status of the game to the specified save file.
-            </summary>
-            <param name="saveFile">The path of the save file.</param>
         </member>
         <member name="M:CivModel.Game.StartTurn">
             <summary>
-            Starts the turn. If the game is loaded from a save file and not resumed, Resume the game.
+            Starts the turn.
             </summary>
-            <remarks>
-            This method also resumes the game loaded from a save file. In this case, Turn/Subturn does not change.
-            </remarks>
             <exception cref="T:System.InvalidOperationException">this game is inside turn yet</exception>
         </member>
         <member name="M:CivModel.Game.EndTurn">
@@ -1362,7 +864,7 @@
         </member>
         <member name="T:CivModel.BattleResult">
             <summary>
-            The result of a battle. This is used by <see cref="M:CivModel.Actor.AttackTo(CivModel.Actor)"/> and <see cref="M:CivModel.Actor.RangedAttackTo(CivModel.Actor)"/>.
+            The result of a battle. This is used by <see cref="M:CivModel.Actor.AttackTo(CivModel.Actor)"/>.
             </summary>
         </member>
         <member name="F:CivModel.BattleResult.Draw">
@@ -1399,10 +901,8 @@
         </member>
         <member name="P:CivModel.Actor.RemainAP">
             <summary>
-            The remaining AP. It must be in [0, <see cref="P:CivModel.Actor.MaxAP"/>].
-            It is reset to <see cref="P:CivModel.Actor.MaxAP"/> when <see cref="M:CivModel.Actor.PreTurn"/> is called.
+            The remaining AP. It is reset to <see cref="P:CivModel.Actor.MaxAP"/> when <see cref="M:CivModel.Actor.PreTurn"/> is called.
             </summary>
-            <exception cref="T:System.ArgumentOutOfRangeException"><see cref="P:CivModel.Actor.RemainAP"/> is not in [0, <see cref="P:CivModel.Actor.MaxAP"/>]</exception>
         </member>
         <member name="P:CivModel.Actor.SkipFlag">
             <summary>
@@ -1459,12 +959,11 @@
             </summary>
             <exception cref="T:System.ArgumentOutOfRangeException"><see cref="P:CivModel.Actor.RemainHP"/> is not in [0, <see cref="P:CivModel.Actor.MaxHP"/>]</exception>
         </member>
-        <member name="M:CivModel.Actor.#ctor(CivModel.Player,CivModel.Terrain.Point,CivModel.TileTag)">
+        <member name="M:CivModel.Actor.#ctor(CivModel.Player,CivModel.TileTag)">
             <summary>
             Initializes a new instance of the <see cref="T:CivModel.Actor"/> class.
             </summary>
             <param name="owner">The player who owns this actor.</param>
-            <param name="point">The tile where the object will be.</param>
             <param name="tag">The <seealso cref="T:CivModel.TileTag"/> of this actor.</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="owner"/> is <c>null</c>.</exception>
         </member>
@@ -1522,15 +1021,9 @@
             </summary>
             <seealso cref="M:CivModel.Actor.ConsumeAP(System.Int32)"/>
         </member>
-        <member name="M:CivModel.Actor.Heal(System.Double)">
-            <summary>
-            Heals HP of this actor with the specified amount.
-            </summary>
-            <param name="amount">The amount to heal.</param>
-        </member>
         <member name="M:CivModel.Actor.AttackTo(CivModel.Actor)">
             <summary>
-            Melee-Attack to another <see cref="T:CivModel.Actor"/>.
+            Attacks to another <see cref="T:CivModel.Actor"/>.
             </summary>
             <param name="opposite">The opposite.</param>
             <returns>
@@ -1539,19 +1032,6 @@
               if this object has died, <see cref="F:CivModel.BattleResult.Defeated"/>.
               if both have died or survived, <see cref="F:CivModel.BattleResult.Draw"/>.
             </returns>
-            <seealso cref="M:CivModel.Actor.RangedAttackTo(CivModel.Actor)"/>
-        </member>
-        <member name="M:CivModel.Actor.RangedAttackTo(CivModel.Actor)">
-            <summary>
-            Ranged-Attack to another <see cref="T:CivModel.Actor"/>.
-            </summary>
-            <param name="opposite">The opposite.</param>
-            <returns>
-              <see cref="T:CivModel.BattleResult"/> indicating the result of this battle.
-              if <paramref name="opposite"/> has died, <see cref="F:CivModel.BattleResult.Victory"/>.
-              otherwise, <see cref="F:CivModel.BattleResult.Draw"/>.
-            </returns>
-            <seealso cref="M:CivModel.Actor.AttackTo(CivModel.Actor)"/>
         </member>
         <member name="M:CivModel.Actor.GetRequiredAPToMove(CivModel.Terrain.Point)">
             <summary>
@@ -1615,11 +1095,6 @@
             Represents an object which can be placed on <see cref="T:CivModel.Terrain.Point"/>.
             </summary>
         </member>
-        <member name="P:CivModel.TileObject.Guid">
-            <summary>
-            The unique identifier of this class.
-            </summary>
-        </member>
         <member name="P:CivModel.TileObject.TileTag">
             <summary>
             The value indicating the kind of this object.
@@ -1630,18 +1105,11 @@
             The placed point of this object. <c>null</c> if not placed.
             </summary>
         </member>
-        <member name="M:CivModel.TileObject.#ctor(CivModel.Terrain.Point,CivModel.TileTag)">
+        <member name="M:CivModel.TileObject.#ctor(CivModel.TileTag)">
             <summary>
             Initializes a new instance of the <see cref="T:CivModel.TileObject"/> class.
             </summary>
-            <param name="point">The tile where the object will be.</param>
-            <param name="tileTag">The <see cref="P:CivModel.TileObject.TileTag"/> of the object.</param>
-        </member>
-        <member name="M:CivModel.TileObject.OnChangePlacedPoint(System.Nullable{CivModel.Terrain.Point})">
-            <summary>
-            Called after <see cref="P:CivModel.TileObject.PlacedPoint"/> is changed.
-            </summary>
-            <param name="oldPoint">The old value of <see cref="P:CivModel.TileObject.PlacedPoint"/>.</param>
+            <param name="tileTag">The <see cref="P:CivModel.TileObject.TileTag"/> of a object.</param>
         </member>
         <member name="T:CivModel.Player">
             <summary>
@@ -1651,77 +1119,39 @@
         </member>
         <member name="P:CivModel.Player.Gold">
             <summary>
-            The gold of this player. This value is not negative.
+            The gold of this player.
             </summary>
-            <seealso cref="P:CivModel.Player.GoldIncome"/>
         </member>
         <member name="P:CivModel.Player.GoldIncome">
             <summary>
-            The gold income of this player. This is not negative, and can be different from <see cref="P:CivModel.Player.GoldNetIncome"/>
+            The gold income of this player.
             </summary>
-            <seealso cref="P:CivModel.Player.GoldNetIncome"/>
             <seealso cref="P:CivModel.Player.TaxRate"/>
-            <seealso cref="P:CivModel.IGameScheme.GoldCoefficient"/>
-        </member>
-        <member name="P:CivModel.Player.GoldNetIncome">
-            <summary>
-            The net income of gold.
-            </summary>
-            <seealso cref="P:CivModel.Player.GoldIncome"/>
+            <seealso cref="P:CivModel.Game.GoldCoefficient"/>
         </member>
         <member name="P:CivModel.Player.Happiness">
             <summary>
-            The happiness of this player. This value is in [-100, 100].
+            The happiness of this player. This value cannot exceed <c>100</c>.
             </summary>
-            <seealso cref="P:CivModel.Player.HappinessIncome"/>
         </member>
         <member name="P:CivModel.Player.HappinessIncome">
             <summary>
             The happiness income of this player.
             </summary>
-            <seealso cref="P:CivModel.IGameScheme.HappinessCoefficient"/>
+            <seealso cref="P:CivModel.Game.HappinessCoefficient"/>
         </member>
         <member name="P:CivModel.Player.Labor">
             <summary>
-            The labor per turn of this player. It is equal to sum of all <see cref="P:CivModel.Common.CityCenter.Labor"/> of cities of this player.
+            The labor per turn of this player.
             </summary>
-            <seealso cref="P:CivModel.Common.CityCenter.Labor"/>
-        </member>
-        <member name="P:CivModel.Player.Population">
-            <summary>
-            The whole population which this player has. It is equal to sum of all <see cref="P:CivModel.Common.CityCenter.Population"/> of cities of this player.
-            </summary>
-            <seealso cref="P:CivModel.Common.CityCenter.Population"/>
+            <seealso cref="P:CivModel.Game.LaborCoefficient"/>
+            <seealso cref="P:CivModel.Game.LaborHappinessConstant"/>
         </member>
         <member name="P:CivModel.Player.TaxRate">
             <summary>
-            The tax rate of this player. It affects <see cref="P:CivModel.Player.GoldIncome"/> and <see cref="P:CivModel.Player.BasicEconomicRequire"/>.
+            The tax rate of this player. It affects <see cref="P:CivModel.Player.GoldIncome"/>.
             </summary>
-            <exception cref="T:System.ArgumentOutOfRangeException"><see cref="P:CivModel.Player.TaxRate"/> is not in [0, 1]</exception>
-        </member>
-        <member name="P:CivModel.Player.BasicEconomicRequire">
-            <summary>
-            The basic economic gold requirement.
-            </summary>
-            <seealso cref="P:CivModel.Player.EconomicInvestment"/>
-        </member>
-        <member name="P:CivModel.Player.EconomicInvestment">
-            <summary>
-            The amount of gold for economic investment.
-            </summary>
-            <seealso cref="P:CivModel.Player.BasicEconomicRequire"/>
-        </member>
-        <member name="P:CivModel.Player.BasicResearchRequire">
-            <summary>
-            The basic research gold requirement.
-            </summary>
-            <seealso cref="P:CivModel.Player.ResearchInvestment"/>
-        </member>
-        <member name="P:CivModel.Player.ResearchInvestment">
-            <summary>
-            The amount of gold for research investment.
-            </summary>
-            <seealso cref="P:CivModel.Player.BasicResearchRequire"/>
+            <exception cref="T:System.ArgumentException"><see cref="P:CivModel.Player.TaxRate"/> is not in [0, 1]</exception>
         </member>
         <member name="P:CivModel.Player.Units">
             <summary>
@@ -1761,11 +1191,6 @@
             This property is updated by <see cref="M:CivModel.Player.EstimateLaborInputing"/>.
             You must call that function before use this property.
             </remarks>
-        </member>
-        <member name="P:CivModel.Player.Territory">
-            <summary>
-            The list of tiles which this player owns as territory.
-            </summary>
         </member>
         <member name="P:CivModel.Player.IsDefeated">
             <summary>
@@ -1818,21 +1243,6 @@
             </remarks>
             <returns>the list of available productions</returns>
         </member>
-        <member name="M:CivModel.Player.AddTerritory(CivModel.Terrain.Point)">
-            <summary>
-            Adds the territory of this player.
-            </summary>
-            <param name="pt">The tile to be in the territory.</param>
-            <exception cref="T:System.InvalidOperationException">a <see cref="T:CivModel.TileBuilding"/> of another player is at <paramref name="pt"/></exception>
-        </member>
-        <member name="M:CivModel.Player.RemoveTerritory(CivModel.Terrain.Point)">
-            <summary>
-            Removes the territory of this player.
-            </summary>
-            <param name="pt">The tile to be out of the territory.</param>
-            <exception cref="T:System.ArgumentException"><paramref name="pt"/> is not in the territoriy of this player</exception>
-            <exception cref="T:System.InvalidOperationException">the tile where a <see cref="T:CivModel.TileBuilding"/> is cannot be removed from the territory</exception>
-        </member>
         <member name="M:CivModel.Player.PreTurn">
             <summary>
             Called before a turn.
@@ -1861,6 +1271,11 @@
             and <see cref="P:CivModel.Player.EstimatedUsedLabor"/> property  of this player.
             </summary>
         </member>
+        <member name="T:CivModel.TerrainType">
+            <summary>
+            The type of a tile of <see cref="T:CivModel.Terrain"/>.
+            </summary>
+        </member>
         <member name="T:CivModel.Unit">
             <summary>
             Represents an unit.
@@ -1872,12 +1287,11 @@
             The action performing movement. A <see cref="T:CivModel.MoveActorAction"/> object by default.
             </summary>
         </member>
-        <member name="M:CivModel.Unit.#ctor(CivModel.Player,CivModel.Terrain.Point)">
+        <member name="M:CivModel.Unit.#ctor(CivModel.Player)">
             <summary>
             Initializes a new instance of the <see cref="T:CivModel.Unit"/> class.
             </summary>
             <param name="owner">The <see cref="T:CivModel.Player"/> who owns this unit.</param>
-            <param name="point">The tile where the object will be.</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="owner"/> is <c>null</c>.</exception>
         </member>
         <member name="M:CivModel.Unit.OnBeforeChangeOwner(CivModel.Player)">
@@ -1895,7 +1309,7 @@
             <summary>
             The factory interface of <see cref="T:CivModel.TileObjectProduction"/>.
             This interface additionally provides <see cref="M:CivModel.ITileObjectProductionFactory.IsPlacable(CivModel.TileObjectProduction,CivModel.Terrain.Point)"/>
-             and <see cref="M:CivModel.ITileObjectProductionFactory.CreateTileObject(CivModel.Player,CivModel.Terrain.Point)"/> methods.
+             and <see cref="M:CivModel.ITileObjectProductionFactory.CreateTileObject(CivModel.Player)"/> methods.
             </summary>
             <seealso cref="T:CivModel.IProductionFactory" />
         </member>
@@ -1909,12 +1323,11 @@
               <c>true</c> if the production is placable; otherwise, <c>false</c>.
             </returns>
         </member>
-        <member name="M:CivModel.ITileObjectProductionFactory.CreateTileObject(CivModel.Player,CivModel.Terrain.Point)">
+        <member name="M:CivModel.ITileObjectProductionFactory.CreateTileObject(CivModel.Player)">
             <summary>
             Creates the <see cref="T:CivModel.TileObject"/> which is the production result.
             </summary>
             <param name="owner">The <see cref="T:CivModel.Player"/> who owns the result.</param>
-            <param name="point">The tile where the object will be.</param>
             <returns>the created <see cref="T:CivModel.TileObject"/> result.</returns>
         </member>
         <member name="T:CivModel.TileObjectProduction">

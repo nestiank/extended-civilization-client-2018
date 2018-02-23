@@ -176,8 +176,7 @@ public class PseudoFSM : MonoBehaviour {
         int index = _currentSkill;
         _inSkillState = false;
         _currentSkill = -1;
-
-        if (!GameManager.I.SelectedActor.SpecialActs[index].IsParametered)
+        if (GameManager.I.SelectedActor == null || !GameManager.I.SelectedActor.SpecialActs[index].IsParametered)
         {
             return;
         }

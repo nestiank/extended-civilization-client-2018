@@ -10,6 +10,19 @@ public class UIManager : MonoBehaviour {
     public GameObject ManagementUI;
     public GameObject QuestUI;
 
+    public Text Gold;
+    public Text Population;
+    public Text Happiness;
+    public Text Technology;
+    public Text Labor;
+
+    public GameObject UnitInfo;
+    public Text UnitName;
+    public Text UnitAttack;
+    public Text UnitDefence;
+    public Text UnitEffect;
+    public Text ActionPoint;
+
     public GameObject SpecialSpec;
 /*
     public GameObject SkillSpec1;
@@ -48,17 +61,44 @@ public class UIManager : MonoBehaviour {
     }
     void Start()
     {
-        uicontroller = ManagementUIController.GetManagementUIController();   
+        uicontroller = ManagementUIController.GetManagementUIController();
     }
     void Update()
     {
         if (GameManager.I.isThereTodos)
         {
             MapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().text = "유닛이 명령을 기다리고 있습니다";
+            MapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().fontSize = Screen.height / 40;
         }
         else
         {
             MapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().text = "다음 턴";
+            MapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().fontSize = Screen.height / 25;
+        }
+
+        Gold.text = "금 : " + GameManager.I.Game.PlayerInTurn.Gold + "(+" + GameManager.I.Game.PlayerInTurn.GoldIncome + ")";
+        Population.text = "인구 : "; // Model 업데이트 이후 어디서 찾아야 하는지 찾을 필요성 있음.
+        Happiness.text = "행복 : " + GameManager.I.Game.PlayerInTurn.Happiness;
+        Technology.text = "기술력 : "; // Model 업데이트 이후 어디서 찾아야 하는지 찾을 필요성 있음.
+        Labor.text = "노동력 : " + GameManager.I.Game.PlayerInTurn.Labor;
+
+        if(GameManager.I.SelectedActor != null)
+        {
+            UnitInfo.SetActive(true);
+            UnitName.text = ProductionFactoryTraits.GetName(GameManager.I.SelectedActor);
+            UnitAttack.text = GameManager.I.SelectedActor.AttackPower.ToString();
+            UnitDefence.text = GameManager.I.SelectedActor.DefencePower.ToString();
+            UnitEffect.text = "";
+            ActionPoint.text = GameManager.I.SelectedActor.RemainAP + "/" + GameManager.I.SelectedActor.MaxAP;
+        }
+        else
+        {
+            UnitInfo.SetActive(false);
+            UnitName.text = "";
+            UnitAttack.text = "";
+            UnitDefence.text = "";
+            UnitEffect.text = "";
+            ActionPoint.text = "";
         }
     }
 

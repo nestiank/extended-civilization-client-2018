@@ -57,7 +57,7 @@ public class GameManager : MonoBehaviour {
         }
         // Use this when scene changing exists
         // DontDestroyOnLoad(gameObject);
-        _game = new CivModel.Game(GameInfo.mapWidth, GameInfo.mapHeight, GameInfo.numOfPlayer, new CivModel.Common.GameSchemeFactory());
+        _game = new CivModel.Game(GameInfo.mapWidth, GameInfo.mapHeight, GameInfo.numOfPlayer);
         _game.StartTurn();
 
     }
@@ -101,6 +101,20 @@ public class GameManager : MonoBehaviour {
                     if (tile.isFlickering)
                     {
                         Deploy(tile.point, PseudoFSM.I.Deployment);
+                    }
+                    else
+                        PseudoFSM.I.NormalStateEnter();
+                }
+                if (PseudoFSM.I.AttackState)
+                {
+                    if (tile.isFlickering)
+                    {
+                        if (tile.point.TileBuilding != null)
+                            SelectedActor.AttackTo(tile.point.TileBuilding);
+                        else if (tile.point.Unit != null)
+                            SelectedActor.AttackTo(tile.point.Unit);
+                        else
+                            Debug.Log("잘못된 공격 대상");
                     }
                     else
                         PseudoFSM.I.NormalStateEnter();
@@ -156,6 +170,10 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+    public void BuildBuilding(CivModel.Terrain.Point pos, TileBuilding building)
+    {
+
+    }
     // Read game terrain and update hex tile resource
     void Render(CivModel.Terrain terrain)
     {
@@ -305,6 +323,25 @@ public static class ProductionFactoryTraits
                 result = "개척자";
                 break;
             case "JediKnightProductionFactory":
+                result = "제다이 기사";
+                break;
+            default:
+                result = "unknown : " + name;
+                break;
+        }
+        return result;
+    }
+    public static string GetName(CivModel.Unit unit)
+    {
+        char[] sep = { '.' };
+        string name = unit.ToString().Split(sep)[2];
+        string result;
+        switch (name)
+        {
+            case "Pioneer":
+                result = "개척자";
+                break;
+            case "JediKnight":
                 result = "제다이 기사";
                 break;
             default:

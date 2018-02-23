@@ -11853,6 +11853,17 @@ MonoBehaviour:
   MapUI: {fileID: 531803464}
   ManagementUI: {fileID: 687281509}
   QuestUI: {fileID: 1243551243}
+  Gold: {fileID: 520572089}
+  Population: {fileID: 1776750191}
+  Happiness: {fileID: 79311831}
+  Technology: {fileID: 1494908599}
+  Labor: {fileID: 798699953}
+  UnitInfo: {fileID: 1452676922}
+  UnitName: {fileID: 83997300}
+  UnitAttack: {fileID: 964404866}
+  UnitDefence: {fileID: 1481027123}
+  UnitEffect: {fileID: 896622680}
+  ActionPoint: {fileID: 1830873737}
   SpecialSpec: {fileID: 269591156}
   SkillSet: {fileID: 1558743809}
   UnitSelTab: {fileID: 309872625}
@@ -11893,7 +11904,13 @@ MonoBehaviour:
     type: 2}
   proQueue: {fileID: 1681201286}
   depQueue: {fileID: 1623971497}
-  productableQueue: {fileID: 1447270533}
+  EpicQueue: {fileID: 1447270533}
+  HighQueue: {fileID: 1911486372}
+  IntermediateQueue: {fileID: 410991340}
+  LowQueue: {fileID: 822141376}
+  CityQueue: {fileID: 1340925456}
+  CityBuildingQueue: {fileID: 1289093026}
+  NormalBuildingQueue: {fileID: 436280704}
 --- !u!1001 &1060029827
 Prefab:
   m_ObjectHideFlags: 0
@@ -20347,7 +20364,7 @@ GameObject:
   - component: {fileID: 1830873738}
   - component: {fileID: 1830873737}
   m_Layer: 5
-  m_Name: Text
+  m_Name: ActionPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -20369,7 +20386,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: -0.000061035156, y: 0}
-  m_SizeDelta: {x: 40, y: 40}
+  m_SizeDelta: {x: 70, y: 40}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1830873737
 MonoBehaviour:

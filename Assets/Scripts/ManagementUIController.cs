@@ -21,7 +21,8 @@ public class ManagementUIController : MonoBehaviour {
 
     private List<GameObject> PQlist;
     private List<GameObject> DQlist;
-    private List<GameObject> SQlist;
+    private List<GameObject> EpicQlist, HighQlist, IntermediateQlist, LowQlist;    // Unit production
+    private List<GameObject> CityQlist, CityBuildingQlist, NormalBuildingQlist;
 
     public GameObject proPrefab;
     public GameObject depPrefab;
@@ -29,9 +30,11 @@ public class ManagementUIController : MonoBehaviour {
 
     public GameObject proQueue;
     public GameObject depQueue;
-    public GameObject productableQueue;
+    public GameObject EpicQueue, HighQueue, IntermediateQueue, LowQueue;    // Unit production
+    public GameObject CityQueue, CityBuildingQueue, NormalBuildingQueue;  // Building production
 
-    public void ManageFunction()                                      // Management tab on/off button -> ManageMentUIActive
+
+    private List<GameObject> MakeSelectionQ(List<GameObject> SQlist, GameObject productableQueue)
     {
         List<GameObject> tempList = new List<GameObject>();
         Debug.Log("SelectList startMaking");
@@ -41,6 +44,7 @@ public class ManagementUIController : MonoBehaviour {
         }
         SQlist.Clear();
         facList = game.PlayerInTurn.GetAvailableProduction();
+        //facList의 변경으로 Epic-High-intermediate-Low 변경 가능. 하지만 지금은 설정되지 않았음(Epic에 생성)
         Debug.Log(facList + " " + facList.Count);
         Debug.Log("facList : " + facList.Count);
         Debug.Log("SelectList Updated");
@@ -62,13 +66,17 @@ public class ManagementUIController : MonoBehaviour {
             SPrefab.GetComponent<SelPrefab>().MakeItem();
             tempList.Add(SPrefab);
         }
-        SQlist = tempList;
+        return tempList;
+    }
+    public void ManageFunction()                                      // Management tab on/off button -> ManageMentUIActive
+    {
+        EpicQlist = MakeSelectionQ(EpicQlist, EpicQueue);
         MakeProductionQ();
         MakeDeploymentQ();
-        foreach (GameObject sq in SQlist)
+        foreach (GameObject sq in EpicQlist)
         {
-            sq.GetComponent<SelPrefab>().SetButton(SQlist.IndexOf(sq));
-            Debug.Log(SQlist.IndexOf(sq));
+            sq.GetComponent<SelPrefab>().SetButton(EpicQlist.IndexOf(sq));
+            Debug.Log(EpicQlist.IndexOf(sq));
         }
         foreach (GameObject dq in DQlist)
         {
@@ -94,7 +102,15 @@ public class ManagementUIController : MonoBehaviour {
         {
             gameManager = GameManager.I;
             game = gameManager.Game;
-            SQlist = new List<GameObject>();
+
+            EpicQlist = new List<GameObject>();
+            HighQlist = new List<GameObject>();
+            IntermediateQlist = new List<GameObject>();
+            LowQlist = new List<GameObject>();
+            CityQlist = new List<GameObject>();
+            CityBuildingQlist = new List<GameObject>();
+            NormalBuildingQlist = new List<GameObject>();
+
             PQlist = new List<GameObject>();
             DQlist = new List<GameObject>();
         }
