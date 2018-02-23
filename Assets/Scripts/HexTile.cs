@@ -85,6 +85,8 @@ public class HexTile : MonoBehaviour {
         Debug.Log(gameObject.name + " stopped flickering");
         if (terrains.GetChild((int)point.Type).GetComponent<Renderer>() == null)
             return;
+        if (_coroutine == null)
+            return;
         StopCoroutine(_coroutine);
         Material mat = terrains.GetChild((int)point.Type).GetComponent<Renderer>().material;
         mat.SetColor("_Color", Color.white);

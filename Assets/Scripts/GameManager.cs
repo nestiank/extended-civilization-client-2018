@@ -96,7 +96,15 @@ public class GameManager : MonoBehaviour {
                         Move(tile.point);
                     }
                 }
-
+                if (PseudoFSM.I.DepState)
+                {
+                    if (tile.isFlickering)
+                    {
+                        Deploy(tile.point, PseudoFSM.I.Deployment);
+                    }
+                    else
+                        PseudoFSM.I.NormalStateEnter();
+                }
                 Unit unit = tile.point.Unit;
                 if (unit != null)
                 {
@@ -276,12 +284,33 @@ public class GameManager : MonoBehaviour {
         _selectedActor.MoveAct.Act(point);
         PseudoFSM.I.NormalStateEnter();
     }
+
+    void Deploy(CivModel.Terrain.Point point, Production dep)
+    {
+        dep.Place(point);
+        PseudoFSM.I.NormalStateEnter();
+    }
 }
 
 public static class ProductionFactoryTraits
 {
     public static string GetFactoryName(CivModel.IProductionFactory Factory)
     {
-        return Factory.ToString();
+        char[] sep = { '.' };
+        string name = Factory.ToString().Split(sep)[2];
+        string result;
+        switch(name)
+        {
+            case "PioneerProductionFactory":
+                result = "개척자";
+                break;
+            case "JediKnightProductionFactory":
+                result = "제다이 기사";
+                break;
+            default:
+                result = "unknown : " + name;
+                break;
+        }
+        return result;
     }
 }

@@ -29,7 +29,23 @@ public class UIManager : MonoBehaviour {
     public GameObject CityTab, CityBuildingTab, NormalBuildingTab;  // Building production
 
     private ManagementUIController uicontroller;
-
+    private static UIManager _uimanager;
+    public static UIManager I { get { return _uimanager; } }
+    void Awake()
+    {
+        // Singleton
+        if (_uimanager != null)
+        {
+            Destroy(this);
+            return;
+        }
+        else
+        {
+            _uimanager = this;
+        }
+        // Use this when scene changing exists
+        // DontDestroyOnLoad(gameObject);
+    }
     void Start()
     {
         uicontroller = ManagementUIController.GetManagementUIController();   

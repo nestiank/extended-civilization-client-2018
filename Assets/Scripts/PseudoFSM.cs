@@ -15,7 +15,11 @@ public class PseudoFSM : MonoBehaviour {
     public bool AttackState { get { return _inAttackState; } }
     private bool _inSkillState = false;
     public bool SkillState { get { return _inSkillState; } }
+    private bool _inDepState = false;
+    public bool DepState { get { return _inDepState; } }
     private int _currentSkill = -1;
+    private Production _deployment;
+    public Production Deployment { get { return _deployment; } }
 
     private CivModel.Terrain.Point?[] _parameterPoints;
 
@@ -47,6 +51,7 @@ public class PseudoFSM : MonoBehaviour {
         if (_inMoveState) MoveStateExit();
         if (_inAttackState) AttackStateExit();
         if (_inSkillState) SkillStateExit();
+        if (_inDepState) DepStateExit();
     }
 
     // When move state, coloring movable adjacent tiles
@@ -57,6 +62,7 @@ public class PseudoFSM : MonoBehaviour {
         if (_inMoveState) return;
         if (_inAttackState) AttackStateExit();
         if (_inSkillState) SkillStateExit();
+        if (_inDepState) DepStateExit();
         _inMoveState = true;
 
         // Select movable adjacent tiles
@@ -94,8 +100,11 @@ public class PseudoFSM : MonoBehaviour {
         if (_inAttackState) return;
         if (_inMoveState) MoveStateExit();
         if (_inSkillState) SkillStateExit();
+        if (_inDepState) DepStateExit();
         _inAttackState = true;
 
+        if (GameManager.I.SelectedActor == null)
+            return;
         // If GameManager.I.SelectedActor cannot attack
         if (GameManager.I.SelectedActor.MovingAttackAct == null)
             return;
@@ -135,6 +144,7 @@ public class PseudoFSM : MonoBehaviour {
         if (_inSkillState && _currentSkill == index) return;
         if (_inMoveState) MoveStateExit();
         if (_inAttackState) AttackStateExit();
+        if (_inDepState) DepStateExit();
         _inSkillState = true;
         _currentSkill = index;
 
@@ -187,8 +197,41 @@ public class PseudoFSM : MonoBehaviour {
             }
         }
     }
-    public bool CheckNormalState()
+    public void DepStateEnter(Production dep)
     {
-        return !(_inMoveState || _inAttackState || _inSkillState);
+        // State change
+        if (dep == null || _inDepState) return;
+        if (_inMoveState) MoveStateExit();
+        if (_inAttackState) AttackStateExit();
+        if (_inSkillState) SkillStateExit();
+        _inDepState = true;
+        _deployment = dep;
+        // Select deploy tile
+        CivModel.Terrain terrain = GameManager.I.Game.Terrain;
+        for (int i = 0; i < terrain.Width; i++)
+        {
+            for (int j = 0; j < terrain.Height; j++)
+            {
+                CivModel.Terrain.Point point = terrain.GetPoint(i, j);
+                if (dep.IsPlacable(point))
+                {
+                    GameManager.I.Cells[point.Position.X, point.Position.Y].GetComponent<HexTile>().FlickerBlue();
+                }
+            }
+        }
+    }
+    void DepStateExit()
+    {
+        _inDepState = false;
+        _deployment = null;
+        CivModel.Terrain terrain = GameManager.I.Game.Terrain;
+        for (int i = 0; i < terrain.Width; i++)
+        {
+            for (int j = 0; j < terrain.Height; j++)
+            {
+                CivModel.Terrain.Point point = terrain.GetPoint(i, j);
+                GameManager.I.Cells[point.Position.X, point.Position.Y].GetComponent<HexTile>().StopFlickering();
+            }
+        }
     }
 }

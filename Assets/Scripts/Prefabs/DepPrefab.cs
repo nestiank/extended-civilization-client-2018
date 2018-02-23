@@ -109,30 +109,8 @@ public class DepPrefab : MonoBehaviour {
     {
         if (dep.Completed)
         {
-            CivModel.Terrain terrain = GameManager.I.Game.Terrain;
-            for (int i = 0; i < terrain.Width; i++)
-            {
-                for (int j = 0; j < terrain.Height; j++)
-                {
-                    CivModel.Terrain.Point point = terrain.GetPoint(i, j);
-                    if(dep.IsPlacable(point))
-                    {
-                        GameManager.I.Cells[point.Position.X, point.Position.Y].GetComponent<HexTile>().FlickerBlue();
-                    }
-                }
-            }
-
-            for (int i = 0; i < terrain.Width; i++)
-            {
-                for (int j = 0; j < terrain.Height; j++)
-                {
-                    CivModel.Terrain.Point point = terrain.GetPoint(i, j);
-                    if (dep.IsPlacable(point))
-                    {
-                        GameManager.I.Cells[point.Position.X, point.Position.Y].GetComponent<HexTile>().StopFlickering();
-                    }
-                }
-            }
+            PseudoFSM.I.DepStateEnter(dep);
+            UIManager.I.MapUIActive();
         }
         else
         {
