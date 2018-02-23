@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using CivPresenter;
 using CivModel;
 using CivModel.Common;
 
@@ -16,11 +15,8 @@ public class ManagementUIController : MonoBehaviour {
     private LinkedList<Production> mDeployment;
     private IReadOnlyList<IProductionFactory> facList;
 
-    //private IReadOnlyList<Player> mPlayers;
-
     private GameObject gameManagerObject;
     private GameManager gameManager;
-    private PseudoFSM state;
     private Game game;
 
     private List<GameObject> PQlist;
@@ -35,20 +31,8 @@ public class ManagementUIController : MonoBehaviour {
     public GameObject depQueue;
     public GameObject productableQueue;
 
-
-    
-
-
-    public void SetManagementUI(bool val)
-    {
-        Debug.Log("manUI : " + val);
-        managementUI.enabled = val;
-    }
-
-
     public void ManageFunction()                                      // Management tab on/off button -> ManageMentUIActive
     {
-
         List<GameObject> tempList = new List<GameObject>();
         Debug.Log("SelectList startMaking");
         foreach (GameObject sq in SQlist)
@@ -84,6 +68,7 @@ public class ManagementUIController : MonoBehaviour {
         foreach (GameObject sq in SQlist)
         {
             sq.GetComponent<SelPrefab>().SetButton(SQlist.IndexOf(sq));
+            Debug.Log(SQlist.IndexOf(sq));
         }
         foreach (GameObject dq in DQlist)
         {
@@ -108,10 +93,7 @@ public class ManagementUIController : MonoBehaviour {
         if (managementUIController == this)
         {
             gameManager = GameManager.I;
-            //mPresenter = gameManager.GetPresenter();
             game = gameManager.Game;
-            state = PseudoFSM.I;
-            //mPlayers = mGame.Players;
             SQlist = new List<GameObject>();
             PQlist = new List<GameObject>();
             DQlist = new List<GameObject>();
@@ -195,12 +177,6 @@ public class ManagementUIController : MonoBehaviour {
         }
         DQlist = tempList;
     }
-    /*public static void PrefabsSetting()
-    {
-        //ProPrefab.SetPresenter();
-        DepPrefab.SetPresenter();
-        SelPrefab.SetPresenter();
-    }*/
     public static ManagementUIController GetManagementUIController()
     {
         if(managementUIController == null)

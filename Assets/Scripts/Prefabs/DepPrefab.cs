@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,8 +7,6 @@ using CivModel;
 using CivModel.Common;
 
 public class DepPrefab : MonoBehaviour {
-
-    private static ManagementUIController uicontroller;
 
     private Text[] textarguments;
     private Image unitPrt;
@@ -30,7 +29,6 @@ public class DepPrefab : MonoBehaviour {
 
     void Start()
     {
-        uicontroller = ManagementUIController.GetManagementUIController();
     }
 
     public GameObject MakeItem(Production prod)
@@ -49,6 +47,7 @@ public class DepPrefab : MonoBehaviour {
                     break;
             }
         }
+
         return this.gameObject;
     }
 
@@ -77,8 +76,68 @@ public class DepPrefab : MonoBehaviour {
     void Update () {
 		
 	}
-
+    
     public void SetButton(int i)
     {
+        if (i == -1)
+        {
+            foreach (Button but in buttons)
+            {
+                but.enabled = false;
+            }
+        }
+        else
+        {
+            LinkedListNode<Production> dep = GameManager.I.Game.PlayerInTurn.Deployment.First;
+            for (int k = 0; k < i; k++)
+            {
+                dep = dep.Next;
+            }
+            foreach (Button but in buttons)
+            {
+                switch (but.name)
+                {
+                    case "Deploy":
+                        but.onClick.AddListener(delegate () { DeployItem(dep.Value); });
+                        break;
+                }
+            }
+        }
+    }
+
+    public void DeployItem(Production dep)
+    {
+        if (dep.Completed)
+        {
+            CivModel.Terrain terrain = GameManager.I.Game.Terrain;
+            for (int i = 0; i < terrain.Width; i++)
+            {
+                for (int j = 0; j < terrain.Height; j++)
+                {
+                    CivModel.Terrain.Point point = terrain.GetPoint(i, j);
+                    if(dep.IsPlacable(point))
+                    {
+                        GameManager.I.Cells[point.Position.X, point.Position.Y].GetComponent<HexTile>().FlickerBlue();
+                    }
+                }
+            }
+
+            for (int i = 0; i < terrain.Width; i++)
+            {
+                for (int j = 0; j < terrain.Height; j++)
+                {
+                    CivModel.Terrain.Point point = terrain.GetPoint(i, j);
+                    if (dep.IsPlacable(point))
+                    {
+                        GameManager.I.Cells[point.Position.X, point.Position.Y].GetComponent<HexTile>().StopFlickering();
+                    }
+                }
+            }
+        }
+        else
+        {
+            Debug.Log("Error : not finished product");
+            throw new AccessViolationException();
+        }
     }
 }

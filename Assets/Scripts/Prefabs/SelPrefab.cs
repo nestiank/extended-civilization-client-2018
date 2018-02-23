@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,7 +9,6 @@ using CivModel.Common;
 public class SelPrefab : MonoBehaviour
 {
     private static ManagementUIController uicontroller;
-
     private Text[] textarguments;
     private Image unitPrt;
     private Button[] buttons;
@@ -78,20 +78,21 @@ public class SelPrefab : MonoBehaviour
     {
         foreach (Button but in buttons)
         {
-            if (but.name == "Produce")
+            switch (but.name)
             {
-                but.onClick.AddListener(delegate () { ProduceItem(i); });
+                case "Deploy":
+                    but.onClick.AddListener(delegate () { ProduceItem(i); });
+                    break;
             }
         }
     }
 
     private void ProduceItem(int i)
     {
-        for (int k = 0; k < i; k++)
-        {
-            //presenter.CommandArrowKey(Direction.Down);
-            //i 번의 Selection thing 을 고르는 코드를 적자. 아직은 어떻게 골라야 할까? 일단 미루자.
-        }
+        IProductionFactory factory = GameManager.I.Game.PlayerInTurn.GetAvailableProduction()[i];
+        GameManager.I.Game.PlayerInTurn.Production.AddLast(factory.Create(GameManager.I.Game.PlayerInTurn));
+        
+        Debug.Log(i + " inputed");
         uicontroller.MakeProductionQ();
         uicontroller.MakeDeploymentQ();
     }

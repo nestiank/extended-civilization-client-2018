@@ -24,7 +24,6 @@ public class ProPrefab : MonoBehaviour {
             }
         }
         buttons = gameObject.GetComponentsInChildren<Button>();
-
     }
     void Start()
     {
@@ -92,6 +91,11 @@ public class ProPrefab : MonoBehaviour {
         }
         else
         {
+            LinkedListNode <Production> prod = GameManager.I.Game.PlayerInTurn.Production.First;
+            for(int k = 0; k < i; k++)
+            {
+                prod = prod.Next;
+            }
             foreach (Button but in buttons)
             {
             }
