@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using CivModel;
 using CivModel.Common;
+using System.Linq;
 
 public class ManagementUIController : MonoBehaviour {
 
@@ -13,6 +14,7 @@ public class ManagementUIController : MonoBehaviour {
 
     private LinkedList<Production> mProduction;
     private LinkedList<Production> mDeployment;
+    //private IReadOnlyList<IProductionFactory> facList;
     private IReadOnlyList<IProductionFactory> facList;
 
     private GameObject gameManagerObject;
@@ -23,7 +25,7 @@ public class ManagementUIController : MonoBehaviour {
     private List<GameObject> DQlist;
     private List<GameObject> EpicQlist, HighQlist, IntermediateQlist, LowQlist;    // Unit production
     private List<GameObject> CityQlist, CityBuildingQlist, NormalBuildingQlist;
-
+    private List<List<GameObject>> ASQlist;
     public GameObject proPrefab;
     public GameObject depPrefab;
     public GameObject productablePrefab;            // prefab templates
@@ -34,43 +36,115 @@ public class ManagementUIController : MonoBehaviour {
     public GameObject CityQueue, CityBuildingQueue, NormalBuildingQueue;  // Building production
 
 
-    private List<GameObject> MakeSelectionQ(List<GameObject> SQlist, GameObject productableQueue)
+    private void MakeSelectionQ()//선택 큐 프리팹 생성 함수
     {
-        List<GameObject> tempList = new List<GameObject>();
-        Debug.Log("SelectList startMaking");
+        Debug.Log("ALL SelectList startMaking");
+        facList = game.PlayerInTurn.AvailableProduction.ToList(); //전체 선택 목록 받아오기
+        //facList의 변경으로 Epic-High-intermediate-Low 변경 가능. 하지만 지금은 설정되지 않았음(Epic에 생성)
+        Debug.Log(facList + " " + facList.Count);
+        Debug.Log("facList : " + facList.Count);
+        Debug.Log("ALL SelectList Updated");
+        DeleteAllSQ();
+        foreach (IProductionFactory fac in facList)
+        {
+            if(fac.ProductionResultType != null)
+            {
+                PartSelectionQ(EpicQlist, EpicQueue, fac);
+            }
+        }
+        //내용물 없을 때 빈칸 채우기
+        foreach(var qlist in ASQlist)
+        {
+            if (qlist.Count == 0)
+            {
+                GameObject productableQueue;
+                switch(ASQlist.IndexOf(qlist))
+                {
+                    case 0:
+                        productableQueue = EpicQueue;
+                        break;
+                    case 1:
+                        productableQueue = HighQueue;
+                        break;
+                    case 2:
+                        productableQueue = IntermediateQueue;
+                        break;
+                    case 3:
+                        productableQueue = LowQueue;
+                        break;
+                    case 4:
+                        productableQueue = CityQueue;
+                        break;
+                    case 5:
+                        productableQueue = CityBuildingQueue;
+                        break;
+                    case 6:
+                        productableQueue = NormalBuildingQueue;
+                        break;
+                    default:
+                        productableQueue = null;
+                        Debug.Log("Error : qlist = " + qlist);
+                        throw new MissingComponentException();
+                        break;
+                }
+                Debug.Log("SelectionList : " + ASQlist.IndexOf(qlist) + "null");
+                var SPrefab = Instantiate(productablePrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
+                SPrefab.transform.SetParent(productableQueue.transform);
+                SPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
+                SPrefab.transform.localPosition = new Vector3(0f, 0f, 0f);
+                SPrefab.GetComponent<SelPrefab>().MakeItem();
+                qlist.Add(SPrefab);
+            }
+        }
+    }
+    //각 Factory의 분야를 읽어서 해당하는 Queue에 집어넣는 역할 
+    private GameObject PartSelectionQ(List<GameObject> SQlist, GameObject productableQueue, IProductionFactory fac)
+    {
+        if (fac.ProductionResultType == null)
+        {
+            return null;
+        }
+        var SPrefab = Instantiate(productablePrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
+        SPrefab.transform.SetParent(productableQueue.transform);
+        SPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
+        SPrefab.transform.localPosition = new Vector3(0f, 0f, 0f);
+        SPrefab.GetComponent<SelPrefab>().MakeItem(fac);
+        SQlist.Add(SPrefab);
+        return SPrefab;
+    }
+    //선택 큐 초기화(GameObject)
+    private void DeleteAllSQ()
+    {
+        DeleteSQ(EpicQlist);
+        DeleteSQ(HighQlist);
+        DeleteSQ(IntermediateQlist);
+        DeleteSQ(LowQlist);
+        DeleteSQ(NormalBuildingQlist);
+        DeleteSQ(CityQlist);
+        DeleteSQ(CityBuildingQlist);
+        ASQlist.Clear();
+        ASQlist.Add(EpicQlist = new List<GameObject>());
+        ASQlist.Add(HighQlist = new List<GameObject>());
+        ASQlist.Add(IntermediateQlist = new List<GameObject>());
+        ASQlist.Add(LowQlist = new List<GameObject>());
+        ASQlist.Add(CityQlist = new List<GameObject>());
+        ASQlist.Add(CityBuildingQlist = new List<GameObject>());
+        ASQlist.Add(NormalBuildingQlist = new List<GameObject>());
+    }
+    //선택 큐 초기화에 쓰이는 함수
+    private void DeleteSQ(List<GameObject> SQlist) 
+    {
         foreach (GameObject sq in SQlist)
         {
             Destroy(sq);
         }
         SQlist.Clear();
-        facList = game.PlayerInTurn.GetAvailableProduction();
-        //facList의 변경으로 Epic-High-intermediate-Low 변경 가능. 하지만 지금은 설정되지 않았음(Epic에 생성)
-        Debug.Log(facList + " " + facList.Count);
-        Debug.Log("facList : " + facList.Count);
-        Debug.Log("SelectList Updated");
-        foreach (IProductionFactory fac in facList)
-        {
-            var SPrefab = Instantiate(productablePrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
-            SPrefab.transform.SetParent(productableQueue.transform);
-            SPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
-            SPrefab.transform.localPosition = new Vector3(0f, 0f, 0f);
-            tempList.Add(SPrefab.GetComponent<SelPrefab>().MakeItem(fac));
-        }
-        if (facList.Count == 0)
-        {
-            Debug.Log("SelectList null");
-            var SPrefab = Instantiate(productablePrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
-            SPrefab.transform.SetParent(productableQueue.transform);
-            SPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
-            SPrefab.transform.localPosition = new Vector3(0f, 0f, 0f);
-            SPrefab.GetComponent<SelPrefab>().MakeItem();
-            tempList.Add(SPrefab);
-        }
-        return tempList;
     }
+
+    //ManageMentUI 갱신 함수
     public void ManageFunction()                                      // Management tab on/off button -> ManageMentUIActive
     {
-        EpicQlist = MakeSelectionQ(EpicQlist, EpicQueue);
+        MakeSelectionQ();
         MakeProductionQ();
         MakeDeploymentQ();
         foreach (GameObject sq in EpicQlist)
@@ -102,14 +176,14 @@ public class ManagementUIController : MonoBehaviour {
         {
             gameManager = GameManager.I;
             game = gameManager.Game;
-
-            EpicQlist = new List<GameObject>();
-            HighQlist = new List<GameObject>();
-            IntermediateQlist = new List<GameObject>();
-            LowQlist = new List<GameObject>();
-            CityQlist = new List<GameObject>();
-            CityBuildingQlist = new List<GameObject>();
-            NormalBuildingQlist = new List<GameObject>();
+            ASQlist = new List<List<GameObject>>();
+            ASQlist.Add(EpicQlist = new List<GameObject>());
+            ASQlist.Add(HighQlist = new List<GameObject>());
+            ASQlist.Add(IntermediateQlist = new List<GameObject>());
+            ASQlist.Add(LowQlist = new List<GameObject>());
+            ASQlist.Add(CityQlist = new List<GameObject>());
+            ASQlist.Add(CityBuildingQlist = new List<GameObject>());
+            ASQlist.Add(NormalBuildingQlist = new List<GameObject>());
 
             PQlist = new List<GameObject>();
             DQlist = new List<GameObject>();
@@ -129,6 +203,7 @@ public class ManagementUIController : MonoBehaviour {
 
     public void MakeProductionQ()
     {
+        ProPrefab.ResetTestingNumber();
         List<GameObject> tempList = new List<GameObject>();
         Debug.Log("ProductionList startMaking");
         foreach (GameObject pq in PQlist)

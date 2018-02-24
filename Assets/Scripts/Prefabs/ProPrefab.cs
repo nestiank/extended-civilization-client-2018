@@ -8,6 +8,7 @@ using CivModel.Common;
 
 public class ProPrefab : MonoBehaviour {
 
+    private static int unitNum = 0;
     private Text[] textarguments;
     private Image unitPrt;
     private Button[] buttons;
@@ -47,10 +48,11 @@ public class ProPrefab : MonoBehaviour {
                     txt.text = "?턴 이후 배치 가능.";
                     break;
                 case "UnitName":
-                    txt.text = nameofProduction;
+                    txt.text = nameofProduction + " " + unitNum++;
                     break;
                 case "Required Resource":
-                    txt.text = "금 : 턴당 " + "?" + " (" + "?" + "/" + Convert.ToInt32(prod.TotalCost).ToString() + ")"+"\n노동력 : 턴당 " + "?" + " (" + Convert.ToInt32(prod.LaborInputed).ToString() + "/" + Convert.ToInt32(prod.TotalCost).ToString() + ")";
+                    txt.text = "금 : 턴당 " + "?" + " (" + "?" + "/" + Convert.ToInt32(prod.TotalGoldCost).ToString() + ")"
+                        +"\n노동력 : 턴당 " + "?" + " (" + Convert.ToInt32(prod.LaborInputed).ToString() + "/" + Convert.ToInt32(prod.TotalLaborCost).ToString() + ")";
                     break;
             }
         }
@@ -64,10 +66,10 @@ public class ProPrefab : MonoBehaviour {
             switch (txt.name)
             {
                 case "TurnsLeft":
-                    txt.text = "비었음";
+                    txt.text = "생산 중인 유닛/건물이 없습니다!\n 오른쪽의 탭에서 생산을 선택하세요!";
                     break;
                 case "UnitName":
-                    txt.text = "B었음";
+                    txt.text = "";
                     break;
                 case "Required Resource":
                     txt.text = "";
@@ -98,7 +100,58 @@ public class ProPrefab : MonoBehaviour {
             }
             foreach (Button but in buttons)
             {
+                switch (but.name)
+                {
+                    case "Delete":
+                        but.onClick.AddListener(delegate () {
+                            Debug.Log(but.name);
+                            prod.List.Remove(prod);
+                            ManagementUIController.GetManagementUIController().MakeProductionQ();
+                        });
+                        break;
+                    case "Top":
+                        but.onClick.AddListener(delegate () {
+                            Debug.Log(but.name);
+                            LinkedListNode<Production> temprod = prod.Previous;
+                            prod.List.Remove(prod);
+                            temprod.List.AddFirst(prod);
+                            ManagementUIController.GetManagementUIController().MakeProductionQ();
+                        });
+                        break;
+                    case "Up":
+                        but.onClick.AddListener(delegate () {
+                            Debug.Log(but.name);
+                            LinkedListNode<Production> temprod = prod.Previous;
+                            prod.List.Remove(prod);
+                            temprod.List.AddBefore(temprod, prod);
+                            ManagementUIController.GetManagementUIController().MakeProductionQ();
+                        });
+                        break;
+                    case "Down":
+                        but.onClick.AddListener(delegate () {
+                            Debug.Log(but.name);
+                            LinkedListNode<Production> temprod = prod.Next;
+                            prod.List.Remove(prod);
+                            temprod.List.AddLast(prod);
+                            ManagementUIController.GetManagementUIController().MakeProductionQ();
+                        });
+                        break;
+                    case "Bottom":
+                        but.onClick.AddListener(delegate () {
+                            Debug.Log(but.name);
+                            LinkedListNode<Production> temprod = prod.Next;
+                            prod.List.Remove(prod);
+                            temprod.List.AddAfter(temprod, prod);
+                            ManagementUIController.GetManagementUIController().MakeProductionQ();
+                        });
+                        break;
+                }
+                ManagementUIController.GetManagementUIController().MakeProductionQ();
             }
         }
+    }
+    public static void ResetTestingNumber()
+    {
+        unitNum = 0;
     }
 }

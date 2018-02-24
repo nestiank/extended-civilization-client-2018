@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using CivModel;
 using CivModel.Common;
+using System.Linq;
 
 public class SelPrefab : MonoBehaviour
 {
@@ -89,7 +90,7 @@ public class SelPrefab : MonoBehaviour
 
     private void ProduceItem(int i)
     {
-        IProductionFactory factory = GameManager.I.Game.PlayerInTurn.GetAvailableProduction()[i];
+        IProductionFactory factory = GameManager.I.Game.PlayerInTurn.AvailableProduction.ToList()[i];
         GameManager.I.Game.PlayerInTurn.Production.AddLast(factory.Create(GameManager.I.Game.PlayerInTurn));
         
         Debug.Log(i + " inputed");

@@ -57,7 +57,7 @@ public class GameManager : MonoBehaviour {
         }
         // Use this when scene changing exists
         // DontDestroyOnLoad(gameObject);
-        _game = new CivModel.Game(GameInfo.mapWidth, GameInfo.mapHeight, GameInfo.numOfPlayer);
+        _game = new CivModel.Game(GameInfo.mapWidth, GameInfo.mapHeight, GameInfo.numOfPlayer, new GameSchemeFactory(), new IGameSchemeFactory[] { new CivModel.AI.GameSchemeFactory()});
         _game.StartTurn();
 
     }
@@ -109,10 +109,14 @@ public class GameManager : MonoBehaviour {
                 {
                     if (tile.isFlickering)
                     {
-                        if (tile.point.TileBuilding != null)
-                            SelectedActor.AttackTo(tile.point.TileBuilding);
-                        else if (tile.point.Unit != null)
-                            SelectedActor.AttackTo(tile.point.Unit);
+                        if(SelectedActor.HoldingAttackAct != null)
+                        {
+                            SelectedActor.HoldingAttackAct.Act(tile.point);
+                        }
+                        else if(SelectedActor.MovingAttackAct != null)
+                        {
+                            SelectedActor.MovingAttackAct.Act(tile.point);
+                        }
                         else
                             Debug.Log("잘못된 공격 대상");
                     }
@@ -121,7 +125,7 @@ public class GameManager : MonoBehaviour {
                 }
                 Unit unit = tile.point.Unit;
                 if (unit != null)
-                {
+                { 
                     SelectUnit(unit);
                 }
             }
@@ -251,9 +255,9 @@ public class GameManager : MonoBehaviour {
         SelectNextUnit();
         if (_selectedActor == null)
         {
-            if (_game.PlayerInTurn.Cities.FirstOrDefault() is CivModel.Common.CityCenter)
+            if (_game.PlayerInTurn.Cities.FirstOrDefault() is CivModel.CityBase)
             {
-                CivModel.Common.CityCenter city = _game.PlayerInTurn.Cities.FirstOrDefault();
+                CityBase city = _game.PlayerInTurn.Cities.FirstOrDefault();
                 if (city.PlacedPoint is CivModel.Terrain.Point)
                     Focus(city.PlacedPoint.Value);
             }

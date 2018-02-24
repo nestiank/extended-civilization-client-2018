@@ -44,6 +44,12 @@
             Called when the game should be shutdown.
             </summary>
         </member>
+        <member name="M:CivPresenter.IView.Invoke(System.Action)">
+            <summary>
+            Invokes the specified action in the UI thread. This method must be thread-safe.
+            </summary>
+            <param name="action">The action.</param>
+        </member>
         <member name="T:CivPresenter.NamespaceDoc">
             <summary>
             The <see cref="N:CivPresenter"/> namespace of CivPresenter.dll module
@@ -92,20 +98,37 @@
             <c>null</c> if no action is being done.
             </summary>
         </member>
+        <member name="P:CivPresenter.Presenter.SelectedInvestment">
+            <summary>
+            Index of the selected investment.
+            If <see cref="P:CivPresenter.Presenter.SelectedProduction"/> is not <c>-1</c>, this value is <c>-1</c>.
+            This value is valid iff <c><see cref="P:CivPresenter.Presenter.State"/> == <see cref="F:CivPresenter.Presenter.States.ProductUI"/></c>.
+            See remarks section for information about the value.
+            </summary>
+            <remarks>
+            <list type="bullet">
+             <item><c>0</c> if <see cref="P:CivModel.Player.TaxRate"/> is selected.</item>
+             <item><c>1</c> if <see cref="P:CivModel.Player.EconomicInvestmentRatio"/> is selected.</item>
+             <item><c>2</c> if <see cref="P:CivModel.Player.ResearchInvestmentRatio"/> is selected.</item>
+             <item><c>3</c> if <see cref="P:CivModel.Player.LogisticInvestmentRatio"/> is selected.</item>
+             <item><c>-1</c> if there is no selected deploy.</item>
+            </list>
+            </remarks>
+        </member>
         <member name="P:CivPresenter.Presenter.SelectedDeploy">
             <summary>
             Index of the selected deploy to <see cref="P:CivModel.Player.Deployment"/> list.
             <c>-1</c> if there is no selected deploy.
-            If <see cref="P:CivPresenter.Presenter.SelectedProduction"/> is not <c>-1</c>, this value is <c>-1</c>.
-            This value is valid iff <c><see cref="P:CivPresenter.Presenter.State"/> == <see cref="F:CivPresenter.Presenter.States.ProductUI"/></c>
+            If <see cref="P:CivPresenter.Presenter.SelectedProduction"/> or <see cref="P:CivPresenter.Presenter.SelectedInvestment"/> is not <c>-1</c>, this value is <c>-1</c>.
+            This value is valid iff <c><see cref="P:CivPresenter.Presenter.State"/> == <see cref="F:CivPresenter.Presenter.States.ProductUI"/></c>.
             </summary>
         </member>
         <member name="P:CivPresenter.Presenter.SelectedProduction">
             <summary>
             Index of the selected production to <see cref="P:CivModel.Player.Production"/> list.
             <c>-1</c> if there is no selected production.
-            If <see cref="P:CivPresenter.Presenter.SelectedDeploy"/> is not <c>-1</c>, this value is <c>-1</c>.
-            This value is valid iff <c><see cref="P:CivPresenter.Presenter.State"/> == <see cref="F:CivPresenter.Presenter.States.ProductUI"/> || <see cref="P:CivPresenter.Presenter.State"/> == <see cref="F:CivPresenter.Presenter.States.ProductAdd"/></c>
+            If <see cref="P:CivPresenter.Presenter.SelectedDeploy"/> or <see cref="P:CivPresenter.Presenter.SelectedInvestment"/> is not <c>-1</c>, this value is <c>-1</c>.
+            This value is valid iff <c><see cref="P:CivPresenter.Presenter.State"/> == <see cref="F:CivPresenter.Presenter.States.ProductUI"/> || <see cref="P:CivPresenter.Presenter.State"/> == <see cref="F:CivPresenter.Presenter.States.ProductAdd"/></c>.
             </summary>
         </member>
         <member name="P:CivPresenter.Presenter.IsProductManipulating">
@@ -116,7 +139,7 @@
         </member>
         <member name="P:CivPresenter.Presenter.AvailableProduction">
             <summary>
-            The list of the available production, retrieved by <see cref="M:CivModel.Player.GetAvailableProduction"/>
+            The list of the available production, retrieved by <see cref="P:CivModel.Player.AvailableProduction"/>
             This value is valid iff <c><see cref="P:CivPresenter.Presenter.State"/> == <see cref="F:CivPresenter.Presenter.States.ProductAdd"/></c>
             </summary>
         </member>
@@ -136,6 +159,37 @@
             The parameter of this <see cref="P:CivPresenter.Presenter.State"/>.
             This value is valid iff <c><see cref="P:CivPresenter.Presenter.State"/> == <see cref="F:CivPresenter.Presenter.States.SpecialAct"/></c>,
             and the value is the number of a special action.
+            </summary>
+        </member>
+        <member name="P:CivPresenter.Presenter.AcceptedQuests">
+            <summary>
+            The list of <see cref="T:CivModel.Quest"/> of <see cref="P:CivModel.Game.PlayerInTurn"/> whose status is <see cref="F:CivModel.QuestStatus.Accepted"/>.
+            This value is valid iff <c><see cref="P:CivPresenter.Presenter.State"/> == <see cref="F:CivPresenter.Presenter.States.Quest"/></c>.
+            </summary>
+        </member>
+        <member name="P:CivPresenter.Presenter.DeployedQuests">
+            <summary>
+            The list of <see cref="T:CivModel.Quest"/> of <see cref="P:CivModel.Game.PlayerInTurn"/> whose status is <see cref="F:CivModel.QuestStatus.Deployed"/>.
+            This value is valid iff <c><see cref="P:CivPresenter.Presenter.State"/> == <see cref="F:CivPresenter.Presenter.States.Quest"/></c>.
+            </summary>
+        </member>
+        <member name="P:CivPresenter.Presenter.CompletedQuests">
+            <summary>
+            The list of <see cref="T:CivModel.Quest"/> of <see cref="P:CivModel.Game.PlayerInTurn"/> whose status is <see cref="F:CivModel.QuestStatus.Completed"/>.
+            This value is valid iff <c><see cref="P:CivPresenter.Presenter.State"/> == <see cref="F:CivPresenter.Presenter.States.Quest"/></c>.
+            </summary>
+        </member>
+        <member name="P:CivPresenter.Presenter.DisabledQuests">
+            <summary>
+            The list of <see cref="T:CivModel.Quest"/> of <see cref="P:CivModel.Game.PlayerInTurn"/> whose status is <see cref="F:CivModel.QuestStatus.Disabled"/>.
+            This value is valid iff <c><see cref="P:CivPresenter.Presenter.State"/> == <see cref="F:CivPresenter.Presenter.States.Quest"/></c>.
+            </summary>
+        </member>
+        <member name="P:CivPresenter.Presenter.SelectedQuest">
+            <summary>
+            Index of the selected quest to <see cref="P:CivModel.Player.Quests"/> list.
+            <c>-1</c> if there is no selected quest.
+            This value is valid iff <c><see cref="P:CivPresenter.Presenter.State"/> == <see cref="F:CivPresenter.Presenter.States.Quest"/></c>.
             </summary>
         </member>
         <member name="P:CivPresenter.Presenter.SaveFile">
@@ -212,6 +266,11 @@
             Gives the command [skip].
             </summary>
         </member>
+        <member name="M:CivPresenter.Presenter.CommandSleep">
+            <summary>
+            Gives the command [sleep].
+            </summary>
+        </member>
         <member name="M:CivPresenter.Presenter.CommandRefocus">
             <summary>
             Gives the command [refocus].
@@ -249,6 +308,12 @@
             <summary>
             Gives the command [product UI].
             This method may introduce <see cref="F:CivPresenter.Presenter.States.ProductUI"/> state.
+            </summary>
+        </member>
+        <member name="M:CivPresenter.Presenter.CommandQuest">
+            <summary>
+            Gives the command [quest].
+            This method may introduce <see cref="F:CivPresenter.Presenter.States.Quest"/> state.
             </summary>
         </member>
         <member name="T:CivPresenter.Presenter.States">
@@ -313,6 +378,13 @@
             In this state, <see cref="P:CivPresenter.Presenter.DeployProduction"/> indicates the production to deploy.
             </summary>
         </member>
+        <member name="F:CivPresenter.Presenter.States.Quest">
+            <summary>
+            State [quest]. This state indicates user is viewing the list of quests.
+            <see cref="M:CivPresenter.Presenter.CommandQuest"/> method may introduce this state.
+            In this state, asdf indicates asdf.
+            </summary>
+        </member>
         <member name="F:CivPresenter.Presenter.States.Victory">
             <summary>
             State [victory]. This state indicates user is viewing a <strong>victory</strong> screen.
@@ -321,6 +393,11 @@
         <member name="F:CivPresenter.Presenter.States.Defeated">
             <summary>
             State [defeated]. This state indicates user is viewing a <strong>defeated</strong> screen.
+            </summary>
+        </member>
+        <member name="F:CivPresenter.Presenter.States.AIControl">
+            <summary>
+            State [AI control]. This state indicates AI player is doing his job now.
             </summary>
         </member>
     </members>

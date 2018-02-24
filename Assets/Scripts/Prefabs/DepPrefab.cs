@@ -107,7 +107,7 @@ public class DepPrefab : MonoBehaviour {
 
     public void DeployItem(Production dep)
     {
-        if (dep.Completed)
+        if (dep.IsCompleted)
         {
             PseudoFSM.I.DepStateEnter(dep);
             UIManager.I.MapUIActive();
