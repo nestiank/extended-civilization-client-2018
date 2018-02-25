@@ -105,16 +105,15 @@ public class ProPrefab : MonoBehaviour {
                     case "Delete":
                         but.onClick.AddListener(delegate () {
                             Debug.Log(but.name);
-                            prod.List.Remove(prod);
+                            GameManager.I.Game.PlayerInTurn.Production.Remove(prod);
                             ManagementUIController.GetManagementUIController().MakeProductionQ();
                         });
                         break;
                     case "Top":
                         but.onClick.AddListener(delegate () {
                             Debug.Log(but.name);
-                            LinkedListNode<Production> temprod = prod.Previous;
-                            prod.List.Remove(prod);
-                            temprod.List.AddFirst(prod);
+                            GameManager.I.Game.PlayerInTurn.Production.Remove(prod);
+                            GameManager.I.Game.PlayerInTurn.Production.AddFirst(prod);
                             ManagementUIController.GetManagementUIController().MakeProductionQ();
                         });
                         break;
@@ -122,8 +121,8 @@ public class ProPrefab : MonoBehaviour {
                         but.onClick.AddListener(delegate () {
                             Debug.Log(but.name);
                             LinkedListNode<Production> temprod = prod.Previous;
-                            prod.List.Remove(prod);
-                            temprod.List.AddBefore(temprod, prod);
+                            GameManager.I.Game.PlayerInTurn.Production.Remove(prod);
+                            GameManager.I.Game.PlayerInTurn.Production.AddBefore(temprod, prod);
                             ManagementUIController.GetManagementUIController().MakeProductionQ();
                         });
                         break;
@@ -131,8 +130,8 @@ public class ProPrefab : MonoBehaviour {
                         but.onClick.AddListener(delegate () {
                             Debug.Log(but.name);
                             LinkedListNode<Production> temprod = prod.Next;
-                            prod.List.Remove(prod);
-                            temprod.List.AddLast(prod);
+                            GameManager.I.Game.PlayerInTurn.Production.Remove(prod);
+                            GameManager.I.Game.PlayerInTurn.Production.AddLast(prod);
                             ManagementUIController.GetManagementUIController().MakeProductionQ();
                         });
                         break;
@@ -140,13 +139,12 @@ public class ProPrefab : MonoBehaviour {
                         but.onClick.AddListener(delegate () {
                             Debug.Log(but.name);
                             LinkedListNode<Production> temprod = prod.Next;
-                            prod.List.Remove(prod);
-                            temprod.List.AddAfter(temprod, prod);
+                            GameManager.I.Game.PlayerInTurn.Production.Remove(prod);
+                            GameManager.I.Game.PlayerInTurn.Production.AddAfter(temprod, prod);
                             ManagementUIController.GetManagementUIController().MakeProductionQ();
                         });
                         break;
                 }
-                ManagementUIController.GetManagementUIController().MakeProductionQ();
             }
         }
     }

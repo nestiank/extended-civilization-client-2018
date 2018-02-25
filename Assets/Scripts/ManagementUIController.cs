@@ -49,6 +49,7 @@ public class ManagementUIController : MonoBehaviour {
         {
             if(fac.ProductionResultType != null)
             {
+                fac.ProductionResultType.GetInterface("battleclasslevel");
                 PartSelectionQ(EpicQlist, EpicQueue, fac);
             }
         }
@@ -85,7 +86,6 @@ public class ManagementUIController : MonoBehaviour {
                         productableQueue = null;
                         Debug.Log("Error : qlist = " + qlist);
                         throw new MissingComponentException();
-                        break;
                 }
                 Debug.Log("SelectionList : " + ASQlist.IndexOf(qlist) + "null");
                 var SPrefab = Instantiate(productablePrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
@@ -95,6 +95,11 @@ public class ManagementUIController : MonoBehaviour {
                 SPrefab.GetComponent<SelPrefab>().MakeItem();
                 qlist.Add(SPrefab);
             }
+        }
+        foreach (GameObject sq in EpicQlist)
+        {
+            sq.GetComponent<SelPrefab>().SetButton(EpicQlist.IndexOf(sq));
+            Debug.Log(EpicQlist.IndexOf(sq));
         }
     }
     //각 Factory의 분야를 읽어서 해당하는 Queue에 집어넣는 역할 
@@ -147,11 +152,6 @@ public class ManagementUIController : MonoBehaviour {
         MakeSelectionQ();
         MakeProductionQ();
         MakeDeploymentQ();
-        foreach (GameObject sq in EpicQlist)
-        {
-            sq.GetComponent<SelPrefab>().SetButton(EpicQlist.IndexOf(sq));
-            Debug.Log(EpicQlist.IndexOf(sq));
-        }
         foreach (GameObject dq in DQlist)
         {
             dq.GetComponent<DepPrefab>().SetButton(DQlist.IndexOf(dq));
@@ -233,7 +233,10 @@ public class ManagementUIController : MonoBehaviour {
             tempList.Add(PPrefab);
         }
         PQlist = tempList;
-        
+        foreach (GameObject pq in PQlist)
+        {
+            pq.GetComponent<ProPrefab>().SetButton(PQlist.IndexOf(pq));
+        }
     }
 
     public void MakeDeploymentQ()
@@ -267,6 +270,10 @@ public class ManagementUIController : MonoBehaviour {
             tempList.Add(DPrefab);
         }
         DQlist = tempList;
+        foreach (GameObject dq in DQlist)
+        {
+            dq.GetComponent<DepPrefab>().SetButton(DQlist.IndexOf(dq));
+        }
     }
     public static ManagementUIController GetManagementUIController()
     {

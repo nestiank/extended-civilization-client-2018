@@ -310,6 +310,7 @@ public class GameManager : MonoBehaviour {
     void Deploy(CivModel.Terrain.Point point, Production dep)
     {
         dep.Place(point);
+        Game.PlayerInTurn.Deployment.Remove(dep);
         PseudoFSM.I.NormalStateEnter();
     }
 }

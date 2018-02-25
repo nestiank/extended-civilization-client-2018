@@ -8,9 +8,12 @@ using CivModel.Common;
 
 public class DepPrefab : MonoBehaviour {
 
+    public static GameObject DeployingObject;
+
     private Text[] textarguments;
     private Image unitPrt;
     private Button[] buttons;
+   
     // Use this for initialization
 
     void Awake()
@@ -98,7 +101,8 @@ public class DepPrefab : MonoBehaviour {
                 switch (but.name)
                 {
                     case "Deploy":
-                        but.onClick.AddListener(delegate () { DeployItem(dep.Value); });
+                        but.onClick.AddListener(delegate () { DeployItem(dep.Value); DeployingObject = this.gameObject; });
+                        
                         break;
                 }
             }
