@@ -95,7 +95,16 @@ public class GameManager : MonoBehaviour {
                 {
                     if (tile.isFlickering)
                     {
-                        Move(tile.point);
+                        //공격 가능한 놈이 있을 때
+                        if (SelectedActor.MovingAttackAct != null && SelectedActor.MovingAttackAct.IsActable(tile.point))
+                        {
+                            SelectedActor.MovingAttackAct.Act(tile.point);
+                            PseudoFSM.I.NormalStateEnter();
+                        }
+                        else
+                        {
+                            Move(tile.point);
+                        }
                     }
                 }
                 if (PseudoFSM.I.DepState)
@@ -114,13 +123,13 @@ public class GameManager : MonoBehaviour {
                         if(SelectedActor.HoldingAttackAct != null && SelectedActor.HoldingAttackAct.IsActable(tile.point))
                         {
                             SelectedActor.HoldingAttackAct.Act(tile.point);
-                        }
-                        else if(SelectedActor.MovingAttackAct != null && SelectedActor.MovingAttackAct.IsActable(tile.point))
-                        {
-                            SelectedActor.MovingAttackAct.Act(tile.point);
+                            PseudoFSM.I.NormalStateEnter();
                         }
                         else
+                        {
                             Debug.Log("잘못된 공격 대상");
+                            PseudoFSM.I.NormalStateEnter();
+                        }
                     }
                     else
                         PseudoFSM.I.NormalStateEnter();
