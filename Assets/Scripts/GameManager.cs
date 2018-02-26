@@ -42,6 +42,8 @@ public class GameManager : MonoBehaviour {
     private CivModel.Unit[] _standbyUnits;
     private int _standbyUnitIndex = -1;
 
+    private bool[] _victoryNotified = null;
+
     // Use this for initialization
     void Awake()
     {
@@ -57,7 +59,7 @@ public class GameManager : MonoBehaviour {
         }
         // Use this when scene changing exists
         // DontDestroyOnLoad(gameObject);
-        _game = new CivModel.Game(GameInfo.mapWidth, GameInfo.mapHeight, GameInfo.numOfPlayer, new GameSchemeFactory(), new IGameSchemeFactory[] { new CivModel.AI.GameSchemeFactory()});
+        _game = new CivModel.Game(GameInfo.mapWidth, GameInfo.mapHeight, GameInfo.numOfPlayer, new GameSchemeFactory()/*, new IGameSchemeFactory[] { new CivModel.AI.GameSchemeFactory()}*/);
         _game.StartTurn();
 
     }
@@ -313,6 +315,21 @@ public class GameManager : MonoBehaviour {
         Game.PlayerInTurn.Deployment.Remove(dep);
         PseudoFSM.I.NormalStateEnter();
     }
+    //승리 확인 함수(From Presenter)
+    private bool CheckVictory()
+    {
+        if (_victoryNotified != null)
+            return false;
+
+        var survivors = Game.Players.Where(player => !player.IsDefeated);
+        if (survivors.Count() <= 1)
+        {
+            _victoryNotified = new bool[Game.Players.Count];
+            PseudoFSM.I.NormalStateEnter();
+            return true;
+        }
+        return false;
+    }
 }
 
 public static class ProductionFactoryTraits
@@ -379,4 +396,5 @@ public static class ProductionFactoryTraits
         }
         return result;
     }
+
 }

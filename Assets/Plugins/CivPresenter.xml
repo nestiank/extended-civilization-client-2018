@@ -44,12 +44,6 @@
             Called when the game should be shutdown.
             </summary>
         </member>
-        <member name="M:CivPresenter.IView.Invoke(System.Action)">
-            <summary>
-            Invokes the specified action in the UI thread. This method must be thread-safe.
-            </summary>
-            <param name="action">The action.</param>
-        </member>
         <member name="T:CivPresenter.NamespaceDoc">
             <summary>
             The <see cref="N:CivPresenter"/> namespace of CivPresenter.dll module
@@ -393,11 +387,6 @@
         <member name="F:CivPresenter.Presenter.States.Defeated">
             <summary>
             State [defeated]. This state indicates user is viewing a <strong>defeated</strong> screen.
-            </summary>
-        </member>
-        <member name="F:CivPresenter.Presenter.States.AIControl">
-            <summary>
-            State [AI control]. This state indicates AI player is doing his job now.
             </summary>
         </member>
     </members>

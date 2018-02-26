@@ -65,10 +65,15 @@ public class UIManager : MonoBehaviour {
     }
     void Update()
     {
-        if (GameManager.I.isThereTodos)
+        if (GameManager.I.isThereTodos && !PseudoFSM.I.DepState)
         {
             MapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().text = "유닛이 명령을 기다리고 있습니다";
             MapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().fontSize = Screen.height / 40;
+        }
+        else if (PseudoFSM.I.DepState)
+        {
+            MapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().text = "배치 취소";
+            MapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().fontSize = Screen.height / 25;
         }
         else
         {
@@ -76,7 +81,7 @@ public class UIManager : MonoBehaviour {
             MapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().fontSize = Screen.height / 25;
         }
 
-        Gold.text = "금 : " + GameManager.I.Game.PlayerInTurn.Gold + "(+" + GameManager.I.Game.PlayerInTurn.GoldIncome + ")";
+            Gold.text = "금 : " + GameManager.I.Game.PlayerInTurn.Gold + "(+" + GameManager.I.Game.PlayerInTurn.GoldIncome + ")";
         Population.text = "인구 : "; // Model 업데이트 이후 어디서 찾아야 하는지 찾을 필요성 있음.
         Happiness.text = "행복 : " + GameManager.I.Game.PlayerInTurn.Happiness;
         Technology.text = "기술력 : "; // Model 업데이트 이후 어디서 찾아야 하는지 찾을 필요성 있음.
@@ -209,9 +214,13 @@ public class UIManager : MonoBehaviour {
     public void EndTurnActive()
     {
         SkillSet.SetActive(false);
-        if (GameManager.I.isThereTodos)
+        if (GameManager.I.isThereTodos && !PseudoFSM.I.DepState)
         {
             GameManager.I.SelectNextUnit();
+        }
+        else if(PseudoFSM.I.DepState)
+        {
+            PseudoFSM.I.NormalStateEnter();
         }
         else
         {

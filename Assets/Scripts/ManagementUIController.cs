@@ -47,11 +47,12 @@ public class ManagementUIController : MonoBehaviour {
         DeleteAllSQ();
         foreach (IProductionFactory fac in facList)
         {
-            if(fac.ProductionResultType != null)
+            /*if(fac.ProductionResultType != null)
             {
                 fac.ProductionResultType.GetInterface("battleclasslevel");
                 PartSelectionQ(EpicQlist, EpicQueue, fac);
-            }
+            }*/
+            PartSelectionQ(EpicQlist, EpicQueue, fac);
         }
         //내용물 없을 때 빈칸 채우기
         foreach(var qlist in ASQlist)
@@ -105,10 +106,10 @@ public class ManagementUIController : MonoBehaviour {
     //각 Factory의 분야를 읽어서 해당하는 Queue에 집어넣는 역할 
     private GameObject PartSelectionQ(List<GameObject> SQlist, GameObject productableQueue, IProductionFactory fac)
     {
-        if (fac.ProductionResultType == null)
+        /*if (fac.ProductionResultType == null)
         {
             return null;
-        }
+        }*/
         var SPrefab = Instantiate(productablePrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
         SPrefab.transform.SetParent(productableQueue.transform);
         SPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
