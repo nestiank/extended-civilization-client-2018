@@ -109,11 +109,11 @@ public class GameManager : MonoBehaviour {
                 {
                     if (tile.isFlickering)
                     {
-                        if(SelectedActor.HoldingAttackAct != null)
+                        if(SelectedActor.HoldingAttackAct != null && SelectedActor.HoldingAttackAct.IsActable(tile.point))
                         {
                             SelectedActor.HoldingAttackAct.Act(tile.point);
                         }
-                        else if(SelectedActor.MovingAttackAct != null)
+                        else if(SelectedActor.MovingAttackAct != null && SelectedActor.MovingAttackAct.IsActable(tile.point))
                         {
                             SelectedActor.MovingAttackAct.Act(tile.point);
                         }
@@ -330,6 +330,18 @@ public static class ProductionFactoryTraits
             case "JediKnightProductionFactory":
                 result = "제다이 기사";
                 break;
+            case "CityCenterProductionFactory":
+                result = "도심부";
+                break;
+            case "FakeKnightProductionFactory":
+                result = "가짜 기사(테스팅)";
+                break;
+            case "FactoryBuildingProductionFactory":
+                result = "공장";
+                break;
+            case "LaboratoryBuildingProductionFactory":
+                result = "연구소";
+                break;
             default:
                 result = "unknown : " + name;
                 break;
@@ -348,6 +360,18 @@ public static class ProductionFactoryTraits
                 break;
             case "JediKnight":
                 result = "제다이 기사";
+                break;
+            case "CityCenter":
+                result = "도심부";
+                break;
+            case "FakeKnight":
+                result = "가짜 기사(테스팅)";
+                break;
+            case "FactoryBuilding":
+                result = "공장";
+                break;
+            case "LabortoryBuilding":
+                result = "연구소";
                 break;
             default:
                 result = "unknown : " + name;

@@ -7,8 +7,7 @@ using CivModel;
 using CivModel.Common;
 
 public class ProPrefab : MonoBehaviour {
-
-    private static int unitNum = 0;
+    
     private Text[] textarguments;
     private Image unitPrt;
     private Button[] buttons;
@@ -40,24 +39,58 @@ public class ProPrefab : MonoBehaviour {
     {
         string nameofProduction = ProductionFactoryTraits.GetFactoryName(prod.Factory);
         unitPrt.sprite = Resources.Load<Sprite>("Unit_portrait/" + nameofProduction + "_portrait");
+        //남은 턴 계산하는 중
+        Double leftturn;
+        string resultturn;
+        
+        if (prod.EstimatedGoldInputing == 0 || prod.EstimatedLaborInputing == 0)
+        {
+            Debug.Log(prod.EstimatedGoldInputing + " : " + prod.EstimatedLaborInputing + " : " + prod.TotalGoldCost + " : " + prod.GoldInputed + " : " + prod.TotalLaborCost + " : " + prod.LaborInputed);
+            if ((prod.TotalGoldCost - prod.GoldInputed) == 0 && (prod.TotalLaborCost - prod.LaborInputed) == 0)
+            {
+                leftturn = -1f;
+            }
+            else
+            {
+                if ((prod.TotalGoldCost - prod.GoldInputed) == 0)
+                    leftturn = (prod.TotalLaborCost - prod.LaborInputed) / prod.EstimatedLaborInputing;
+                else if ((prod.TotalLaborCost - prod.LaborInputed) == 0)
+                    leftturn = (prod.TotalGoldCost - prod.GoldInputed) / prod.EstimatedGoldInputing;
+                else
+                    leftturn = -1f;
+            }
+        }
+        else
+        {
+            leftturn = Math.Max(((prod.TotalGoldCost - prod.GoldInputed) / prod.EstimatedGoldInputing),((prod.TotalLaborCost - prod.LaborInputed) / prod.EstimatedLaborInputing));
+        }
+        if (leftturn == -1 || Double.IsInfinity(leftturn))
+            resultturn = "?";
+        else
+        {
+            Debug.Log(leftturn);
+            resultturn = Convert.ToInt32(leftturn).ToString();
+        }
+        //텍스트 표시
         foreach (Text txt in textarguments)
         {
             switch (txt.name)
             {
                 case "TurnsLeft":
-                    txt.text = "?턴 이후 배치 가능.";
+                    txt.text = resultturn + "턴 이후 배치 가능.";
                     break;
                 case "UnitName":
-                    txt.text = nameofProduction + " " + unitNum++;
+                    txt.text = nameofProduction + " ";
                     break;
                 case "Required Resource":
-                    txt.text = "금 : 턴당 " + "?" + " (" + "?" + "/" + Convert.ToInt32(prod.TotalGoldCost).ToString() + ")"
-                        +"\n노동력 : 턴당 " + "?" + " (" + Convert.ToInt32(prod.LaborInputed).ToString() + "/" + Convert.ToInt32(prod.TotalLaborCost).ToString() + ")";
+                    txt.text = "금 : 턴당 " + Convert.ToInt32(prod.EstimatedGoldInputing) + " (" + Convert.ToInt32(prod.GoldInputed)+ "/" + Convert.ToInt32(prod.TotalGoldCost).ToString() + ")"
+                        +"\n노동력 : 턴당 " + Convert.ToInt32(prod.EstimatedLaborInputing) + " (" + Convert.ToInt32(prod.LaborInputed).ToString() + "/" + Convert.ToInt32(prod.TotalLaborCost).ToString() + ")";
                     break;
             }
         }
         return this.gameObject;
     }
+    //production이 비었을 때 블랭크 아이템 만들기
     public GameObject MakeItem()
     {
         unitPrt.enabled = false;
@@ -82,6 +115,7 @@ public class ProPrefab : MonoBehaviour {
         }
         return this.gameObject;
     }
+    //버튼 기능 붙이는 함수
     public void SetButton(int i)
     {
         if(i == -1)
@@ -116,6 +150,8 @@ public class ProPrefab : MonoBehaviour {
                             GameManager.I.Game.PlayerInTurn.Production.AddFirst(prod);
                             ManagementUIController.GetManagementUIController().MakeProductionQ();
                         });
+                        if (GameManager.I.Game.PlayerInTurn.Production.First == prod)
+                            but.enabled = false;
                         break;
                     case "Up":
                         but.onClick.AddListener(delegate () {
@@ -125,8 +161,10 @@ public class ProPrefab : MonoBehaviour {
                             GameManager.I.Game.PlayerInTurn.Production.AddBefore(temprod, prod);
                             ManagementUIController.GetManagementUIController().MakeProductionQ();
                         });
+                        if (GameManager.I.Game.PlayerInTurn.Production.First == prod)
+                            but.enabled = false;
                         break;
-                    case "Down":
+                    case "Bottom":
                         but.onClick.AddListener(delegate () {
                             Debug.Log(but.name);
                             LinkedListNode<Production> temprod = prod.Next;
@@ -134,8 +172,10 @@ public class ProPrefab : MonoBehaviour {
                             GameManager.I.Game.PlayerInTurn.Production.AddLast(prod);
                             ManagementUIController.GetManagementUIController().MakeProductionQ();
                         });
+                        if (GameManager.I.Game.PlayerInTurn.Production.Last == prod)
+                            but.enabled = false;
                         break;
-                    case "Bottom":
+                    case "Down":
                         but.onClick.AddListener(delegate () {
                             Debug.Log(but.name);
                             LinkedListNode<Production> temprod = prod.Next;
@@ -143,13 +183,11 @@ public class ProPrefab : MonoBehaviour {
                             GameManager.I.Game.PlayerInTurn.Production.AddAfter(temprod, prod);
                             ManagementUIController.GetManagementUIController().MakeProductionQ();
                         });
+                        if (GameManager.I.Game.PlayerInTurn.Production.Last == prod)
+                            but.enabled = false;
                         break;
                 }
             }
         }
-    }
-    public static void ResetTestingNumber()
-    {
-        unitNum = 0;
     }
 }

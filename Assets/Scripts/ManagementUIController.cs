@@ -203,7 +203,6 @@ public class ManagementUIController : MonoBehaviour {
 
     public void MakeProductionQ()
     {
-        ProPrefab.ResetTestingNumber();
         List<GameObject> tempList = new List<GameObject>();
         Debug.Log("ProductionList startMaking");
         foreach (GameObject pq in PQlist)
