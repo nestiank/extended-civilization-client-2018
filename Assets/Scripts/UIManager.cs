@@ -81,8 +81,8 @@ public class UIManager : MonoBehaviour {
             MapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().fontSize = Screen.height / 25;
         }
 
-            Gold.text = "금 : " + GameManager.I.Game.PlayerInTurn.Gold + "(+" + GameManager.I.Game.PlayerInTurn.GoldIncome + ")";
-        Population.text = "인구 : "; // Model 업데이트 이후 어디서 찾아야 하는지 찾을 필요성 있음.
+        Gold.text = "금 : " + GameManager.I.Game.PlayerInTurn.Gold + "(+" + GameManager.I.Game.PlayerInTurn.GoldIncome + ")";
+        Population.text = "인구 : " + GameManager.I.Game.PlayerInTurn.Population;
         Happiness.text = "행복 : " + GameManager.I.Game.PlayerInTurn.Happiness;
         Technology.text = "기술력 : "; // Model 업데이트 이후 어디서 찾아야 하는지 찾을 필요성 있음.
         Labor.text = "노동력 : " + GameManager.I.Game.PlayerInTurn.Labor;

@@ -9,6 +9,7 @@ public class HexTile : MonoBehaviour {
     public CivModel.Terrain.Point point;
 
     Transform terrains;
+    Transform buildings;
     Transform units;
 
     public bool isFlickering;
@@ -18,7 +19,9 @@ public class HexTile : MonoBehaviour {
 	void Start () {
         terrains = transform.GetChild(0).transform;
         units = transform.GetChild(1).transform;
-	}
+        buildings = transform.GetChild(2).transform;
+
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -29,6 +32,39 @@ public class HexTile : MonoBehaviour {
     public void ChangeTile()
     {
         terrains.GetChild((int)point.Type).gameObject.SetActive(true);
+    }
+
+    public void BuildDistrict(CivModel.TileBuilding building)
+    {
+        if (building == null)
+        {
+            foreach(Transform child in buildings)
+            {
+                child.gameObject.SetActive(false);
+            }
+        }
+        else
+        {
+            foreach (Transform child in buildings)
+            {
+                if (child.gameObject.name.Equals(TileBuildingObject(building)))
+                {
+                    child.gameObject.SetActive(true);
+                }
+                else
+                {
+                    child.gameObject.SetActive(false);
+                }
+            }
+        }
+    }
+    string TileBuildingObject(CivModel.TileBuilding building)
+    {
+        if (building is CivModel.Common.CityCenter)
+        {
+            return "CityCenter";
+        }
+        else return "";
     }
 
     // This method should be changed when unit type increses
@@ -45,7 +81,7 @@ public class HexTile : MonoBehaviour {
         {
             foreach (Transform child in units)
             {
-                if (child.gameObject.name == "Pioneer")
+                if (child.gameObject.name == "Jedi Knight")
                 {
                     child.gameObject.SetActive(true);
                 }

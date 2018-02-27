@@ -77,6 +77,11 @@ public class GameManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update() {
         Render(_game.Terrain);
+        Debug.Log("Gold:" + _game.PlayerInTurn.Gold + "(+" + _game.PlayerInTurn.GoldIncome +")");
+        Debug.Log("Pop:" + _game.PlayerInTurn.Population);
+        Debug.Log("Happ:" + _game.PlayerInTurn.Happiness);
+        Debug.Log("Prod:" + _game.PlayerInTurn.Labor);
+        Debug.Log("Tech:" + _game.PlayerInTurn.Research);
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -199,8 +204,8 @@ public class GameManager : MonoBehaviour {
             {
                 CivModel.Terrain.Point point = terrain.GetPoint(i, j);
                 // TODO: Make prefab component
-                 _cells[i, j].GetComponent<HexTile>().ChangeTile();
-                // _cells[i, j].GetComponent<HexTile>().BuildDistrict(point.TileBuilding);
+                _cells[i, j].GetComponent<HexTile>().ChangeTile();
+                _cells[i, j].GetComponent<HexTile>().BuildDistrict(point.TileBuilding);
                 _cells[i, j].GetComponent<HexTile>().DrawUnit(point.Unit);
             }
         }
