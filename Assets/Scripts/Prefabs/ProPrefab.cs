@@ -14,7 +14,7 @@ public class ProPrefab : MonoBehaviour {
     // Use this for initialization
     void Awake()
     {
-        Debug.Log("call ProPre");
+        //Debug.Log("call ProPre");
         textarguments = gameObject.GetComponentsInChildren<Text>();
         foreach (Image unt in gameObject.GetComponentsInChildren<Image>())
         {
@@ -45,7 +45,7 @@ public class ProPrefab : MonoBehaviour {
         
         if (prod.EstimatedGoldInputing == 0 || prod.EstimatedLaborInputing == 0)
         {
-            Debug.Log(prod.EstimatedGoldInputing + " : " + prod.EstimatedLaborInputing + " : " + prod.TotalGoldCost + " : " + prod.GoldInputed + " : " + prod.TotalLaborCost + " : " + prod.LaborInputed);
+            //Debug.Log(prod.EstimatedGoldInputing + " : " + prod.EstimatedLaborInputing + " : " + prod.TotalGoldCost + " : " + prod.GoldInputed + " : " + prod.TotalLaborCost + " : " + prod.LaborInputed);
             if ((prod.TotalGoldCost - prod.GoldInputed) == 0 && (prod.TotalLaborCost - prod.LaborInputed) == 0)
             {
                 leftturn = -1f;
@@ -68,7 +68,7 @@ public class ProPrefab : MonoBehaviour {
             resultturn = "?";
         else
         {
-            Debug.Log(leftturn);
+            //Debug.Log(leftturn);
             resultturn = Convert.ToInt32(leftturn).ToString();
         }
         //텍스트 표시
@@ -138,14 +138,14 @@ public class ProPrefab : MonoBehaviour {
                 {
                     case "Delete":
                         but.onClick.AddListener(delegate () {
-                            Debug.Log(but.name);
+                            //Debug.Log(but.name);
                             GameManager.I.Game.PlayerInTurn.Production.Remove(prod);
                             ManagementUIController.GetManagementUIController().MakeProductionQ();
                         });
                         break;
                     case "Top":
                         but.onClick.AddListener(delegate () {
-                            Debug.Log(but.name);
+                            //Debug.Log(but.name);
                             GameManager.I.Game.PlayerInTurn.Production.Remove(prod);
                             GameManager.I.Game.PlayerInTurn.Production.AddFirst(prod);
                             ManagementUIController.GetManagementUIController().MakeProductionQ();
@@ -155,7 +155,7 @@ public class ProPrefab : MonoBehaviour {
                         break;
                     case "Up":
                         but.onClick.AddListener(delegate () {
-                            Debug.Log(but.name);
+                            //Debug.Log(but.name);
                             LinkedListNode<Production> temprod = prod.Previous;
                             GameManager.I.Game.PlayerInTurn.Production.Remove(prod);
                             GameManager.I.Game.PlayerInTurn.Production.AddBefore(temprod, prod);
@@ -166,7 +166,7 @@ public class ProPrefab : MonoBehaviour {
                         break;
                     case "Bottom":
                         but.onClick.AddListener(delegate () {
-                            Debug.Log(but.name);
+                            //Debug.Log(but.name);
                             LinkedListNode<Production> temprod = prod.Next;
                             GameManager.I.Game.PlayerInTurn.Production.Remove(prod);
                             GameManager.I.Game.PlayerInTurn.Production.AddLast(prod);
@@ -177,7 +177,7 @@ public class ProPrefab : MonoBehaviour {
                         break;
                     case "Down":
                         but.onClick.AddListener(delegate () {
-                            Debug.Log(but.name);
+                            //Debug.Log(but.name);
                             LinkedListNode<Production> temprod = prod.Next;
                             GameManager.I.Game.PlayerInTurn.Production.Remove(prod);
                             GameManager.I.Game.PlayerInTurn.Production.AddAfter(temprod, prod);

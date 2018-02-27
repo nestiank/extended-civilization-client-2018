@@ -18,7 +18,7 @@ public class DepPrefab : MonoBehaviour {
 
     void Awake()
     {
-        Debug.Log("call DepPre");
+        //Debug.Log("call DepPre");
         textarguments = gameObject.GetComponentsInChildren<Text>();
         foreach (Image unt in gameObject.GetComponentsInChildren<Image>())
         {
@@ -118,7 +118,7 @@ public class DepPrefab : MonoBehaviour {
         }
         else
         {
-            Debug.Log("Error : not finished product");
+            //Debug.Log("Error : not finished product");
             throw new AccessViolationException();
         }
     }

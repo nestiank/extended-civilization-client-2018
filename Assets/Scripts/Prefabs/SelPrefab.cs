@@ -17,7 +17,7 @@ public class SelPrefab : MonoBehaviour
 
     void Awake()
     {
-        Debug.Log("call SelPre");
+        //Debug.Log("call SelPre");
         textarguments = gameObject.GetComponentsInChildren<Text>();
         foreach (Image unt in gameObject.GetComponentsInChildren<Image>())
         {
@@ -34,7 +34,7 @@ public class SelPrefab : MonoBehaviour
     }
     public GameObject MakeItem(IProductionFactory fact)
     {
-        Debug.Log("Selection Queue Item Made");
+        //Debug.Log("Selection Queue Item Made");
         string nameofFactory = ProductionFactoryTraits.GetFactoryName(fact);
         unitPrt.sprite = Resources.Load<Sprite>("Unit_portrait/" + nameofFactory + "_portrait");
         foreach (Text txt in textarguments)
@@ -55,7 +55,7 @@ public class SelPrefab : MonoBehaviour
     public GameObject MakeItem()
     {
         unitPrt.enabled = false;
-        Debug.Log("NULL Selection Queue");
+        //Debug.Log("NULL Selection Queue");
         foreach (Text txt in textarguments)
         {
             switch (txt.name)
@@ -93,7 +93,7 @@ public class SelPrefab : MonoBehaviour
         IProductionFactory factory = GameManager.I.Game.PlayerInTurn.AvailableProduction.ToList()[i];
         GameManager.I.Game.PlayerInTurn.Production.AddLast(factory.Create(GameManager.I.Game.PlayerInTurn));
         
-        Debug.Log(i + " inputed");
+        //Debug.Log(i + " inputed");
         uicontroller.MakeProductionQ();
         uicontroller.MakeDeploymentQ();
     }

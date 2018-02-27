@@ -61,7 +61,7 @@ public class HexTile : MonoBehaviour {
     public void FlickerBlue()
     {
         isFlickering = true;
-        Debug.Log(gameObject.name + " is flickering with blue");
+        //Debug.Log(gameObject.name + " is flickering with blue");
         if (terrains.GetChild((int)point.Type).GetComponent<Renderer>() == null)
             return;
         _coroutine = Flicker(Color.blue);
@@ -72,7 +72,7 @@ public class HexTile : MonoBehaviour {
     public void FlickerRed()
     {
         isFlickering = true;
-        Debug.Log(gameObject.name + " is flickering with red");
+        //Debug.Log(gameObject.name + " is flickering with red");
         if (terrains.GetChild((int)point.Type).GetComponent<Renderer>() == null)
             return;
         _coroutine = Flicker(Color.red);
@@ -82,7 +82,7 @@ public class HexTile : MonoBehaviour {
     public void StopFlickering()
     {
         isFlickering = false;
-        Debug.Log(gameObject.name + " stopped flickering");
+        //Debug.Log(gameObject.name + " stopped flickering");
         if (terrains.GetChild((int)point.Type).GetComponent<Renderer>() == null)
             return;
         if (_coroutine == null)

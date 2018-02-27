@@ -38,12 +38,12 @@ public class ManagementUIController : MonoBehaviour {
 
     private void MakeSelectionQ()//선택 큐 프리팹 생성 함수
     {
-        Debug.Log("ALL SelectList startMaking");
+        //Debug.Log("ALL SelectList startMaking");
         facList = game.PlayerInTurn.AvailableProduction.ToList(); //전체 선택 목록 받아오기
         //facList의 변경으로 Epic-High-intermediate-Low 변경 가능. 하지만 지금은 설정되지 않았음(Epic에 생성)
-        Debug.Log(facList + " " + facList.Count);
-        Debug.Log("facList : " + facList.Count);
-        Debug.Log("ALL SelectList Updated");
+        //Debug.Log(facList + " " + facList.Count);
+        //Debug.Log("facList : " + facList.Count);
+        //Debug.Log("ALL SelectList Updated");
         DeleteAllSQ();
         foreach (IProductionFactory fac in facList)
         {
@@ -85,10 +85,10 @@ public class ManagementUIController : MonoBehaviour {
                         break;
                     default:
                         productableQueue = null;
-                        Debug.Log("Error : qlist = " + qlist);
+                        //Debug.Log("Error : qlist = " + qlist);
                         throw new MissingComponentException();
                 }
-                Debug.Log("SelectionList : " + ASQlist.IndexOf(qlist) + "null");
+                //Debug.Log("SelectionList : " + ASQlist.IndexOf(qlist) + "null");
                 var SPrefab = Instantiate(productablePrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
                 SPrefab.transform.SetParent(productableQueue.transform);
                 SPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
@@ -100,7 +100,7 @@ public class ManagementUIController : MonoBehaviour {
         foreach (GameObject sq in EpicQlist)
         {
             sq.GetComponent<SelPrefab>().SetButton(EpicQlist.IndexOf(sq));
-            Debug.Log(EpicQlist.IndexOf(sq));
+            //Debug.Log(EpicQlist.IndexOf(sq));
         }
     }
     //각 Factory의 분야를 읽어서 해당하는 Queue에 집어넣는 역할 
@@ -197,7 +197,7 @@ public class ManagementUIController : MonoBehaviour {
 
     void Update()
     {
-        Debug.Log(game);
+        //Debug.Log(game);
         mProduction = game.PlayerInTurn.Production;
         mDeployment = game.PlayerInTurn.Deployment;
     }
@@ -205,15 +205,15 @@ public class ManagementUIController : MonoBehaviour {
     public void MakeProductionQ()
     {
         List<GameObject> tempList = new List<GameObject>();
-        Debug.Log("ProductionList startMaking");
+        //Debug.Log("ProductionList startMaking");
         foreach (GameObject pq in PQlist)
         {
             Destroy(pq);
         }
         PQlist.Clear();
         mProduction = game.PlayerInTurn.Production;
-        Debug.Log("ProList : " + mProduction.Count);
-        Debug.Log("ProductionList Updated");
+        //Debug.Log("ProList : " + mProduction.Count);
+        //Debug.Log("ProductionList Updated");
         foreach (Production prod in mProduction)
         {
             var PPrefab = Instantiate(proPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
@@ -224,7 +224,7 @@ public class ManagementUIController : MonoBehaviour {
         }
         if (mProduction.Count == 0)
         {
-            Debug.Log("ProductionList null");
+            //Debug.Log("ProductionList null");
             var PPrefab = Instantiate(proPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
             PPrefab.transform.SetParent(proQueue.transform);
             PPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
@@ -242,15 +242,15 @@ public class ManagementUIController : MonoBehaviour {
     public void MakeDeploymentQ()
     {
         List<GameObject> tempList = new List<GameObject>();
-        Debug.Log("DeploymentList startMaking");
+        //Debug.Log("DeploymentList startMaking");
         foreach (GameObject dq in DQlist)
         {
             Destroy(dq);
         }
         DQlist.Clear();
         mDeployment = game.PlayerInTurn.Deployment;
-        Debug.Log("DepList : " + mDeployment.Count);
-        Debug.Log("DeploymentList Updated");
+        //Debug.Log("DepList : " + mDeployment.Count);
+        //Debug.Log("DeploymentList Updated");
         foreach (Production prod in mDeployment)
         {
             var DPrefab = Instantiate(depPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
@@ -261,7 +261,7 @@ public class ManagementUIController : MonoBehaviour {
         }
         if (mDeployment.Count == 0)
         {
-            Debug.Log("DeploymentList null");
+            //Debug.Log("DeploymentList null");
             var DPrefab = Instantiate(depPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
             DPrefab.transform.SetParent(depQueue.transform);
             DPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
@@ -279,7 +279,7 @@ public class ManagementUIController : MonoBehaviour {
     {
         if(managementUIController == null)
         {
-            Debug.Log("managementUIController not made");
+            //Debug.Log("managementUIController not made");
             throw new MissingComponentException();
         }
         return managementUIController;

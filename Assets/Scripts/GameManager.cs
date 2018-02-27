@@ -59,7 +59,8 @@ public class GameManager : MonoBehaviour {
         }
         // Use this when scene changing exists
         // DontDestroyOnLoad(gameObject);
-        _game = new CivModel.Game(GameInfo.mapWidth, GameInfo.mapHeight, GameInfo.numOfPlayer, new GameSchemeFactory()/*, new IGameSchemeFactory[] { new CivModel.AI.GameSchemeFactory()}*/);
+        //_game = new CivModel.Game(GameInfo.mapWidth, GameInfo.mapHeight, GameInfo.numOfPlayer, new GameSchemeFactory()/*, new IGameSchemeFactory[] { new CivModel.AI.GameSchemeFactory()}*/);
+        _game = new CivModel.Game(".\\Assets\\map.txt", new IGameSchemeFactory[] { new CivModel.Common.GameSchemeFactory() });
         _game.StartTurn();
 
     }
@@ -127,7 +128,7 @@ public class GameManager : MonoBehaviour {
                         }
                         else
                         {
-                            Debug.Log("잘못된 공격 대상");
+                            ////Debug.Log("잘못된 공격 대상");
                             PseudoFSM.I.NormalStateEnter();
                         }
                     }
@@ -213,14 +214,14 @@ public class GameManager : MonoBehaviour {
 
         for (int j = 0; j < tryNumber; ++j)
         {
-            Debug.Log(_standbyUnitIndex);
+            //Debug.Log(_standbyUnitIndex);
             if (_standbyUnitIndex == -1)
             {
                 _standbyUnits = _game.PlayerInTurn.Units.ToArray();
             }
 
             int idx = _standbyUnitIndex + 1;
-            Debug.Log(_standbyUnits.Length);
+            //Debug.Log(_standbyUnits.Length);
             for (; idx < _standbyUnits.Length; ++idx)
             {
                 var unit = _standbyUnits[idx];
@@ -229,7 +230,7 @@ public class GameManager : MonoBehaviour {
                     _standbyUnitIndex = idx;
                     _selectedActor = _standbyUnits[idx];
                     isThereTodos = true;
-                    Debug.Log(_selectedActor.PlacedPoint);
+                    //Debug.Log(_selectedActor.PlacedPoint);
                     Focus();
                     return;
                 }
@@ -242,7 +243,7 @@ public class GameManager : MonoBehaviour {
     }
     void SelectUnit(Unit unit)
     {
-        Debug.Log(unit.ToString() + " selected");
+        //Debug.Log(unit.ToString() + " selected");
         var units = _game.PlayerInTurn.Units.ToArray();
         int idx = Array.IndexOf(units, unit);
 
