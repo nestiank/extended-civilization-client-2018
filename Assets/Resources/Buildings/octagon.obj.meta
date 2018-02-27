@@ -1,18 +1,18 @@
 fileFormatVersion: 2
-guid: edc13a44c490be640be54a1406d88e2c
-timeCreated: 1519652317
+guid: 3a4bce3ea1faeb54f9d8df5ef601f908
+timeCreated: 1519719719
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
-    100000: //RootNode
-    100002: Tube001
-    400000: //RootNode
-    400002: Tube001
-    2100000: Tube001Mat
-    2300000: Tube001
-    3300000: Tube001
-    4300000: Tube001
+    100000: Octagon
+    100002: //RootNode
+    400000: Octagon
+    400002: //RootNode
+    2100000: OctagonMat
+    2300000: Octagon
+    3300000: Octagon
+    4300000: Octagon
   externalObjects: {}
   materials:
     importMaterials: 1

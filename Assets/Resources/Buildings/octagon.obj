@@ -1,10 +1,8 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
-# File Created: 22.02.2018 17:09:38
-
-mtllib octagon.mtl
+# File Created: 27.02.2018 17:20:24
 
 #
-# object Tube001
+# object Octagon
 #
 
 v  -0.0000 0.0500 -0.6000
@@ -713,9 +711,8 @@ vt 0.9137 0.2474 0.0376
 vt 0.9191 0.2495 -0.0376
 # 377 texture coords
 
-o Tube001
-g Tube001
-usemtl Material__47
+o Octagon
+g Octagon
 s off
 f 1/1/1 2/2/2 3/3/3 4/4/4 
 f 2/2/2 5/5/2 6/6/3 3/3/3 

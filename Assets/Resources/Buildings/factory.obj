@@ -1,7 +1,5 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
-# File Created: 23.02.2018 15:42:43
-
-mtllib factory.mtl
+# File Created: 27.02.2018 17:19:57
 
 #
 # object factory
@@ -597,7 +595,6 @@ vt 0.9423 0.6999 0.0000
 
 o factory
 g factory
-usemtl Material__50
 s 32
 f 1/1/1 2/2/2 3/3/3 4/4/4 
 s 64

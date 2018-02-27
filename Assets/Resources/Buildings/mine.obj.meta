@@ -1,18 +1,18 @@
 fileFormatVersion: 2
-guid: 19ba7a9090a753f469c32edf43818212
-timeCreated: 1519652317
+guid: 33a9748aae428e14c8a0af0e860de983
+timeCreated: 1519719718
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
-    100000: Box002
+    100000: mine
     100002: //RootNode
-    400000: Box002
+    400000: mine
     400002: //RootNode
-    2100000: Box002Mat
-    2300000: Box002
-    3300000: Box002
-    4300000: Box002
+    2100000: mineMat
+    2300000: mine
+    3300000: mine
+    4300000: mine
   externalObjects: {}
   materials:
     importMaterials: 1

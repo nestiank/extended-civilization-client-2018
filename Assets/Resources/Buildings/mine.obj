@@ -1,10 +1,8 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
-# File Created: 22.02.2018 21:17:18
-
-mtllib mine.mtl
+# File Created: 27.02.2018 17:21:01
 
 #
-# object Box002
+# object mine
 #
 
 v  -0.5000 0.0500 0.5269
@@ -693,9 +691,8 @@ vt 0.4751 0.1603 0.0000
 vt 0.9315 0.8308 0.0000
 # 325 texture coords
 
-o Box002
-g Box002
-usemtl Material__47
+o mine
+g mine
 s 8
 f 1/1/1 2/2/2 3/3/3 4/4/4 
 s 64

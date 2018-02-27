@@ -1,24 +1,18 @@
 fileFormatVersion: 2
-guid: 77184d476736fd547931481af020aacf
-timeCreated: 1519652317
+guid: aadc1d3476b10294d87f856e215ae594
+timeCreated: 1519719719
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
-    100000: Box003
+    100000: fort
     100002: //RootNode
-    100004: Hextile
-    400000: Box003
+    400000: fort
     400002: //RootNode
-    400004: Hextile
-    2100000: Box003Mat
-    2100002: HextileMat
-    2300000: Box003
-    2300002: Hextile
-    3300000: Box003
-    3300002: Hextile
-    4300000: Box003
-    4300002: Hextile
+    2100000: fortMat
+    2300000: fort
+    3300000: fort
+    4300000: fort
   externalObjects: {}
   materials:
     importMaterials: 1
