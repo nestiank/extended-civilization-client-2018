@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour {
     public GameObject MapUI;
     public GameObject ManagementUI;
     public GameObject QuestUI;
+    public GameObject GameEND;
 
     public Text Gold;
     public Text Population;
@@ -84,12 +85,15 @@ public class UIManager : MonoBehaviour {
         Gold.text = "금 : " + GameManager.I.Game.PlayerInTurn.Gold + "(+" + GameManager.I.Game.PlayerInTurn.GoldIncome + ")";
         Population.text = "인구 : " + GameManager.I.Game.PlayerInTurn.Population;
         Happiness.text = "행복 : " + GameManager.I.Game.PlayerInTurn.Happiness;
-        Technology.text = "기술력 : "; // Model 업데이트 이후 어디서 찾아야 하는지 찾을 필요성 있음.
+        Technology.text = "기술력 : " + GameManager.I.Game.PlayerInTurn.Research;
         Labor.text = "노동력 : " + GameManager.I.Game.PlayerInTurn.Labor;
-
-        if(GameManager.I.SelectedActor != null)
+    }
+    public void MakeUnitInfo()
+    {
+        if (GameManager.I.SelectedActor != null)
         {
             UnitInfo.SetActive(true);
+            //UnitPortrait.sprite = Resources.Load<Sprite>("Hwan Units/Portraits/hwan_jedi.png");
             UnitName.text = ProductionFactoryTraits.GetName(GameManager.I.SelectedActor);
             UnitAttack.text = GameManager.I.SelectedActor.AttackPower.ToString();
             UnitDefence.text = GameManager.I.SelectedActor.DefencePower.ToString();
@@ -106,13 +110,19 @@ public class UIManager : MonoBehaviour {
             ActionPoint.text = "";
         }
     }
-
     //// Resource bar UI ////
     public void MapUIActive()                   // Map UI tab
     {
         MapUI.SetActive(true);
         ManagementUI.SetActive(false);
         QuestUI.SetActive(false);
+    }
+    public void GameEnd()                   // Map UI tab
+    {
+        GameEND.SetActive(true);
+        ManagementUI.SetActive(false);
+        QuestUI.SetActive(false);
+        MapUI.SetActive(false);
     }
     public void ManagementUIActive()            // Management UI tab
     {
@@ -217,14 +227,17 @@ public class UIManager : MonoBehaviour {
         if (GameManager.I.isThereTodos && !PseudoFSM.I.DepState)
         {
             GameManager.I.SelectNextUnit();
+            MakeUnitInfo();
         }
         else if(PseudoFSM.I.DepState)
         {
             PseudoFSM.I.NormalStateEnter();
+            MakeUnitInfo();
         }
         else
         {
             GameManager.I.ProceedTurn();
+            MakeUnitInfo();
         }
     }
 

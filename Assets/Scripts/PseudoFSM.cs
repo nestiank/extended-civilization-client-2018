@@ -69,15 +69,15 @@ public class PseudoFSM : MonoBehaviour {
         _parameterPoints = GameManager.I.SelectedActor.PlacedPoint.Value.Adjacents();
         for (int i = 0; i < _parameterPoints.Length; i++)
         {
-            if (GameManager.I.SelectedActor.MoveAct.IsActable(_parameterPoints[i]))
-            {
-                CivModel.Position pos = _parameterPoints[i].Value.Position;
-                GameManager.I.Cells[pos.X, pos.Y].GetComponent<HexTile>().FlickerBlue();
-            }
-            else if (GameManager.I.SelectedActor.MovingAttackAct.IsActable(_parameterPoints[i]))
+            if (GameManager.I.SelectedActor.MovingAttackAct.IsActable(_parameterPoints[i]))
             {
                 CivModel.Position pos = _parameterPoints[i].Value.Position;
                 GameManager.I.Cells[pos.X, pos.Y].GetComponent<HexTile>().FlickerRed();
+            }
+            else if (GameManager.I.SelectedActor.MoveAct.IsActable(_parameterPoints[i]))
+            {
+                CivModel.Position pos = _parameterPoints[i].Value.Position;
+                GameManager.I.Cells[pos.X, pos.Y].GetComponent<HexTile>().FlickerBlue();
             }
         }
     }

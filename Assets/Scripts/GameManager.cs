@@ -42,8 +42,6 @@ public class GameManager : MonoBehaviour {
     private CivModel.Unit[] _standbyUnits;
     private int _standbyUnitIndex = -1;
 
-    private bool[] _victoryNotified = null;
-
     // Use this for initialization
     void Awake()
     {
@@ -82,92 +80,98 @@ public class GameManager : MonoBehaviour {
         Debug.Log("Happ:" + _game.PlayerInTurn.Happiness);
         Debug.Log("Prod:" + _game.PlayerInTurn.Labor);
         Debug.Log("Tech:" + _game.PlayerInTurn.Research);
-
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (CheckVictory())
         {
-            Focus();
+            UIManager.I.GameEnd();
         }
-
-        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
+        else
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-
-            if (Physics.Raycast(ray, out hit))
+            if (Input.GetKeyDown(KeyCode.Space))
             {
-                HexTile tile = hit.collider.gameObject.GetComponent<HexTile>();
+                Focus();
+            }
 
-                if (PseudoFSM.I.MoveState)
+            if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
+            {
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+
+                if (Physics.Raycast(ray, out hit))
                 {
-                    if (tile.isFlickering)
+                    HexTile tile = hit.collider.gameObject.GetComponent<HexTile>();
+
+                    if (PseudoFSM.I.MoveState)
                     {
-                        //공격 가능한 놈이 있을 때
-                        if (SelectedActor.MovingAttackAct != null && SelectedActor.MovingAttackAct.IsActable(tile.point))
+                        if (tile.isFlickering)
                         {
-                            SelectedActor.MovingAttackAct.Act(tile.point);
-                            PseudoFSM.I.NormalStateEnter();
+                            //공격 가능한 놈이 있을 때
+                            if (SelectedActor.MovingAttackAct != null && SelectedActor.MovingAttackAct.IsActable(tile.point))
+                            {
+                                SelectedActor.MovingAttackAct.Act(tile.point);
+                                PseudoFSM.I.NormalStateEnter();
+                            }
+                            else
+                            {
+                                Move(tile.point);
+                            }
+                        }
+                    }
+                    if (PseudoFSM.I.DepState)
+                    {
+                        if (tile.isFlickering)
+                        {
+                            Deploy(tile.point, PseudoFSM.I.Deployment);
                         }
                         else
-                        {
-                            Move(tile.point);
-                        }
-                    }
-                }
-                if (PseudoFSM.I.DepState)
-                {
-                    if (tile.isFlickering)
-                    {
-                        Deploy(tile.point, PseudoFSM.I.Deployment);
-                    }
-                    else
-                        PseudoFSM.I.NormalStateEnter();
-                }
-                if (PseudoFSM.I.AttackState)
-                {
-                    if (tile.isFlickering)
-                    {
-                        if(SelectedActor.HoldingAttackAct != null && SelectedActor.HoldingAttackAct.IsActable(tile.point))
-                        {
-                            SelectedActor.HoldingAttackAct.Act(tile.point);
                             PseudoFSM.I.NormalStateEnter();
+                    }
+                    if (PseudoFSM.I.AttackState)
+                    {
+                        if (tile.isFlickering)
+                        {
+                            if (SelectedActor.HoldingAttackAct != null && SelectedActor.HoldingAttackAct.IsActable(tile.point))
+                            {
+                                SelectedActor.HoldingAttackAct.Act(tile.point);
+                                PseudoFSM.I.NormalStateEnter();
+                            }
+                            else
+                            {
+                                ////Debug.Log("잘못된 공격 대상");
+                                PseudoFSM.I.NormalStateEnter();
+                            }
                         }
                         else
-                        {
-                            ////Debug.Log("잘못된 공격 대상");
                             PseudoFSM.I.NormalStateEnter();
-                        }
                     }
-                    else
-                        PseudoFSM.I.NormalStateEnter();
-                }
-                Unit unit = tile.point.Unit;
-                if (unit != null)
-                { 
-                    SelectUnit(unit);
+                    Unit unit = tile.point.Unit;
+                    if (unit != null)
+                    {
+                        SelectUnit(unit);
+                    }
                 }
             }
-        }
 
-        // Camera movement
-        Vector3 mousePos = Input.mousePosition;
-        if (mousePos.x < 10)
-        {
-            CameraMove(Vector3.left);
-        }
-        else if (mousePos.x > Screen.width - 10)
-        {
-            CameraMove(Vector3.right);
-        }
-        if (mousePos.y < 10)
-        {
-            CameraMove(Vector3.back);
-        }
-        else if (mousePos.y > Screen.height - 10)
-        {
-            CameraMove(Vector3.forward);
-        }
+            // Camera movement
+            Vector3 mousePos = Input.mousePosition;
+            if (mousePos.x < 10)
+            {
+                CameraMove(Vector3.left);
+            }
+            else if (mousePos.x > Screen.width - 10)
+            {
+                CameraMove(Vector3.right);
+            }
+            if (mousePos.y < 10)
+            {
+                CameraMove(Vector3.back);
+            }
+            else if (mousePos.y > Screen.height - 10)
+            {
+                CameraMove(Vector3.forward);
+            }
 
-        CameraZoom();
+            CameraZoom();
+        }
     }
 
     // Instantiate hex tiles
@@ -322,6 +326,7 @@ public class GameManager : MonoBehaviour {
     {
         _selectedActor.MoveAct.Act(point);
         PseudoFSM.I.NormalStateEnter();
+        UIManager.I.MakeUnitInfo();
     }
 
     void Deploy(CivModel.Terrain.Point point, Production dep)
@@ -329,17 +334,14 @@ public class GameManager : MonoBehaviour {
         dep.Place(point);
         Game.PlayerInTurn.Deployment.Remove(dep);
         PseudoFSM.I.NormalStateEnter();
+        UIManager.I.MakeUnitInfo();
     }
     //승리 확인 함수(From Presenter)
     private bool CheckVictory()
     {
-        if (_victoryNotified != null)
-            return false;
-
         var survivors = Game.Players.Where(player => !player.IsDefeated);
         if (survivors.Count() <= 1)
         {
-            _victoryNotified = new bool[Game.Players.Count];
             PseudoFSM.I.NormalStateEnter();
             return true;
         }
