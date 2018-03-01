@@ -135,6 +135,7 @@ public class UIManager : MonoBehaviour {
     public void QuestUIActive()                 // Quest UI tab
     {
         SkillSet.SetActive(false);
+        uicontroller.MakeQuestQueue();
         QuestUI.SetActive(true);
         MapUI.SetActive(false);
         ManagementUI.SetActive(false);

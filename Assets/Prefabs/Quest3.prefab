@@ -106,7 +106,8 @@ GameObject:
   - component: {fileID: 224218572548644340}
   - component: {fileID: 222262096531738452}
   - component: {fileID: 114137855164640326}
-  - component: {fileID: 114657329043301410}
+  - component: {fileID: 114956457392117038}
+  - component: {fileID: 114763697980529176}
   m_Layer: 5
   m_Name: Quest3
   m_TagString: Untagged
@@ -173,7 +174,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Ancient Egypt
+  m_Text: "\uBE44\uC5C8\uC74C"
 --- !u!114 &114314259769222040
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -206,7 +207,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: X 1
+  m_Text: 
 --- !u!114 &114330057817639758
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -266,7 +267,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "3 \uD134\uC5D0 \uC644\uB8CC"
+  m_Text: 
 --- !u!114 &114644825157980132
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -294,7 +295,7 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114657329043301410
+--- !u!114 &114763697980529176
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -302,7 +303,48 @@ MonoBehaviour:
   m_GameObject: {fileID: 1982589330345592}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bdf0fa739872652438abde0f4b5f6f2a, type: 3}
+  m_Script: {fileID: 1392445389, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 114137855164640326}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+--- !u!114 &114956457392117038
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1982589330345592}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e9dcfa9a45da2f45bdcbdc531c3f51b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!222 &222104265176523744

@@ -16,6 +16,7 @@ public class ManagementUIController : MonoBehaviour {
     private LinkedList<Production> mDeployment;
     //private IReadOnlyList<IProductionFactory> facList;
     private IReadOnlyList<IProductionFactory> facList;
+    private IReadOnlyList<Quest> questList;
 
     private GameObject gameManagerObject;
     private GameManager gameManager;
@@ -26,15 +27,87 @@ public class ManagementUIController : MonoBehaviour {
     private List<GameObject> EpicQlist, HighQlist, IntermediateQlist, LowQlist;    // Unit production
     private List<GameObject> CityQlist, CityBuildingQlist, NormalBuildingQlist;
     private List<List<GameObject>> ASQlist;
+    private List<GameObject> DQQlist; //Deploied Quest Queue list
+    private List<GameObject> AQQlist; //Accepted Quest Queue list
+    private List<GameObject> CQQlist; //Completed Quset Queue list
+
+    public GameObject DQPrefab;
+    public GameObject AQPrefab;
+    public GameObject CQPrefab;
     public GameObject proPrefab;
     public GameObject depPrefab;
     public GameObject productablePrefab;            // prefab templates
 
+    public GameObject DQQueue;
+    public GameObject AQQueue;
+    public GameObject CQQueue;
     public GameObject proQueue;
     public GameObject depQueue;
     public GameObject EpicQueue, HighQueue, IntermediateQueue, LowQueue;    // Unit production
     public GameObject CityQueue, CityBuildingQueue, NormalBuildingQueue;  // Building production
 
+    public GameObject QuestInfo;
+    private Text[] questInfotexts;
+
+    //ManageMentUI 갱신 함수
+    public void ManageFunction()                                      // Management tab on/off button -> ManageMentUIActive
+    {
+        MakeSelectionQ();
+        MakeProductionQ();
+        MakeDeploymentQ();
+        foreach (GameObject dq in DQlist)
+        {
+            dq.GetComponent<DepPrefab>().SetButton(DQlist.IndexOf(dq));
+        }
+    }
+    void Awake()
+    {
+        DontDestroyOnLoad(this);
+        if (managementUIController == null)
+        {
+            managementUIController = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
+    }
+
+    void Start()
+    {
+        if (managementUIController == this)
+        {
+            gameManager = GameManager.I;
+            game = gameManager.Game;
+            ASQlist = new List<List<GameObject>>();
+            ASQlist.Add(EpicQlist = new List<GameObject>());
+            ASQlist.Add(HighQlist = new List<GameObject>());
+            ASQlist.Add(IntermediateQlist = new List<GameObject>());
+            ASQlist.Add(LowQlist = new List<GameObject>());
+            ASQlist.Add(CityQlist = new List<GameObject>());
+            ASQlist.Add(CityBuildingQlist = new List<GameObject>());
+            ASQlist.Add(NormalBuildingQlist = new List<GameObject>());
+
+            PQlist = new List<GameObject>();
+            DQlist = new List<GameObject>();
+
+            DQQlist = new List<GameObject>();
+            AQQlist = new List<GameObject>();
+            CQQlist = new List<GameObject>();
+            questInfotexts = QuestInfo.GetComponentsInChildren<Text>();
+        }
+        else
+        {
+            Destroy(this);
+        }
+    }
+
+    void Update()
+    {
+        //Debug.Log(game);
+        mProduction = game.PlayerInTurn.Production;
+        mDeployment = game.PlayerInTurn.Deployment;
+    }
 
     private void MakeSelectionQ()//선택 큐 프리팹 생성 함수
     {
@@ -55,12 +128,12 @@ public class ManagementUIController : MonoBehaviour {
             PartSelectionQ(EpicQlist, EpicQueue, fac);
         }
         //내용물 없을 때 빈칸 채우기
-        foreach(var qlist in ASQlist)
+        foreach (var qlist in ASQlist)
         {
             if (qlist.Count == 0)
             {
                 GameObject productableQueue;
-                switch(ASQlist.IndexOf(qlist))
+                switch (ASQlist.IndexOf(qlist))
                 {
                     case 0:
                         productableQueue = EpicQueue;
@@ -138,68 +211,13 @@ public class ManagementUIController : MonoBehaviour {
         ASQlist.Add(NormalBuildingQlist = new List<GameObject>());
     }
     //선택 큐 초기화에 쓰이는 함수
-    private void DeleteSQ(List<GameObject> SQlist) 
+    private void DeleteSQ(List<GameObject> SQlist)
     {
         foreach (GameObject sq in SQlist)
         {
             Destroy(sq);
         }
         SQlist.Clear();
-    }
-
-    //ManageMentUI 갱신 함수
-    public void ManageFunction()                                      // Management tab on/off button -> ManageMentUIActive
-    {
-        MakeSelectionQ();
-        MakeProductionQ();
-        MakeDeploymentQ();
-        foreach (GameObject dq in DQlist)
-        {
-            dq.GetComponent<DepPrefab>().SetButton(DQlist.IndexOf(dq));
-        }
-    }
-    void Awake()
-    {
-        DontDestroyOnLoad(this);
-        if (managementUIController == null)
-        {
-            managementUIController = this;
-        }
-        else
-        {
-            Destroy(this);
-        }
-    }
-
-    void Start()
-    {
-        if (managementUIController == this)
-        {
-            gameManager = GameManager.I;
-            game = gameManager.Game;
-            ASQlist = new List<List<GameObject>>();
-            ASQlist.Add(EpicQlist = new List<GameObject>());
-            ASQlist.Add(HighQlist = new List<GameObject>());
-            ASQlist.Add(IntermediateQlist = new List<GameObject>());
-            ASQlist.Add(LowQlist = new List<GameObject>());
-            ASQlist.Add(CityQlist = new List<GameObject>());
-            ASQlist.Add(CityBuildingQlist = new List<GameObject>());
-            ASQlist.Add(NormalBuildingQlist = new List<GameObject>());
-
-            PQlist = new List<GameObject>();
-            DQlist = new List<GameObject>();
-        }
-        else
-        {
-            Destroy(this);
-        }
-    }
-
-    void Update()
-    {
-        //Debug.Log(game);
-        mProduction = game.PlayerInTurn.Production;
-        mDeployment = game.PlayerInTurn.Deployment;
     }
 
     public void MakeProductionQ()
@@ -273,6 +291,169 @@ public class ManagementUIController : MonoBehaviour {
         foreach (GameObject dq in DQlist)
         {
             dq.GetComponent<DepPrefab>().SetButton(DQlist.IndexOf(dq));
+        }
+    }
+
+    public void MakeQuestQueue()
+    {
+        List<GameObject> tempDList = new List<GameObject>();
+        List<GameObject> tempAList = new List<GameObject>();
+        List<GameObject> tempCList = new List<GameObject>();
+        Debug.Log("QuestQueue making");
+        foreach (GameObject item in DQQlist)
+        {
+            Destroy(item);
+        }
+        DQQlist.Clear();
+        foreach (GameObject item in AQQlist)
+        {
+            Destroy(item);
+        }
+        AQQlist.Clear();
+        foreach (GameObject item in CQQlist)
+        {
+            Destroy(item);
+        }
+        CQQlist.Clear();
+        questList = game.PlayerInTurn.Quests;
+        Debug.Log("Quest : " + questList.Count);
+        foreach (Quest qst in questList)
+        {
+            switch (qst.Status)
+            {
+                case QuestStatus.Deployed:
+                    var dqPrefab = Instantiate(DQPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
+                    dqPrefab.transform.SetParent(DQQueue.transform);
+                    dqPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
+                    dqPrefab.transform.localPosition = new Vector3(0f, 0f, 0f);
+                    dqPrefab.name = "DQuest";
+                    tempDList.Add(dqPrefab.GetComponent<Quests>().MakeDItem(qst));
+                    break;
+                case QuestStatus.Accepted:
+                    var aqPrefab = Instantiate(AQPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
+                    aqPrefab.transform.SetParent(AQQueue.transform);
+                    aqPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
+                    aqPrefab.transform.localPosition = new Vector3(0f, 0f, 0f);
+                    aqPrefab.name = "AQuest";
+                    tempAList.Add(aqPrefab.GetComponent<Quests>().MakeAItem(qst));
+                    break;
+                case QuestStatus.Completed:
+                    var cqPrefab = Instantiate(CQPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
+                    cqPrefab.transform.SetParent(CQQueue.transform);
+                    cqPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
+                    cqPrefab.transform.localPosition = new Vector3(0f, 0f, 0f);
+                    cqPrefab.name = "CQuest";
+                    tempCList.Add(cqPrefab.GetComponent<Quests>().MakeCItem(qst));
+                    break;
+                case QuestStatus.Disabled:
+                    break;
+
+                default:
+                    Debug.Log("Undifined Status");
+                    throw new System.Exception("Undifined Status");
+            }
+        }
+        if (tempDList.Count == 0)
+        {
+            var dqPrefab = Instantiate(DQPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
+            dqPrefab.transform.SetParent(DQQueue.transform);
+            dqPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
+            dqPrefab.transform.localPosition = new Vector3(0f, 0f, 0f);
+            dqPrefab.name = "DQuest_null";
+            tempDList.Add(dqPrefab.GetComponent<Quests>().MakeDItem());
+        }
+        DQQlist = tempDList;
+
+        if (tempAList.Count == 0)
+        {
+            var aqPrefab = Instantiate(AQPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
+            aqPrefab.transform.SetParent(AQQueue.transform);
+            aqPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
+            aqPrefab.transform.localPosition = new Vector3(0f, 0f, 0f);
+            aqPrefab.name = "AQuest_null";
+            tempAList.Add(aqPrefab.GetComponent<Quests>().MakeAItem());
+        }
+        AQQlist = tempAList;
+
+        if (tempCList.Count == 0)
+        {
+            var cqPrefab = Instantiate(CQPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
+            cqPrefab.transform.SetParent(CQQueue.transform);
+            cqPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
+            cqPrefab.transform.localPosition = new Vector3(0f, 0f, 0f);
+            cqPrefab.name = "CQuest_null";
+            tempCList.Add(cqPrefab.GetComponent<Quests>().MakeCItem());
+        }
+        CQQlist = tempCList;
+
+        foreach (GameObject dq in DQQlist)
+        {
+            dq.GetComponent<Quests>().SetDButton();
+        }
+        foreach (GameObject aq in AQQlist)
+        {
+            aq.GetComponent<Quests>().SetAButton();
+        }
+        foreach (GameObject cq in CQQlist)
+        {
+            cq.GetComponent<Quests>().SetCButton();
+        }
+
+    }
+    public void SetQuestInfo(Quest qst)
+    {
+        if (qst == null) 
+        {
+            foreach(Text txt in questInfotexts)
+            {
+                switch(txt.name)
+                {
+                    default: txt.text = "";
+                        break;
+                }
+            }
+            QuestInfo.SetActive(false);
+        }
+        else
+        {
+
+            foreach (Text txt in questInfotexts)
+            {
+                switch (txt.name)
+                {
+                    case "QuestName":
+                        txt.text = qst.Name;
+                        break;
+                    case "Offered Turn":
+                        txt.text = "게시된 턴 : 턴 " + qst.PostingTurn; // qst에서 불러올 수 없음
+                        if (qst.PostingTurn == -1)
+                            txt.text = "게시된 턴 : 턴 1";
+                        break;
+                    case "Available Turns":
+                        txt.text = "게시 기한 : " + qst.LeftTurn + "턴 동안";
+                        if (qst.LimitTurn == -1)
+                            txt.text = "게시 기한 : 영구히";
+                        break;
+                    case "Deadline":
+                        txt.text = "제한 기한 : " + qst.LimitTurn +"까지";
+                        if (qst.LimitTurn == -1)
+                            txt.text = "제한 기한 : 없음";
+                        break;
+                    case "Country Name":
+                        //txt.text = "게시 국가 : " + qst.Requester.ToString();
+                        break;
+                    case "Conditions":
+                        txt.text = qst.GoalNotice;
+                        break;
+                    case "Rewards":
+                        txt.text = qst.RewardNotice;
+                        break;
+                    default:
+                        txt.text = "";
+                        break;
+                }
+            }
+            QuestInfo.SetActive(true);
         }
     }
     public static ManagementUIController GetManagementUIController()
