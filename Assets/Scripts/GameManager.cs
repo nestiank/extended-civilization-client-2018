@@ -80,11 +80,11 @@ public class GameManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update() {
         Render(_game.Terrain);
-        Debug.Log("Gold:" + _game.PlayerInTurn.Gold + "(+" + _game.PlayerInTurn.GoldIncome +")");
-        Debug.Log("Pop:" + _game.PlayerInTurn.Population);
-        Debug.Log("Happ:" + _game.PlayerInTurn.Happiness);
-        Debug.Log("Prod:" + _game.PlayerInTurn.Labor);
-        Debug.Log("Tech:" + _game.PlayerInTurn.Research);
+        //Debug.Log("Gold:" + _game.PlayerInTurn.Gold + "(+" + _game.PlayerInTurn.GoldIncome +")");
+        //Debug.Log("Pop:" + _game.PlayerInTurn.Population);
+        //Debug.Log("Happ:" + _game.PlayerInTurn.Happiness);
+        //Debug.Log("Prod:" + _game.PlayerInTurn.Labor);
+        //Debug.Log("Tech:" + _game.PlayerInTurn.Research);
         if (CheckVictory())
         {
             UIManager.I.GameEnd();
