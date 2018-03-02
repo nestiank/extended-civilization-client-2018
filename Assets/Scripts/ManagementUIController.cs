@@ -121,8 +121,55 @@ public class ManagementUIController : MonoBehaviour {
         DeleteAllSQ();
         foreach (IProductionFactory fac in facList)
         {
-            //여기서 분리
-            PartSelectionQ(EpicQlist, EpicQueue, fac);
+            //여기서 분리 
+            if(typeof(Unit).IsAssignableFrom(fac.ResultType))
+            {
+                var f = (IActorProductionFactory)fac;
+                switch (f.ActorConstants.BattleClassLevel)
+                {
+                    case 4:
+                        PartSelectionQ(EpicQlist, EpicQueue, fac);
+                        break;
+                    case 3:
+                        PartSelectionQ(HighQlist, HighQueue, fac);
+                        break;
+                    case 2:
+                        PartSelectionQ(IntermediateQlist, IntermediateQueue, fac);
+                        break;
+                    case 1:
+                        PartSelectionQ(LowQlist, LowQueue, fac);
+                        break;
+                    case 0:
+                        PartSelectionQ(LowQlist, LowQueue, fac);
+                        break;
+                    default:
+                        PartSelectionQ(LowQlist, LowQueue, fac);
+                        break;
+                }
+            }
+            else if(typeof(TileObject).IsAssignableFrom(fac.ResultType))
+            {
+                if(typeof(CityBase).IsAssignableFrom(fac.ResultType))
+                {
+                    PartSelectionQ(CityQlist, CityQueue, fac);
+                }
+                else if(typeof(TileBuilding).IsAssignableFrom(fac.ResultType))
+                {
+                    PartSelectionQ(NormalBuildingQlist, NormalBuildingQueue, fac);
+                }
+                else
+                {
+                    throw new System.Exception("Undefined Factory");
+                }
+            }
+            else if(typeof(InteriorBuilding).IsAssignableFrom(fac.ResultType))
+            {
+                PartSelectionQ(CityBuildingQlist, CityBuildingQueue, fac);
+            }
+            else
+            {
+                throw new System.Exception("Undefined Factory");
+            }
         }
         //내용물 없을 때 빈칸 채우기
         foreach (var qlist in ASQlist)
