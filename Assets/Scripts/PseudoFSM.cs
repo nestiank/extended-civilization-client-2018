@@ -65,6 +65,11 @@ public class PseudoFSM : MonoBehaviour {
         if (_inDepState) DepStateExit();
         _inMoveState = true;
 
+        if(GameManager.I.SelectedActor == null)
+        {
+            return;
+        }
+
         // Select movable adjacent tiles
         _parameterPoints = GameManager.I.SelectedActor.PlacedPoint.Value.Adjacents();
         for (int i = 0; i < _parameterPoints.Length; i++)

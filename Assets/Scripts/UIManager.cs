@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using CivModel;
+using CivModel.Common;
 
 public class UIManager : MonoBehaviour {
 
@@ -10,7 +12,7 @@ public class UIManager : MonoBehaviour {
     public GameObject ManagementUI;
     public GameObject QuestUI;
     public GameObject GameEND;
-
+    public GameObject QuestPopUp;
     public Text Gold;
     public Text Population;
     public Text Happiness;
@@ -242,6 +244,14 @@ public class UIManager : MonoBehaviour {
         }
     }
 
+    public void ShowQuestEnd(Quest quest)
+    {
+        
+    }
+    public void QuestEndEnd()
+    {
+        QuestPopUp.SetActive(false);
+    }
     //// Management UI (Production Selection) ////
     public void UnitSelTabActive()
     {
