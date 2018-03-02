@@ -47,6 +47,7 @@ public class ManagementUIController : MonoBehaviour {
     public GameObject CityQueue, CityBuildingQueue, NormalBuildingQueue;  // Building production
 
     public GameObject QuestInfo;
+    
     private Text[] questInfotexts;
 
     //ManageMentUI 갱신 함수
@@ -120,7 +121,7 @@ public class ManagementUIController : MonoBehaviour {
         DeleteAllSQ();
         foreach (IProductionFactory fac in facList)
         {
-            
+            //여기서 분리
             PartSelectionQ(EpicQlist, EpicQueue, fac);
         }
         //내용물 없을 때 빈칸 채우기
@@ -398,11 +399,11 @@ public class ManagementUIController : MonoBehaviour {
     }
     public void SetQuestInfo(Quest qst)
     {
-        if (qst == null) 
+        if (qst == null)
         {
-            foreach(Text txt in questInfotexts)
+            foreach (Text txt in questInfotexts)
             {
-                switch(txt.name)
+                switch (txt.name)
                 {
                     default: txt.text = "";
                         break;
@@ -431,7 +432,7 @@ public class ManagementUIController : MonoBehaviour {
                             txt.text = "게시 기한 : 영구히";
                         break;
                     case "Deadline":
-                        txt.text = "제한 기한 : " + qst.LimitTurn +"까지";
+                        txt.text = "제한 기한 : " + qst.LimitTurn + "까지";
                         if (qst.LimitTurn == -1)
                             txt.text = "제한 기한 : 없음";
                         break;

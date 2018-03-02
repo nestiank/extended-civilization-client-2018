@@ -139,6 +139,7 @@ public class UIManager : MonoBehaviour {
         SkillSet.SetActive(false);
         ManagementUI.SetActive(true);
         uicontroller.ManageFunction();
+        InvestUIController.I.initSlider();
         MapUI.SetActive(false);
         QuestUI.SetActive(false);
     }
