@@ -36,7 +36,7 @@ public class DepPrefab : MonoBehaviour {
 
     public GameObject MakeItem(Production prod)
     {
-        string nameofProduction = ProductionFactoryTraits.GetFactoryName(prod.Factory);
+        string nameofProduction = ProductionFactoryTraits.GetFacPortName(prod.Factory);
         unitPrt.sprite = Resources.Load<Sprite>("Unit_portrait/" + nameofProduction + "_portrait");
         foreach (Text txt in textarguments)
         {

@@ -408,6 +408,37 @@ public static class ProductionFactoryTraits
         }
         return result;
     }
+    public static string GetFacPortName(CivModel.IProductionFactory Factory)
+    {
+        char[] sep = { '.' };
+        string name = Factory.ToString().Split(sep)[2];
+        string result;
+        switch (name)
+        {
+            case "PioneerProductionFactory":
+                result = "Pioneer";
+                break;
+            case "JediKnightProductionFactory":
+                result = "JediKnight";
+                break;
+            case "CityCenterProductionFactory":
+                result = "CityCenter";
+                break;
+            case "FakeKnightProductionFactory":
+                result = "JediKnight";
+                break;
+            case "FactoryBuildingProductionFactory":
+                result = "Factory";
+                break;
+            case "LaboratoryBuildingProductionFactory":
+                result = "Laboratory";
+                break;
+            default:
+                result = "unknown : " + name;
+                break;
+        }
+        return result;
+    }
     public static string GetName(CivModel.Unit unit)
     {
         char[] sep = { '.' };
