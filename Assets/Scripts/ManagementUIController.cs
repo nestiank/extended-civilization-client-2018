@@ -120,11 +120,7 @@ public class ManagementUIController : MonoBehaviour {
         DeleteAllSQ();
         foreach (IProductionFactory fac in facList)
         {
-            /*if(fac.ProductionResultType != null)
-            {
-                fac.ProductionResultType.GetInterface("battleclasslevel");
-                PartSelectionQ(EpicQlist, EpicQueue, fac);
-            }*/
+            
             PartSelectionQ(EpicQlist, EpicQueue, fac);
         }
         //내용물 없을 때 빈칸 채우기

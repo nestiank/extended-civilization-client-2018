@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour {
 
     //// Resource bar UI ////
     public GameObject MapUI;
+    public GameObject Actions;
     public GameObject ManagementUI;
     public GameObject QuestUI;
     public GameObject GameEND;
@@ -99,13 +100,14 @@ public class UIManager : MonoBehaviour {
         if (GameManager.I.SelectedActor != null)
         {
             UnitInfo.SetActive(true);
-            //GameManager.I.SelectedActor.player
+            //(GameManager.I.SelectedActor.Owner == ) 
             //UnitPortrait.sprite = Resources.Load(("Quests/" + ParseQuest.GetQuestName(quest)).ToLower(), typeof(Sprite)) as Sprite;
             UnitName.text = ProductionFactoryTraits.GetName(GameManager.I.SelectedActor);
             UnitAttack.text = GameManager.I.SelectedActor.AttackPower.ToString();
             UnitDefence.text = GameManager.I.SelectedActor.DefencePower.ToString();
             UnitEffect.text = "";
             ActionPoint.text = GameManager.I.SelectedActor.RemainAP + "/" + GameManager.I.SelectedActor.MaxAP;
+            Actions.SetActive(true);
         }
         else
         {
@@ -115,6 +117,7 @@ public class UIManager : MonoBehaviour {
             UnitDefence.text = "";
             UnitEffect.text = "";
             ActionPoint.text = "";
+            Actions.SetActive(false);
         }
     }
     //// Resource bar UI ////
@@ -170,6 +173,22 @@ public class UIManager : MonoBehaviour {
         PseudoFSM.I.AttackStateEnter();
     }
 
+    public void WaitActive()
+    {
+        SkillSet.SetActive(false);
+        GameManager.I.SelectedActor.SkipFlag = true;
+        GameManager.I.SelectNextUnit();
+        MakeUnitInfo();
+        PseudoFSM.I.NormalStateEnter();
+    }
+    public void SleepActive()
+    {
+        SkillSet.SetActive(false);
+        GameManager.I.SelectedActor.SleepFlag = true;
+        GameManager.I.SelectNextUnit();
+        MakeUnitInfo();
+        PseudoFSM.I.NormalStateEnter();
+    }
     public void SkillSetActive()
     {
         SkillSet.SetActive(!SkillSet.activeSelf);

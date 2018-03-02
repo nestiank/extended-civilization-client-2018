@@ -71,8 +71,10 @@ public class GameManager : MonoBehaviour {
 
         ObserverSet();
         DrawMap();
-
+        
         ProceedTurn();
+
+        UIManager.I.MakeUnitInfo();
     }
 	
 	// Update is called once per frame
@@ -198,10 +200,10 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    public void BuildBuilding(CivModel.Terrain.Point pos, TileBuilding building)
+    /*public void BuildBuilding(CivModel.Terrain.Point pos, TileBuilding building)
     {
 
-    }
+    }*/
     // Read game terrain and update hex tile resource
     void Render(CivModel.Terrain terrain)
     {
