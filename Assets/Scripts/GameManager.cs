@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour {
     // Selected actor
     private CivModel.Unit _selectedActor = null;
     public CivModel.Unit SelectedActor { get { return _selectedActor; } }
+    public IQuestObserver QuestObserver;
 
     // Variables from Presenter.cs
     public bool isThereTodos;
@@ -67,6 +68,8 @@ public class GameManager : MonoBehaviour {
 
         // Map tiling
         innerRadius = outerRadius * Mathf.Sqrt(3.0f) / 2;
+
+        ObserverSet();
         DrawMap();
 
         ProceedTurn();
@@ -347,8 +350,29 @@ public class GameManager : MonoBehaviour {
         }
         return false;
     }
+    private void ObserverSet()
+    {
+        QuestObserver = new CivQuestObserver();
+        _game.QuestObservable.AddObserver(QuestObserver);
+    }
 }
+public class CivQuestObserver : IQuestObserver
+{
+    public void QuestAccepted(Quest quest)
+    {
+        return;
+    }
 
+    public void QuestCompleted(Quest quest)
+    {
+        UIManager.I.ShowQuestEnd(quest);
+    }
+
+    public void QuestGivenup(Quest quest)
+    {
+        return;
+    }
+}
 public static class ProductionFactoryTraits
 {
     public static string GetFactoryName(CivModel.IProductionFactory Factory)
@@ -356,7 +380,7 @@ public static class ProductionFactoryTraits
         char[] sep = { '.' };
         string name = Factory.ToString().Split(sep)[2];
         string result;
-        switch(name)
+        switch (name)
         {
             case "PioneerProductionFactory":
                 result = "개척자";
@@ -413,5 +437,52 @@ public static class ProductionFactoryTraits
         }
         return result;
     }
+}
 
+public static class ParseQuest
+{
+    public static string GetQuestName(Quest qst)
+    {
+        string rlatmxmfld;
+        switch (qst.Name)
+        {
+            case "개꿀잼 퀘스트":
+                rlatmxmfld = "hwan_main2";
+                break;
+            case "불가사의 - 오티즘 빔 반사 어레이":
+                rlatmxmfld = "hwan_main1";
+                break;
+            case "첩보 - 크툴루 계획":
+                rlatmxmfld = "hwan_main2";
+                break;
+            case "불가사의- 이집트 캉덤":
+                rlatmxmfld = "hwan_main3";
+                break;
+            case "[전쟁 동맹] - 에뮤 연방":
+                rlatmxmfld = "finno_main1";
+                break;
+            case "[불가사의] - 아틀란티스":
+                rlatmxmfld = "finno_main2";
+                break;
+            case "[불가사의] - R'̧l̨̜y͎͎̜̺̬e͕͇͇͚͓̹h̢̳͎̗͇͇̙":
+                rlatmxmfld = "finno_main3";
+                break;
+            case "군사 동맹 - 궤도 장악권":
+                rlatmxmfld = "hwan_sub1";
+                break;
+            case "건물 기증 - 모아이 포스 필드":
+                rlatmxmfld = "hwan_sub2";
+                break;
+            case "불가사의 - 성간 에너지":
+                rlatmxmfld = "finno_sub1";
+                break;
+            case "불가사의 - 유전 연구학":
+                rlatmxmfld = "finno_sub2";
+                break;
+            default:
+                rlatmxmfld = "hwan_main1";
+                break;
+        }
+        return rlatmxmfld;
+    }
 }

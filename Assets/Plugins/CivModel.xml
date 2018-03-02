@@ -524,17 +524,22 @@
         </member>
         <member name="P:CivModel.Game.TurnObservable">
             <summary>
-            An <see cref="T:CivModel.Observable`1"/> which can be observed by <see cref="T:CivModel.ITurnObserver"/>.
+            An <see cref="T:CivModel.Observable`1"/> object which can be observed by <see cref="T:CivModel.ITurnObserver"/>.
             </summary>
         </member>
         <member name="P:CivModel.Game.TileObjectObservable">
             <summary>
-            An <see cref="T:CivModel.Observable`1"/> which can be observed by <see cref="T:CivModel.ITileObjectObserver"/>.
+            An <see cref="T:CivModel.Observable`1"/> object which can be observed by <see cref="T:CivModel.ITileObjectObserver"/>.
             </summary>
         </member>
         <member name="P:CivModel.Game.BattleObservable">
             <summary>
-            An <see cref="T:CivModel.Observable`1"/> which can be observed by <see cref="T:CivModel.IBattleObserver"/>.
+            An <see cref="T:CivModel.Observable`1"/> object which can be observed by <see cref="T:CivModel.IBattleObserver"/>.
+            </summary>
+        </member>
+        <member name="P:CivModel.Game.QuestObservable">
+            <summary>
+            An <see cref="T:CivModel.Observable`1"/> object which can be observed by <see cref="T:CivModel.IQuestObserver"/>.
             </summary>
         </member>
         <member name="T:CivModel.GameConstants">
@@ -1148,6 +1153,31 @@
             <param name="point">The point to place the production result.</param>
             <exception cref="T:System.InvalidOperationException">production is not completed yet</exception>
             <exception cref="T:System.ArgumentException">point is invalid</exception>
+        </member>
+        <member name="T:CivModel.IQuestObserver">
+            <summary>
+            The interface to observe <see cref="T:CivModel.Quest"/> related events.
+            </summary>
+            <seealso cref="T:CivModel.Game"/>
+            <seealso cref="T:CivModel.Quest"/>
+        </member>
+        <member name="M:CivModel.IQuestObserver.QuestAccepted(CivModel.Quest)">
+            <summary>
+            Called when quest is accepted.
+            </summary>
+            <param name="quest"></param>
+        </member>
+        <member name="M:CivModel.IQuestObserver.QuestGivenup(CivModel.Quest)">
+            <summary>
+            Called when quest is given up.
+            </summary>
+            <param name="quest"></param>
+        </member>
+        <member name="M:CivModel.IQuestObserver.QuestCompleted(CivModel.Quest)">
+            <summary>
+            Called when quest is completed.
+            </summary>
+            <param name="quest"></param>
         </member>
         <member name="T:CivModel.ITileObjectObserver">
             <summary>

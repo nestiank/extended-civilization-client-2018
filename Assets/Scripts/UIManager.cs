@@ -12,7 +12,7 @@ public class UIManager : MonoBehaviour {
     public GameObject ManagementUI;
     public GameObject QuestUI;
     public GameObject GameEND;
-    public GameObject QuestPopUp;
+
     public Text Gold;
     public Text Population;
     public Text Happiness;
@@ -43,6 +43,9 @@ public class UIManager : MonoBehaviour {
     public GameObject BuildingSelTab;
     public GameObject EpicTab, HighTab, IntermediateTab, LowTab;    // Unit production
     public GameObject CityTab, CityBuildingTab, NormalBuildingTab;  // Building production
+
+    public GameObject QuestPopPrefab;
+
 
     private ManagementUIController uicontroller;
     private static UIManager _uimanager;
@@ -246,12 +249,54 @@ public class UIManager : MonoBehaviour {
 
     public void ShowQuestEnd(Quest quest)
     {
-        
+        var Qrefab = Instantiate(QuestPopPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
+        Qrefab.transform.localScale = new Vector3(1f, 1f, 1f);
+        Qrefab.transform.localPosition = new Vector3(0f, 0f, 0f);
+        Button[] buttons = Qrefab.GetComponentsInChildren<Button>();
+        Image[] images = Qrefab.GetComponentsInChildren<Image>();
+        Text[] texts = Qrefab.GetComponentsInChildren<Text>();
+        foreach (Button btn in buttons)
+        {
+            switch (btn.name)
+            {
+                case "Exit":
+                    btn.onClick.AddListener(delegate { QuestEndEnd(Qrefab); });
+                    break;
+                default: break;
+            }
+        }
+        foreach (Image img in images)
+        {
+            switch (img.name)
+            {
+                case "Image":
+                    Debug.Log("Quests/" + ParseQuest.GetQuestName(quest));
+                    img.sprite = Resources.Load(("Quests/" + ParseQuest.GetQuestName(quest)).ToLower(), typeof(Sprite)) as Sprite;
+                    if(img.sprite == null)
+                    {
+                        Debug.Log("아씨바ㅏㅓㅇㄹ넝ㄹㅇㄴㅁㄹ");
+                    }
+                    break;
+                default: break;
+            }
+        }
+        foreach (Text txt in texts)
+        {
+            switch (txt.name)
+            {
+                case "RewardNotice":
+                    txt.text = quest.CompleteNotice;
+                    break;
+                default: break;
+            }
+        }
     }
-    public void QuestEndEnd()
+
+    public void QuestEndEnd(GameObject Qrefab)
     {
-        QuestPopUp.SetActive(false);
+        Destroy(Qrefab);
     }
+
     //// Management UI (Production Selection) ////
     public void UnitSelTabActive()
     {
