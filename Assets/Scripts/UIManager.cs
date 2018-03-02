@@ -20,6 +20,7 @@ public class UIManager : MonoBehaviour {
     public Text Labor;
 
     public GameObject UnitInfo;
+    public Image UnitPortrait;
     public Text UnitName;
     public Text UnitAttack;
     public Text UnitDefence;
@@ -98,7 +99,8 @@ public class UIManager : MonoBehaviour {
         if (GameManager.I.SelectedActor != null)
         {
             UnitInfo.SetActive(true);
-            //UnitPortrait.sprite = Resources.Load<Sprite>("Hwan Units/Portraits/hwan_jedi.png");
+            //GameManager.I.SelectedActor.player
+            //UnitPortrait.sprite = Resources.Load(("Quests/" + ParseQuest.GetQuestName(quest)).ToLower(), typeof(Sprite)) as Sprite;
             UnitName.text = ProductionFactoryTraits.GetName(GameManager.I.SelectedActor);
             UnitAttack.text = GameManager.I.SelectedActor.AttackPower.ToString();
             UnitDefence.text = GameManager.I.SelectedActor.DefencePower.ToString();

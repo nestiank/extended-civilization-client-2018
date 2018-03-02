@@ -661,6 +661,12 @@
             The factory object of this instance.
             </summary>
         </member>
+        <member name="M:CivModel.IGameScheme.OnAfterInitialized(CivModel.Game)">
+            <summary>
+            Called after the game is initialized.
+            </summary>
+            <param name="game">The <see cref="T:CivModel.Game"/> object.</param>
+        </member>
         <member name="T:CivModel.IGameStartupScheme">
             <summary>
             The interface represents <see cref="T:CivModel.IGameScheme"/> for startup settings.
@@ -1997,7 +2003,7 @@
             Gets the applied exclusive scheme.
             </summary>
             <typeparam name="T">The type of exclusive scheme.</typeparam>
-            <returns>The applied scheme</returns>
+            <returns>The applied scheme. <c>null</c> if there is no scheme of given type.</returns>
         </member>
         <member name="M:CivModel.SchemeLoader.GetOverlappableScheme``1">
             <summary>
