@@ -73,27 +73,36 @@ public class UIManager : MonoBehaviour {
     }
     void Update()
     {
-        if (GameManager.I.isThereTodos && !PseudoFSM.I.DepState)
+        if (GameManager.I.Game.PlayerInTurn.IsAIControlled)
         {
-            MapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().text = "유닛이 명령을 기다리고 있습니다";
+            MapUI.transform.Find("EndTurn").GetComponentInChildren<Button>().enabled = false;
+            MapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().text = "다른 플레이어가 턴 진행 중입니다. 기다려 주십시오.";
             MapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().fontSize = Screen.height / 40;
-        }
-        else if (PseudoFSM.I.DepState)
-        {
-            MapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().text = "배치 취소";
-            MapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().fontSize = Screen.height / 25;
         }
         else
         {
-            MapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().text = "다음 턴";
-            MapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().fontSize = Screen.height / 25;
+            MapUI.transform.Find("EndTurn").GetComponentInChildren<Button>().enabled = true;
+            if (GameManager.I.isThereTodos && !PseudoFSM.I.DepState)
+            {
+                MapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().text = "유닛이 명령을 기다리고 있습니다";
+                MapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().fontSize = Screen.height / 40;
+            }
+            else if (PseudoFSM.I.DepState)
+            {
+                MapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().text = "배치 취소";
+                MapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().fontSize = Screen.height / 25;
+            }
+            else
+            {
+                MapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().text = "다음 턴";
+                MapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().fontSize = Screen.height / 25;
+            }
+            Gold.text = "금 : " + GameManager.I.Game.PlayerInTurn.Gold + "(+" + GameManager.I.Game.PlayerInTurn.GoldIncome + ")";
+            Population.text = "인구 : " + GameManager.I.Game.PlayerInTurn.Population;
+            Happiness.text = "행복 : " + GameManager.I.Game.PlayerInTurn.Happiness;
+            Technology.text = "기술력 : " + GameManager.I.Game.PlayerInTurn.Research;
+            Labor.text = "노동력 : " + GameManager.I.Game.PlayerInTurn.Labor;
         }
-
-        Gold.text = "금 : " + GameManager.I.Game.PlayerInTurn.Gold + "(+" + GameManager.I.Game.PlayerInTurn.GoldIncome + ")";
-        Population.text = "인구 : " + GameManager.I.Game.PlayerInTurn.Population;
-        Happiness.text = "행복 : " + GameManager.I.Game.PlayerInTurn.Happiness;
-        Technology.text = "기술력 : " + GameManager.I.Game.PlayerInTurn.Research;
-        Labor.text = "노동력 : " + GameManager.I.Game.PlayerInTurn.Labor;
     }
     public void MakeUnitInfo()
     {
@@ -265,7 +274,6 @@ public class UIManager : MonoBehaviour {
         else
         {
             GameManager.I.ProceedTurn();
-            MakeUnitInfo();
         }
     }
 
@@ -377,5 +385,11 @@ public class UIManager : MonoBehaviour {
         CityTab.SetActive(false);
         CityBuildingTab.SetActive(false);
         NormalBuildingTab.SetActive(true);
+    }
+    public void WaitTurn()
+    {
+        MapUI.SetActive(true);
+        ManagementUI.SetActive(false);
+        QuestUI.SetActive(false);
     }
 }

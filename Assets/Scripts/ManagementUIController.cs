@@ -149,7 +149,8 @@ public class ManagementUIController : MonoBehaviour {
             }
             else if(typeof(TileObject).IsAssignableFrom(fac.ResultType))
             {
-                if(typeof(CityBase).IsAssignableFrom(fac.ResultType))
+                Debug.Log(fac.ToString());
+                if (typeof(CityBase).IsAssignableFrom(fac.ResultType))
                 {
                     PartSelectionQ(CityQlist, CityQueue, fac);
                 }

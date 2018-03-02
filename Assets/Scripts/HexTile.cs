@@ -71,7 +71,7 @@ public class HexTile : MonoBehaviour
 
         if (building is CivModel.CityBase)
         {
-            Debug.Log(building.Owner.Team);
+            //Debug.Log(building.Owner.Team);
             buildings.GetChild(2).gameObject.SetActive(true);
             side = buildings.GetChild((building.Owner.Team + 1) %  2);
             side.GetChild(0).gameObject.SetActive(true);
