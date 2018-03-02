@@ -1666,6 +1666,11 @@
             </summary>
             <seealso cref="P:CivModel.Player.AvailableProduction"/>
         </member>
+        <member name="P:CivModel.IProductionFactory.ResultType">
+            <summary>
+            The type of production result object. <c>null</c> if the production result is not an object.
+            </summary>
+        </member>
         <member name="P:CivModel.IProductionFactory.TotalLaborCost">
             <summary>
             The total labor cost to finish this production.
@@ -2158,6 +2163,11 @@
               5   4
             </remarks>
             <returns>an array of the adjacent points</returns>
+        </member>
+        <member name="P:CivModel.Terrain.AllTiles">
+            <summary>
+            Gets all tiles of this terrain.
+            </summary>
         </member>
         <member name="P:CivModel.Terrain.Width">
             <summary>

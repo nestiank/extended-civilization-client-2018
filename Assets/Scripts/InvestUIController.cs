@@ -45,11 +45,7 @@ public class InvestUIController : MonoBehaviour {
         eiSlider = EcoInv.GetComponentInChildren<Slider>();
         tiSlider = TechInv.GetComponentInChildren<Slider>();
         logiSlider = Logistics.GetComponentInChildren<Slider>();
-
-        
-
         initSlider();
-
     }
 	
 	// Update is called once per frame
@@ -64,7 +60,6 @@ public class InvestUIController : MonoBehaviour {
         eiRateText.text = ((int)(eiSlider.value * 100)).ToString() + "%";
         tiRateText.text = ((int)(tiSlider.value * 100)).ToString() + "%";
         logiRateText.text = ((int)(logiSlider.value * 100)).ToString() + "%";
-        Debug.Log(GameManager.I.Game.PlayerInTurn.TaxRate);
     }
 
     public void initSlider()
