@@ -34,9 +34,15 @@ public class HexTile : MonoBehaviour
     // Render tile terrain
     public void ChangeTile()
     {
-        foreach (Transform child in terrains)
+        if(terrains == null)
         {
-            child.gameObject.SetActive(false);
+        }
+        else
+        {
+            foreach (Transform child in terrains)
+            {
+                child.gameObject.SetActive(false);
+            }
         }
 
         if (point.TileBuilding is CivModel.CityBase)

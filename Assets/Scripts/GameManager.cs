@@ -353,9 +353,9 @@ public class GameManager : MonoBehaviour
         GameObject tile = _cells[point.Position.X, point.Position.Y];
         Vector3 tilePos = tile.transform.position;
         float x = tilePos.x;
-        float z = tilePos.z - (6.75f / Mathf.Tan(40 * Mathf.Deg2Rad));
+        float z = tilePos.z - (mainCamera.transform.position.y / Mathf.Tan(40 * Mathf.Deg2Rad));
 
-        mainCamera.transform.position = new Vector3(x, 6.75f, z);
+        mainCamera.transform.position = new Vector3(x, mainCamera.transform.position.y, z);
     }
 
     // Camera controlls
