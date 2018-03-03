@@ -110,7 +110,7 @@ public class UIManager : MonoBehaviour {
         {
             UnitInfo.SetActive(true);
             //(GameManager.I.SelectedActor.Owner == ) 
-            //UnitPortrait.sprite = Resources.Load(("Quests/" + ParseQuest.GetQuestName(quest)).ToLower(), typeof(Sprite)) as Sprite;
+            UnitPortrait.sprite = Resources.Load(("Portraits/" + (ProductionFactoryTraits.GetPortName(GameManager.I.SelectedActor)).ToLower()), typeof(Sprite)) as Sprite;
             UnitName.text = ProductionFactoryTraits.GetName(GameManager.I.SelectedActor);
             UnitAttack.text = GameManager.I.SelectedActor.AttackPower.ToString();
             UnitDefence.text = GameManager.I.SelectedActor.DefencePower.ToString();

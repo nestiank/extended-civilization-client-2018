@@ -215,11 +215,6 @@ public class ManagementUIController : MonoBehaviour {
                 qlist.Add(SPrefab);
             }
         }
-        foreach (GameObject sq in EpicQlist)
-        {
-            sq.GetComponent<SelPrefab>().SetButton(EpicQlist.IndexOf(sq));
-            //Debug.Log(EpicQlist.IndexOf(sq));
-        }
     }
     //각 Factory의 분야를 읽어서 해당하는 Queue에 집어넣는 역할 
     private GameObject PartSelectionQ(List<GameObject> SQlist, GameObject productableQueue, IProductionFactory fac)
@@ -233,6 +228,7 @@ public class ManagementUIController : MonoBehaviour {
         SPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
         SPrefab.transform.localPosition = new Vector3(0f, 0f, 0f);
         SPrefab.GetComponent<SelPrefab>().MakeItem(fac);
+        SPrefab.GetComponent<SelPrefab>().SetButton(fac);
         SQlist.Add(SPrefab);
         return SPrefab;
     }

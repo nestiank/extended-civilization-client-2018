@@ -38,7 +38,7 @@ public class ProPrefab : MonoBehaviour {
     public GameObject MakeItem(Production prod)
     {
         string nameofProduction = ProductionFactoryTraits.GetFactoryName(prod.Factory);
-        unitPrt.sprite = Resources.Load<Sprite>("Unit_portrait/" + nameofProduction + "_portrait");
+        unitPrt.sprite = Resources.Load(("Portraits/" + (ProductionFactoryTraits.GetFacPortName(prod.Factory)).ToLower()), typeof(Sprite)) as Sprite;
         //남은 턴 계산하는 중
         Double leftturn;
         string resultturn;

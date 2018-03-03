@@ -36,7 +36,7 @@ public class SelPrefab : MonoBehaviour
     {
         //Debug.Log("Selection Queue Item Made");
         string nameofFactory = ProductionFactoryTraits.GetFactoryName(fact);
-        unitPrt.sprite = Resources.Load<Sprite>("Unit_portrait/" + nameofFactory + "_portrait");
+        unitPrt.sprite = Resources.Load(("Portraits/" + (ProductionFactoryTraits.GetFacPortName(fact)).ToLower()), typeof(Sprite)) as Sprite;
         foreach (Text txt in textarguments)
         {
             switch (txt.name)
@@ -75,23 +75,22 @@ public class SelPrefab : MonoBehaviour
         }
         return this.gameObject;
     }
-    public void SetButton(int i)
+    public void SetButton(IProductionFactory fac)
     {
         foreach (Button but in buttons)
         {
             switch (but.name)
             {
                 case "Deploy":
-                    but.onClick.AddListener(delegate () { ProduceItem(i); });
+                    but.onClick.AddListener(delegate () { ProduceItem(fac); });
                     break;
             }
         }
     }
 
-    private void ProduceItem(int i)
+    private void ProduceItem(IProductionFactory fac)
     {
-        IProductionFactory factory = GameManager.I.Game.PlayerInTurn.AvailableProduction.ToList()[i];
-        GameManager.I.Game.PlayerInTurn.Production.AddLast(factory.Create(GameManager.I.Game.PlayerInTurn));
+        GameManager.I.Game.PlayerInTurn.Production.AddLast(fac.Create(GameManager.I.Game.PlayerInTurn));
         
         //Debug.Log(i + " inputed");
         uicontroller.MakeProductionQ();
