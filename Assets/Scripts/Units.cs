@@ -1,5 +1,21 @@
 ﻿public enum Units
 {
-    Pioneer,
-    JediKnight
+    HwanPioneer,
+    HwanBrainwashedEmuKnight,
+    HwanDecentralizedMilitary,
+    HwanSpy,
+    HwanUnicornOrder,
+    HwanLEO,
+    HwanJediKnight,
+    HwanProtoNinja,
+    HwanJackieChan,
+    FinnoPioneer,
+    FinnoEmuHorseArcher,
+    FinnoDecentralizedMilitary,
+    FinnoSpy,
+    FinnoElephantCavarly,
+    FinnoAncientSorcerer,
+    FinnoJediKnight,
+    FinnoAutismBeamDrone,
+    FinnoGenghisKhan
 }

@@ -49,6 +49,8 @@ public class GameManager : MonoBehaviour
     private CivModel.Unit[] _standbyUnits;
     private int _standbyUnitIndex = -1;
 
+    public Material[] materials;
+
     // Use this for initialization
     void Awake()
     {
