@@ -86,7 +86,11 @@ public class GameManager : MonoBehaviour
 
         ObserverSet();
         DrawMap();
-        _game.Players[1].IsAIControlled = true;
+        foreach(Player plyr in _game.Players)
+        {
+            plyr.IsAIControlled = true;
+        }
+        _game.Players[GameInfo.UserPlayer].IsAIControlled = false;
         ProceedTurn();
     }
 
