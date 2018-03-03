@@ -11612,6 +11612,8 @@ MonoBehaviour:
   mainCamera: {fileID: 1006940699}
   cameraMoveSpeed: 4
   cameraZoomSpeed: 6
+  cameraZoomAmount: 5
+  cameraZoomLimit: 5
   outerRadius: 1
   innerRadius: 0
   cellPrefab: {fileID: 1823159130722898, guid: ef12b8f6d512e104b979d4a75f3e60c0, type: 2}
