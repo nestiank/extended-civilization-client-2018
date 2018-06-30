@@ -2,20 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class HexTile : MonoBehaviour
 {
+    // 현재 tile의 위치의 point class
     public CivModel.Terrain.Point point;
 
-    void Start ()
-    {
-		
-	}
+    // prefab의 자식 gameobject들 
+    GameObject terrains;
+    GameObject tilebuildings;
 
-    void Update()
-    {
+    /*
+     * TODO
+     * Hextile Prefab을 수정하여 terrain와 tilebuilding을 설정할 수 있게 해야함.
+     */
 
-    }
-
+    /*
+     * 관련 legacy code
     public void ChangeTile()
     {
         if (terrains == null)
@@ -54,5 +57,5 @@ public class HexTile : MonoBehaviour
         {
             TileBuildingObject(building);
         }
-    }
+    }*/
 }

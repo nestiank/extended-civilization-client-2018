@@ -664,9 +664,9 @@ PlayerSettings:
     UNet: 1
   facebookSdkVersion: 7.9.4
   apiCompatibilityLevel: 3
-  cloudProjectId: 3c4449d6-16ad-47f1-9c24-c6b481667cdd
-  projectName: civilization-iii
-  organizationId: dshseungwon
+  cloudProjectId: 351bd782-e721-4672-a71a-85649ff2d005
+  projectName: civilization-iii (1)
+  organizationId: abslon
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0
