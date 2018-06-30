@@ -612,13 +612,26 @@
             <seealso cref="T:CivModel.Game"/>
             <seealso cref="T:CivModel.Actor"/>
         </member>
-        <member name="M:CivModel.IBattleObserver.OnBattle(CivModel.Actor,CivModel.Actor,CivModel.BattleResult)">
+        <member name="M:CivModel.IBattleObserver.OnBeforeBattle(CivModel.Actor,CivModel.Actor)">
+            <summary>
+            Called before battle.
+            </summary>
+            <param name="attacker">The attacker.</param>
+            <param name="defender">The defender.</param>
+        </member>
+        <member name="M:CivModel.IBattleObserver.OnAfterBattle(CivModel.Actor,CivModel.Actor,CivModel.Player,CivModel.Player,CivModel.BattleResult)">
             <summary>
             Called after battle.
             </summary>
             <param name="attacker">The attacker.</param>
             <param name="defender">The defender.</param>
+            <param name="atkOwner">The owner of <paramref name="attacker"/>.</param>
+            <param name="defOwner">The owner of <paramref name="defender"/>.</param>
             <param name="result">The result of battle.</param>
+            <remarks>
+            If an <see cref="T:CivModel.Actor"/> engaged in battle die, its <see cref="P:CivModel.Actor.Owner"/> becomes <c>null</c>.
+            In this case, <paramref name="atkOwner"/> and <paramref name="defOwner"/> parameters can be used to get their previous value.
+            </remarks>
         </member>
         <member name="T:CivModel.IGameSchemeFactory">
             <summary>
