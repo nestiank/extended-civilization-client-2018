@@ -8,54 +8,72 @@ public class HexTile : MonoBehaviour
     // 현재 tile의 위치의 point class
     public CivModel.Terrain.Point point;
 
-    // prefab의 자식 gameobject들 
-    GameObject terrains;
-    GameObject tilebuildings;
+	// prefab의 자식 gameobject들 
+	Transform terrains;
+	Transform buildings;
 
-    /*
-     * TODO
-     * Hextile Prefab을 수정하여 terrain와 tilebuilding을 설정할 수 있게 해야함.
-     */
+	CivModel.TileBuilding building;
 
-    /*
-     * 관련 legacy code
-    public void ChangeTile()
-    {
-        if (terrains == null)
-        {
-        }
-        else
-        {
-            foreach (Transform child in terrains)
-            {
-                child.gameObject.SetActive(false);
-            }
-        }
 
-        if (point.TileBuilding is CivModel.CityBase)
-        {
-            terrains.GetChild(0).gameObject.SetActive(true);
-        }
-        else
-        {
-            terrains.GetChild((int)point.Type).gameObject.SetActive(true);
-        }
-    }
+	// Use this for initialization
+	void Start() {
+		terrains = transform.GetChild(0).transform;
+		SetTerrain();
 
-    public void BuildDistrict(CivModel.TileBuilding building)
-    {
-        buildings.GetChild(2).gameObject.SetActive(false);
-        for (int i = 0; i < 2; i++)
-        {
-            foreach (Transform child in buildings.GetChild(i))
-            {
-                child.gameObject.SetActive(false);
-            }
-        }
+		buildings = transform.GetChild(1).transform;
+		building = point.TileBuilding;
+		SetBuilding();
+	}
 
-        if (building != null)
-        {
-            TileBuildingObject(building);
-        }
-    }*/
+	// Render tile terrain
+	public void SetTerrain() {
+		if (terrains != null) {
+			terrains.GetChild((int)point.Type).gameObject.SetActive(true);
+		}
+	}
+
+	public void SetBuilding() {
+		Transform side;
+
+		if (building is CivModel.CityBase) {
+			buildings.GetChild(2).gameObject.SetActive(true);
+			side = buildings.GetChild((building.Owner.Team + 1) % 2);
+			side.GetChild(0).gameObject.SetActive(true);
+		}
+		else if (building is CivModel.Hwan.HwanEmpireIbiza) {
+			side = buildings.GetChild(0);
+			side.GetChild(1).gameObject.SetActive(true);
+		}
+		else if (building is CivModel.Finno.AncientFinnoOctagon) {
+			side = buildings.GetChild(1);
+			side.GetChild(1).gameObject.SetActive(true);
+		}
+		else if (building is CivModel.Hwan.HwanEmpireLatifundium) {
+			side = buildings.GetChild(0);
+			side.GetChild(2).gameObject.SetActive(true);
+		}
+		else if (building is CivModel.Finno.AncientFinnoGermaniumMine) {
+			side = buildings.GetChild(1);
+			side.GetChild(2).gameObject.SetActive(true);
+		}
+		else if (building is CivModel.Hwan.HwanEmpireFIRFortress) {
+			side = buildings.GetChild(0);
+			side.GetChild(3).gameObject.SetActive(true);
+		}
+		else if (building is CivModel.Finno.AncientFinnoFIRFortress) {
+			side = buildings.GetChild(1);
+			side.GetChild(3).gameObject.SetActive(true);
+		}
+		else if (building is CivModel.Hwan.HwanEmpireKimchiFactory) {
+			side = buildings.GetChild(0);
+			side.GetChild(4).gameObject.SetActive(true);
+		}
+		else if (building is CivModel.Finno.AncientFinnoFineDustFactory) {
+			side = buildings.GetChild(1);
+			side.GetChild(4).gameObject.SetActive(true);
+		}
+	}
+
+
+
 }

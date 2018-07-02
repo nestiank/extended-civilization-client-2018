@@ -252,13 +252,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1029091335}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 110, y: 120, z: -60}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!1 &1802626827
 GameObject:
   m_ObjectHideFlags: 0
@@ -290,6 +290,27 @@ MonoBehaviour:
   innerRadius: 0.8660254
   HextilePrefab: {fileID: 1864742050183090, guid: ef12b8f6d512e104b979d4a75f3e60c0,
     type: 2}
+  UnitPrefab: {fileID: 1994173042382988, guid: d799813cc5de24e418535494923a7dfa, type: 2}
+  materials:
+  - {fileID: 2100000, guid: aaebbdfcddf55724e81f16f00843036c, type: 2}
+  - {fileID: 2100000, guid: d7c1b912f778c81408d5373612b7e506, type: 2}
+  - {fileID: 2100000, guid: 689b4e837e7f57a4f9661066ac8cb604, type: 2}
+  - {fileID: 2100000, guid: 6c4b3b32f0097254dbd6fbd4bd8c6514, type: 2}
+  - {fileID: 2100000, guid: d43034c6b6ecbd34490444b94465fcc8, type: 2}
+  - {fileID: 2100000, guid: 66b06834ae9caa44e83577e34d8cfc67, type: 2}
+  - {fileID: 2100000, guid: 4912b0e955bd12447a4eb88abdff0301, type: 2}
+  - {fileID: 2100000, guid: 1a36748b9a8dec6439997129156b4bac, type: 2}
+  - {fileID: 2100000, guid: e7bac625115da16408e49bbb9b01c57c, type: 2}
+  - {fileID: 2100000, guid: d5c18e411ea7f764592e1b2777482dcd, type: 2}
+  - {fileID: 2100000, guid: 9f9a3969923bd8d498f73da024895219, type: 2}
+  - {fileID: 2100000, guid: 6a388cc3d531c8d4085057d7f11fff91, type: 2}
+  - {fileID: 2100000, guid: 7a2dc2bcd2b2f93479cadccf877ebb17, type: 2}
+  - {fileID: 2100000, guid: 896df3751f60a50448f436393973eaf3, type: 2}
+  - {fileID: 2100000, guid: 64c7a7eeee22cda4c94c7afe85acf340, type: 2}
+  - {fileID: 2100000, guid: eb14f06a5eddeed48a11418664db9594, type: 2}
+  - {fileID: 2100000, guid: 31a4feda50a4d7c4f94a5f71806c7df7, type: 2}
+  - {fileID: 2100000, guid: 9f18b1711a90f794aad93d565cfc12e2, type: 2}
+  rend: {fileID: 0}
 --- !u!4 &1802626829
 Transform:
   m_ObjectHideFlags: 0
