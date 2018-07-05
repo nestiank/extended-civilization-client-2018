@@ -6,13 +6,15 @@ using CivModel;
 public class UIManager : MonoBehaviour
 {
     GameObject mapUI;
+	GameObject managementUI;
+	GameObject questUI;
 
-    // Use this for initialization
-    void Start()
+	// Use this for initialization
+	void Start()
     {
-        GameObject map = GameObject.Find("MapUI");
-		GameObject management = GameObject.Find("ManagementUI");
-		GameObject quest = GameObject.Find("QuestUI");
+        mapUI = GameObject.Find("MapUI");
+		managementUI = GameObject.Find("ManagementUI");
+		questUI = GameObject.Find("QuestUI");
 	}
 
     // Update is called once per frame
@@ -26,9 +28,9 @@ public class UIManager : MonoBehaviour
         if (go.activeSelf == false)
         {
             go.SetActive(true);
-			if (go != map) map.SetActive(false);
-			if (go != management) management.SetActive(false);
-			if (go != quest) quest.SetActive(false);
+			if (go != mapUI) mapUI.SetActive(false);
+			if (go != managementUI) managementUI.SetActive(false);
+			if (go != questUI) questUI.SetActive(false);
 		}
         else
         {
