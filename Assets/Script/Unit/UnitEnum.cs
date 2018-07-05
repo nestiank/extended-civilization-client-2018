@@ -1,4 +1,6 @@
-﻿public enum Units {
+﻿using CivModel;
+
+public enum Units {
 	HwanPioneer,
 	HwanBrainwashedEmuKnight,
 	HwanDecentralizedMilitary,
