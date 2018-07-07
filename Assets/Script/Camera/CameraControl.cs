@@ -5,13 +5,13 @@ using UnityEngine;
 public class CameraControl : MonoBehaviour {
 
 	public int boundary = 5;
-	public int speed = 50;
+	public int speed = 10;
 
 	private int screen_height = Screen.height;
 	private int screen_width = Screen.width;
 
     int MaxHeight = 30; //최대 높이
-    int MinHeight = 10; //최소 높이
+    int MinHeight = 15; //최소 높이
 
 	// Use this for initialization
 	void Start () {
@@ -34,8 +34,6 @@ public class CameraControl : MonoBehaviour {
         {
             Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, MinHeight, Camera.main.transform.position.z);
         }
-
-
 
         if (Input.mousePosition.x > screen_width - boundary) {
             if (Camera.main.transform.position.x <= 220)
