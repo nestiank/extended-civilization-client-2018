@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using CivModel;
+using System.Threading.Tasks;
 
 public class GameUI : MonoBehaviour {
 
@@ -25,7 +26,7 @@ public class GameUI : MonoBehaviour {
         {
             mapUI.transform.Find("EndTurn").GetComponentInChildren<Button>().enabled = false;
             mapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().text = "다른 플레이어가 턴 진행 중입니다. 기다려 주십시오.";
-            mapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().fontSize = Screen.height / 40;
+            mapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().fontSize = Screen.height / 20;
         }
         else
         {
@@ -34,18 +35,18 @@ public class GameUI : MonoBehaviour {
             if (GameManager.Instance.isThereTodos && !PseudoFSM.Instance.DepState)
             {
                 mapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().text = "유닛이 명령을 기다리고 있습니다";
-                mapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().fontSize = Screen.height / 15;
+                mapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().fontSize = 30;
             }
             else if (PseudoFSM.Instance.DepState)
             {
                 mapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().text = "배치 취소";
-                mapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().fontSize = Screen.height / 10;
+                mapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().fontSize = 40;
             }
             else
             {
             */
                 mapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().text = "다음 턴";
-                mapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().fontSize = Screen.height / 10;
+                mapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().fontSize = 40;
             //}
 
             updatePanel();
@@ -81,5 +82,10 @@ public class GameUI : MonoBehaviour {
     public void updateManagement()
     {
         managementcontroller.begin();
+    }
+
+    public void onClickNextTurn()
+    {
+        GameManager.Instance.ProceedTurn();
     }
 }

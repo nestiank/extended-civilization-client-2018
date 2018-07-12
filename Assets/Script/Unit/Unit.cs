@@ -93,18 +93,16 @@ public class Unit : MonoBehaviour {
                 {
                     CivModel.Position pos = _parameterPoints[i].Value.Position;
                     GameManager.Instance.Tiles[pos.X, pos.Y].GetComponent<HexTile>().FlickerRed();
-                    Debug.Log(pos.X + " " + pos.Y + " Filcker Red");
                 }
                 else if (GameManager.Instance.selectedActor.MoveAct.IsActable(_parameterPoints[i]))
                 {
                     CivModel.Position pos = _parameterPoints[i].Value.Position;
                     GameManager.Instance.Tiles[pos.X, pos.Y].GetComponent<HexTile>().FlickerBlue();
-                    Debug.Log(pos.X + " " + pos.Y + " Filcker Blue");
                 }
                 else
                 {
                     CivModel.Position pos = _parameterPoints[i].Value.Position;
-                    Debug.Log("Cannot Move to (" + pos.X + ", " + pos.Y + ")"); 
+                    //Debug.Log("Cannot Move to (" + pos.X + ", " + pos.Y + ")"); 
                 }
             }
             IEnumerator _coroutine = MoveUnit(GameManager.Instance.selectedActor);

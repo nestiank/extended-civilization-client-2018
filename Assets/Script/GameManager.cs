@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using CivModel;
+using System.Threading.Tasks;
+
 
 public class GameManager : MonoBehaviour {
 
@@ -57,9 +59,6 @@ public class GameManager : MonoBehaviour {
 		_game = new CivModel.Game(".\\Assets\\map.txt", factories);
 		_game.StartTurn();
 
-		// Use Only for TESTING!
-        _game.EndTurn();
-        _game.StartTurn();
 	}
 
 	// Use this for initialization
@@ -67,6 +66,7 @@ public class GameManager : MonoBehaviour {
 		InitiateMap();
 		InitiateUnit();
 		InitiateMiniMap();
+        InitiateTurn();
 	}
 
 	// Update is called once per frame
@@ -203,6 +203,39 @@ public class GameManager : MonoBehaviour {
 			plyrIdx++;
 		}
 	}
+
+    private void InitiateTurn() {
+        //// Use Only for TESTING!
+        _game.EndTurn();
+        _game.StartTurn();
+
+        foreach (Player plyr in _game.Players)
+        {
+            plyr.IsAIControlled = true;
+        }
+        _game.Players[0].IsAIControlled = false;
+
+    }
+
+    public async Task ProceedTurn()
+    {
+        //Debug.Log(Game.PlayerNumberInTurn);
+        if(_game.PlayerInTurn == _game.Players[0])
+            _game.EndTurn();
+        _game.StartTurn();
+        while (_game.PlayerInTurn.IsAIControlled)
+        {
+            //Debug.Log(Game.PlayerNumberInTurn);
+            await _game.PlayerInTurn.DoAITurnAction();
+            _game.EndTurn();
+            _game.StartTurn();
+        }
+        UpdateMap();
+        UpdateUnit();
+        //if (_game.PlayerInTurn == _game.Players[0])
+            //_game.StartTurn();
+    }
+
 
     public static Vector3 ModelPntToUnityPnt(CivModel.Terrain.Point pt, float yPos) {
         Vector3 unityPoint = new Vector3(2 * pt.Position.X * (Mathf.Sqrt(3) / 2), yPos, -pt.Position.Y * 1.5f);
