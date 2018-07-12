@@ -236,6 +236,8 @@ public class UIManager : MonoBehaviour
             GameManager.Instance.selectedActor.SkipFlag = true;
         }
         ButtonInteractChange();
+        GameManager.Instance.CheckToDo();
+        GameManager.Instance.FocusOnActableUnit();
     }
 
     public void SpecialMouseOver()
@@ -307,9 +309,7 @@ public class UIManager : MonoBehaviour
         NormalBuildingTab.SetActive(true);
     }
 
-
-
-    private void ButtonInteractChange()
+    public void ButtonInteractChange()
     {
         // Hide Actions Tab
         if(GameManager.Instance.selectedActor == null || GameManager.Instance.selectedActor.Owner != GameManager.Instance.Game.PlayerInTurn)
@@ -382,4 +382,23 @@ public class UIManager : MonoBehaviour
             skillBtn.GetComponent<Button>().interactable = false;
         }
     }
+
+    public void updateSelectedInfo(CivModel.Actor actor)
+    {
+        GameManager.Instance.selectedActor = actor;
+        var pt = actor.PlacedPoint.Value;
+        GameManager.Instance.selectedPoint = pt;
+        foreach (GameObject unit in GameManager.Instance.Units)
+        {
+            if (unit.GetComponent<Unit>().point == pt)
+            {
+                GameManager.Instance.selectedGameObject = unit;
+                break;
+            }
+        }
+        GameManager.Instance.selectedTile = GameManager.Instance.Tiles[pt.Position.X, pt.Position.Y].GetComponent<HexTile>();
+        UIManager.Instance.Actions.SetActive(true);
+        ButtonInteractChange();
+    }
+
 }

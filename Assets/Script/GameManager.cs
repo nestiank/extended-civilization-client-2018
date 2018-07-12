@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using CivModel;
 using System.Threading.Tasks;
+using System.IO;
 
 
 public class GameManager : MonoBehaviour {
@@ -37,6 +38,8 @@ public class GameManager : MonoBehaviour {
     public CivModel.Actor selectedActor;
     public GameObject selectedGameObject;
 
+    public bool isThereTodos = false;
+
 	void Awake() {
 		// Singleton
 		if (_manager != null) {
@@ -56,7 +59,9 @@ public class GameManager : MonoBehaviour {
 			new CivModel.Zap.GameSchemeFactory(),
 			new CivModel.AI.GameSchemeFactory()
 		};
-		_game = new CivModel.Game(".\\Assets\\map.txt", factories);
+        string[] pathStr = { "Assets", "map.txt" };
+        string path = Path.Combine(pathStr);
+		_game = new CivModel.Game(path, factories);
 		_game.StartTurn();
 
 	}
@@ -67,6 +72,7 @@ public class GameManager : MonoBehaviour {
 		InitiateUnit();
 		InitiateMiniMap();
         InitiateTurn();
+        CheckToDo();
 	}
 
 	// Update is called once per frame
@@ -150,6 +156,7 @@ public class GameManager : MonoBehaviour {
             }
             plyrIdx++;
         }
+        CheckToDo();
     }
 
 	private void InitiateMap() {
@@ -205,7 +212,6 @@ public class GameManager : MonoBehaviour {
 	}
 
     private void InitiateTurn() {
-        //// Use Only for TESTING!
         _game.EndTurn();
         _game.StartTurn();
 
@@ -217,23 +223,19 @@ public class GameManager : MonoBehaviour {
 
     }
 
-    public async Task ProceedTurn()
+    public void CheckToDo()
     {
-        //Debug.Log(Game.PlayerNumberInTurn);
-        if(_game.PlayerInTurn == _game.Players[0])
-            _game.EndTurn();
-        _game.StartTurn();
-        while (_game.PlayerInTurn.IsAIControlled)
-        {
-            //Debug.Log(Game.PlayerNumberInTurn);
-            await _game.PlayerInTurn.DoAITurnAction();
-            _game.EndTurn();
-            _game.StartTurn();
-        }
-        UpdateMap();
-        UpdateUnit();
-        //if (_game.PlayerInTurn == _game.Players[0])
-            //_game.StartTurn();
+        isThereTodos = false;
+        // Only For Testing!
+        //foreach (CivModel.Unit unit in this.Game.PlayerInTurn.Units)
+        //{
+        //    if(!unit.RemainAP.Equals(0)) {
+        //        if(unit.SkipFlag == false) {
+        //            isThereTodos = true;
+        //            break;
+        //        }
+        //    }
+        //}
     }
 
 
@@ -271,13 +273,30 @@ public class GameManager : MonoBehaviour {
         }
         Focus(actor.PlacedPoint.Value);
     }
+
     static void Focus(CivModel.Terrain.Point point)
     {
         Vector3 tilePos = GameManager.Instance.Tiles[point.Position.X, point.Position.Y].transform.position;
         float x = tilePos.x;
-        float z = tilePos.z - (Camera.main.transform.position.y / Mathf.Tan(40 * Mathf.Deg2Rad));
+        float z = tilePos.z - (Camera.main.transform.position.y / Mathf.Tan(60 * Mathf.Deg2Rad));
 
         Camera.main.transform.position = new Vector3(x, Camera.main.transform.position.y, z);
     }
+
+    public void FocusOnActableUnit()
+    {
+        foreach (CivModel.Unit unit in GameManager.Instance.Game.PlayerInTurn.Units)
+        {
+            if (unit.SkipFlag == false)
+            {
+                if(!unit.RemainAP.Equals(0))
+                {
+                    Focus(unit);
+                    UIManager.Instance.updateSelectedInfo(unit);
+                }
+            }
+        }
+    }
+
 
 }

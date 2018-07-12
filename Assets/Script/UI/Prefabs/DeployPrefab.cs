@@ -15,6 +15,8 @@ public class DeployPrefab : MonoBehaviour
     private Image unitPrt;
     private Button[] buttons;
 
+    private GameManager gameManager;
+    private Game game;
     // Use this for initialization
 
     private bool _inDepState = false;
@@ -39,6 +41,8 @@ public class DeployPrefab : MonoBehaviour
 
     void Start()
     {
+        gameManager = GameManager.Instance;
+        game = gameManager.Game;
     }
 
     public GameObject MakeItem(Production prod)
@@ -121,10 +125,10 @@ public class DeployPrefab : MonoBehaviour
     {
         if (dep.IsCompleted)
         {
-            DepStateEnter(dep);
             UIManager.Instance.mapUI.SetActive(true);
             UIManager.Instance.managementUI.SetActive(false);
             UIManager.Instance.questUI.SetActive(false);
+            DepStateEnter(dep);
         }
         else
         {
@@ -151,6 +155,42 @@ public class DeployPrefab : MonoBehaviour
                     GameManager.Instance.Tiles[point.Position.X, point.Position.Y].GetComponent<HexTile>().FlickerBlue();
                 }
             }
+            IEnumerator _coroutine = DeployUnit(GameManager.Instance.selectedPoint, dep);
+            StartCoroutine(_coroutine);
+        }
+    }
+
+    IEnumerator DeployUnit(CivModel.Terrain.Point point, Production dep)
+    {
+        while (true)
+        {
+            CivModel.Terrain.Point destPoint = GameManager.Instance.selectedPoint;
+            // 새로운 Point 을 선택했을 때
+            if (point != destPoint)
+            {
+                // Flicker하고 있는 Tile을 선택했을 때
+                if (GameManager.Instance.selectedTile.isFlickering)
+                {
+                    if (dep.IsPlacable(destPoint))
+                    {
+                        game.PlayerInTurn.Deployment.Remove(dep);
+                        dep.Place(destPoint);
+                        //여기에 유닛을 생성하는 걸 추가해야 함
+                        GameManager.Instance.UpdateUnit();
+                        break;
+                    }
+                    else
+                    {
+                        DepStateExit();
+                    }
+                }
+                // Flicker 하지 않는 타일 선택
+                else
+                {
+                    DepStateExit();
+                }
+            }
+            yield return null;
         }
     }
     void DepStateExit()

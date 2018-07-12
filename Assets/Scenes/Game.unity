@@ -1148,8 +1148,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1841507268}
   m_HandleRect: {fileID: 1841507267}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 0.9999998
+  m_Value: 0.99998355
+  m_Size: 0.87019
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2547,7 +2547,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.00006367598}
+  m_AnchoredPosition: {x: 0.000030517578, y: -0.00004841719}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &191355288
@@ -5088,7 +5088,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000053677646, y: -0.00005972678}
+  m_AnchoredPosition: {x: -0.000053677646, y: -0.00003277704}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &454209707
@@ -8993,7 +8993,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1457256215}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -9689,7 +9689,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000017556631, y: -0.00005972678}
+  m_AnchoredPosition: {x: 0.000036194124, y: -0.00003277704}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &1001046761
@@ -9794,7 +9794,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000030517578}
+  m_AnchoredPosition: {x: 0, y: -0.000015258789}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1004629748
@@ -11763,7 +11763,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.00006514437, y: -0.00007116278}
+  m_AnchoredPosition: {x: 0.00006514437, y: -0.000010127624}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &1173066205
@@ -14151,7 +14151,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.00001036023, y: 0.000010931467}
+  m_AnchoredPosition: {x: -0.00001036023, y: 0.0005912781}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &1465630758
@@ -17992,6 +17992,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 9f18b1711a90f794aad93d565cfc12e2, type: 2}
   selectedTile: {fileID: 0}
   selectedGameObject: {fileID: 0}
+  isThereTodos: 0
 --- !u!4 &1802626829
 Transform:
   m_ObjectHideFlags: 0
@@ -20096,7 +20097,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1975635208}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 398836120}
+        m_MethodName: onClickSkip
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1975635208
@@ -20865,8 +20877,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1833688074}
   m_HandleRect: {fileID: 1833688073}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.99999994
+  m_Value: 0.9999992
+  m_Size: 0.87019
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -21829,8 +21841,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 145151054}
   m_HandleRect: {fileID: 145151053}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.99999994
+  m_Value: 0.9999992
+  m_Size: 0.87019
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

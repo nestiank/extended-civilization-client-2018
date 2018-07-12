@@ -25,29 +25,23 @@ public class GameUI : MonoBehaviour {
         if (GameManager.Instance.Game.PlayerInTurn.IsAIControlled)
         {
             mapUI.transform.Find("EndTurn").GetComponentInChildren<Button>().enabled = false;
-            mapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().text = "다른 플레이어가 턴 진행 중입니다. 기다려 주십시오.";
-            mapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().fontSize = Screen.height / 20;
+            mapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().text = "다른 플레이어가 턴 진행 중입니다.\n잠시만 기다려 주십시오.";
+            mapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().fontSize = 20;
         }
         else
         {
             mapUI.transform.Find("EndTurn").GetComponentInChildren<Button>().enabled = true;
-            /*
-            if (GameManager.Instance.isThereTodos && !PseudoFSM.Instance.DepState)
+
+            if (GameManager.Instance.isThereTodos)
             {
                 mapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().text = "유닛이 명령을 기다리고 있습니다";
-                mapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().fontSize = 30;
-            }
-            else if (PseudoFSM.Instance.DepState)
-            {
-                mapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().text = "배치 취소";
                 mapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().fontSize = 40;
             }
             else
             {
-            */
                 mapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().text = "다음 턴";
                 mapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().fontSize = 40;
-            //}
+            }
 
             updatePanel();
         }
@@ -86,6 +80,26 @@ public class GameUI : MonoBehaviour {
 
     public void onClickNextTurn()
     {
-        GameManager.Instance.ProceedTurn();
+        if (GameManager.Instance.isThereTodos)
+        {
+            GameManager.Instance.FocusOnActableUnit();
+        }
+        else
+        {
+            // Debug.Log(Game.PlayerNumberInTurn);
+            if (GameManager.Instance.Game.PlayerInTurn == GameManager.Instance.Game.Players[0])
+                GameManager.Instance.Game.EndTurn();
+            GameManager.Instance.Game.StartTurn();
+            while (GameManager.Instance.Game.PlayerInTurn.IsAIControlled)
+            {
+                // Debug.Log(Game.PlayerNumberInTurn);
+                GameManager.Instance.Game.PlayerInTurn.DoAITurnAction().GetAwaiter().GetResult();
+                GameManager.Instance.Game.EndTurn();
+                GameManager.Instance.Game.StartTurn();
+            }
+            GameManager.Instance.UpdateMap();
+            GameManager.Instance.UpdateUnit();
+            UIManager.Instance.ButtonInteractChange();
+        }
     }
 }
