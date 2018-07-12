@@ -10,8 +10,8 @@ public class CameraControl : MonoBehaviour {
 	private int screen_height = Screen.height;
 	private int screen_width = Screen.width;
 
-    int MaxHeight = 30; //최대 높이
-    int MinHeight = 15; //최소 높이
+    public int MaxHeight = 30; //최대 높이
+    public int MinHeight = 15; //최소 높이
 
 	// Use this for initialization
 	void Start () {

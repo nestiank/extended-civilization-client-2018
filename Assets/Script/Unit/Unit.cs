@@ -127,9 +127,9 @@ public class Unit : MonoBehaviour {
             return;
         }
         // If GameManager.Instance.SelectedActor cannot attack
-        if (GameManager.Instance.selectedActor.MovingAttackAct == null)
+        if (GameManager.Instance.selectedActor.HoldingAttackAct == null)
         {
-            Debug.Log("Selected Actor can not act moving attack");
+            Debug.Log("Selected Actor can not act holding attack");
             return;
         }
 
@@ -139,7 +139,7 @@ public class Unit : MonoBehaviour {
             _parameterPoints = GameManager.Instance.selectedActor.PlacedPoint.Value.Adjacents();
             for (int i = 0; i < _parameterPoints.Length; i++)
             {
-                if (GameManager.Instance.selectedActor.MovingAttackAct.IsActable(_parameterPoints[i]))
+                if (GameManager.Instance.selectedActor.HoldingAttackAct.IsActable(_parameterPoints[i]))
                 {
                     CivModel.Position pos = _parameterPoints[i].Value.Position;
                     GameManager.Instance.Tiles[pos.X, pos.Y].GetComponent<HexTile>().FlickerRed();
@@ -151,9 +151,56 @@ public class Unit : MonoBehaviour {
                     Debug.Log("Cannot Attack to (" + pos.X + ", " + pos.Y + ")");
                 }
             }
-            IEnumerator _coroutine = MoveUnit(GameManager.Instance.selectedActor);
+            IEnumerator _coroutine = AttackUnit(GameManager.Instance.selectedActor);
             StartCoroutine(_coroutine);
         }
+    }
+
+    IEnumerator AttackUnit(CivModel.Actor unitToMove)
+    {
+        while (true)
+        {
+            CivModel.Terrain.Point destPoint = GameManager.Instance.selectedPoint;
+            // 새로운 Point 을 선택했을 때
+            if (unitToMove.PlacedPoint.Value != destPoint)
+            {
+                // Flicker하고 있는 Tile을 선택했을 때
+                if (GameManager.Instance.selectedTile.isFlickering)
+                {
+                    if (unitToMove.HoldingAttackAct != null && unitToMove.HoldingAttackAct.IsActable(destPoint))
+                    {
+                        unitToMove.HoldingAttackAct.Act(destPoint);
+                        AttackStateExit();
+                        GameManager.Instance.UpdateUnit();
+                        break;
+                    }
+                }
+                // Flicker 하지 않는 타일 선택
+                else
+                {
+                    AttackStateExit();
+                }
+            }
+            yield return null;
+        }
+    }
+
+    public void AttackStateExit()
+    {
+        _inAttackState = false;
+
+        if (_parameterPoints == null)
+            return;
+
+        for (int i = 0; i < _parameterPoints.Length; i++)
+        {
+            if (_parameterPoints[i] != null)
+            {
+                CivModel.Position pos = _parameterPoints[i].Value.Position;
+                GameManager.Instance.Tiles[pos.X, pos.Y].GetComponent<HexTile>().StopFlickering();
+            }
+        }
+        _parameterPoints = null;
     }
 
     IEnumerator MoveUnit(CivModel.Actor unitToMove) {
@@ -185,7 +232,7 @@ public class Unit : MonoBehaviour {
         }
     }
 
-	void MoveStateExit() {
+	public void MoveStateExit() {
 		if (_inMoveState) _inMoveState = false;
 		else if (_inAttackState) _inAttackState = false;
 
@@ -213,7 +260,6 @@ public class Unit : MonoBehaviour {
         // If SpecialActs[_currentSkill] is not parametered skill, this skill is immediately activated.
         if (!GameManager.Instance.selectedActor.SpecialActs[_currentSkill].IsParametered) {
             GameManager.Instance.selectedActor.SpecialActs[_currentSkill].Act(null);
-            SkillStateExit(GameManager.Instance.selectedActor);
             GameManager.Instance.UpdateUnit();
             return;
         }
@@ -263,22 +309,13 @@ public class Unit : MonoBehaviour {
     }
 
 
-    void SkillStateExit(CivModel.Actor unitToSkill) {
-        int index = _currentSkill;
-        _inSkillState = false;
-        _currentSkill = -1;
-        if (!unitToSkill.SpecialActs[index].IsParametered) {
-            return;
-        }
-        else {
-			foreach (CivModel.Terrain.Point pnt in _skillParameterPoints) {
-				Debug.Log(pnt);
-				CivModel.Position pos = pnt.Position;
-				GameManager.Instance.Tiles[pos.X, pos.Y].GetComponent<HexTile>().StopFlickering();
-			}
-
-			_skillParameterPoints.Clear();
-        }
+    public void SkillStateExit(CivModel.Actor unitToSkill) {
+		foreach (CivModel.Terrain.Point pnt in _skillParameterPoints) {
+			Debug.Log(pnt);
+			CivModel.Position pos = pnt.Position;
+			GameManager.Instance.Tiles[pos.X, pos.Y].GetComponent<HexTile>().StopFlickering();
+		}
+        _skillParameterPoints.Clear();
     }
 
     //public void DepStateEnter(Production dep)

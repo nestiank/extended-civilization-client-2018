@@ -161,7 +161,7 @@ public class UIController : MonoBehaviour {
         }
     }
 
-    public void SetQuestInfo(Quest qst)
+    public void SetQuestInfo(Quest qst, int type)
     {
         if (qst == null)
         {
@@ -191,12 +191,13 @@ public class UIController : MonoBehaviour {
                             txt.text = "게시된 턴: 턴 1";
                         break;
                    case "AvailableTurnText":
-                        txt.text = "게시 기한: " + qst.LeftTurn + "턴 동안";
+                        if (type == 1) txt.text = "게시 기한: " + qst.LeftTurn + "턴 동안";
+                        else txt.text = "남은 기간: " + qst.LeftTurn + "턴 동안";
                         if (qst.LimitTurn == -1)
                             txt.text = "게시 기한 : 영구히";
                         break;
                     case "DeadlineText":
-                        txt.text = "제한 기한: " + qst.LimitTurn + " 턴까지";
+                        txt.text = "제한 기한: " + qst.LimitTurn + "턴 이내";
                         if (qst.LimitTurn == -1)
                             txt.text = "제한 기한: 없음";
                         break;

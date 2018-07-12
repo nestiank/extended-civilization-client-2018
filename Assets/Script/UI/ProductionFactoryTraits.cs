@@ -25,46 +25,52 @@ public class ProductionFactoryTraits : MonoBehaviour {
                 result = "개척자";
                 break;
             case "JediKnightProductionFactory":
-                result = "제다이 기사";
+                result = "제다이 기사단";
                 break;
             case "FakeKnightProductionFactory":
                 result = "가짜 기사(테스팅)";
                 break;
             case "BrainwashedEMUKnightProductionFactory":
-                result = "세뇌된 에뮤 기사";
+                result = "세뇌된 EMU 기사";
                 break;
             case "DecentralizedMilitaryProductionFactory":
                 result = "탈중앙화된 군인";
                 break;
             case "JackieChanProductionFactory":
-                result = "재키 찬";
+                result = "Jackie Chan";
                 break;
             case "LEOSpaceArmadaProductionFactory":
                 result = "저궤도 우주 함대";
                 break;
             case "ProtoNinjaProductionFactory":
-                result = "프로토-닌자";
+                result = "프로토 닌자";
                 break;
             case "UnicornOrderProductionFactory":
                 result = "유니콘 기사단";
+                break;
+            case "preternaturalityProductionFactory":
+                result = "불가사의";
+                break;
+            case "PreternaturalityProductionFactory":
+                result = "불가사의";
                 break;
             case "SpyProductionFactory":
                 result = "스파이";
                 break;
             case "AncientSorcererProductionFactory":
-                result = "고대 소서러";
+                result = "소서러";
                 break;
             case "AutismBeamDroneFactory":
-                result = "O-ti-ism 빔 드론";
+                result = "Autism Beam Drone";
                 break;
             case "ElephantCavalryProductionFactory":
-                result = "코끼리 기병";
+                result = "코끼리 장갑병";
                 break;
             case "EMUHorseArcherProductionFactory":
-                result = "에뮤 궁기병";
+                result = "EMU 궁기병";
                 break;
             case "GenghisKhanProductionFactory":
-                result = "징기즈 칸";
+                result = "Genghis Khan";
                 break;
             case "ArmedDivisionProductionFactory":
                 result = "기갑사단";
@@ -85,34 +91,46 @@ public class ProductionFactoryTraits : MonoBehaviour {
                 result = "환 제국 도시";
                 break;
             case "HwanEmpireFIRFortressProductionFactory":
-                result = "환 제국 4차 산업 요새";
+                result = "5차 산업혁명 요새";
                 break;
             case "HwanEmpireCityCentralLabProductionFactory":
                 result = "환 제국 도시 연구소";
                 break;
             case "HwanEmpireFIRFactoryProductionFactory":
-                result = "환 제국 4차 산업 공장";
+                result = "5차 산업혁명 공장";
                 break;
             case "HwanEmpireIbizaProductionFactory":
-                result = "환 제국 이비자";
+                result = "이비자";
                 break;
             case "HwanEmpireKimchiFactoryProductionFactory":
-                result = "환 제국 김치 군수공장";
+                result = "Kimchi Factory";
                 break;
             case "HwanEmpireLatifundiumProductionFactory":
-                result = "환 제국 라티푼디움";
+                result = "라티푼디움";
+                break;
+            case "HwanEmpireSungsimdangProductionFactory":
+                result = "성심당";
+                break;
+            case "HwanEmpireVigilantProductionFactory":
+                result = "자경단";
+                break;
+            case "AnciencFinnoVigilantProductionFactory":
+                result = "자경단";
+                break;
+            case "AnciencFinnoXylitolProductionFactory":
+                result = "자일리톨 생산지";
                 break;
             case "AncientFinnoFineDustFactoryProductionFactory":
-                result = "고대 수오미 제국 미세먼지 공장";
+                result = "미세먼지 공장";
                 break;
             case "AncientFinnoFIRFortressProductionFactory":
-                result = "고대 수오미 제국 4차 산업 요새";
+                result = "5차 산업혁명 요새";
                 break;
             case "AncientFinnoGermaniumMineProductionFactory":
-                result = "고대 수오미 제국 게르마늄 광산";
+                result = "게르마늄 광산";
                 break;
             case "AncientFinnoOctagonProductionFactory":
-                result = "고대 수오미 제국 옥타곤";
+                result = "옥타곤";
                 break;
             case "FinnoEmpireCityProductionFactory":
                 result = "고대 수오미 제국 도시";
@@ -121,7 +139,7 @@ public class ProductionFactoryTraits : MonoBehaviour {
                 result = "카지노";
                 break;
             case "FIRFortressProductionFactory":
-                result = "4차 산업 요새";
+                result = "5차 산업혁명 요새";
                 break;
             case "ZapFactoryBuildingProductionFactory":
                 result = "공장";
@@ -133,7 +151,7 @@ public class ProductionFactoryTraits : MonoBehaviour {
                 result = "연구소";
                 break;
             default:
-                result = "unknown : " + name;
+                result = "Unknown: " + name;
                 break;
         }
         return result;
@@ -311,59 +329,56 @@ public class ProductionFactoryTraits : MonoBehaviour {
         string result;
         switch (name)
         {
-            case "Pioneer":
+            case "Pioneery":
                 result = "개척자";
                 break;
             case "JediKnight":
-                result = "제다이 기사";
-                break;
-            case "CityCenter":
-                result = "도심부";
+                result = "제다이 기사단";
                 break;
             case "FakeKnight":
                 result = "가짜 기사(테스팅)";
                 break;
-            case "FactoryBuilding":
-                result = "공장";
-                break;
-            case "LaboratoryBuilding":
-                result = "연구소";
-                break;
             case "BrainwashedEMUKnight":
-                result = "세뇌된 에뮤 기사";
+                result = "세뇌된 EMU 기사";
                 break;
             case "DecentralizedMilitary":
                 result = "탈중앙화된 군인";
                 break;
             case "JackieChan":
-                result = "재키 찬";
+                result = "Jackie Chan";
                 break;
             case "LEOSpaceArmada":
                 result = "저궤도 우주 함대";
                 break;
             case "ProtoNinja":
-                result = "프로토-닌자";
+                result = "프로토 닌자";
                 break;
             case "UnicornOrder":
                 result = "유니콘 기사단";
+                break;
+            case "preternaturality":
+                result = "불가사의";
+                break;
+            case "Preternaturality":
+                result = "불가사의";
                 break;
             case "Spy":
                 result = "스파이";
                 break;
             case "AncientSorcerer":
-                result = "고대 소서러";
+                result = "소서러";
                 break;
             case "AutismBeamDrone":
-                result = "O-ti-ism 빔 드론";
+                result = "Autism Beam Drone";
                 break;
             case "ElephantCavalry":
-                result = "코끼리 기병";
+                result = "코끼리 장갑병";
                 break;
             case "EMUHorseArcher":
-                result = "에뮤 궁기병";
+                result = "EMU 궁기병";
                 break;
             case "GenghisKhan":
-                result = "징기즈 칸";
+                result = "Genghis Khan";
                 break;
             case "ArmedDivision":
                 result = "기갑사단";
@@ -377,8 +392,74 @@ public class ProductionFactoryTraits : MonoBehaviour {
             case "ZapNinja":
                 result = "닌자";
                 break;
+            case "CityCenter":
+                result = "도심부";
+                break;
+            case "HwanEmpireCity":
+                result = "환 제국 도시";
+                break;
+            case "HwanEmpireFIRFortress":
+                result = "5차 산업혁명 요새";
+                break;
+            case "HwanEmpireCityCentralLab":
+                result = "환 제국 도시 연구소";
+                break;
+            case "HwanEmpireFIRFactory":
+                result = "5차 산업혁명 공장";
+                break;
+            case "HwanEmpireIbiza":
+                result = "이비자";
+                break;
+            case "HwanEmpireKimchiFactory":
+                result = "Kimchi Factory";
+                break;
+            case "HwanEmpireLatifundium":
+                result = "라티푼디움";
+                break;
+            case "HwanEmpireSungsimdang":
+                result = "성심당";
+                break;
+            case "HwanEmpireVigilant":
+                result = "자경단";
+                break;
+            case "AnciencFinnoVigilant":
+                result = "자경단";
+                break;
+            case "AnciencFinnoXylitol":
+                result = "자일리톨 생산지";
+                break;
+            case "AncientFinnoFineDustFactory":
+                result = "미세먼지 공장";
+                break;
+            case "AncientFinnoFIRFortress":
+                result = "5차 산업혁명 요새";
+                break;
+            case "AncientFinnoGermaniumMine":
+                result = "게르마늄 광산";
+                break;
+            case "AncientFinnoOctagon":
+                result = "옥타곤";
+                break;
+            case "FinnoEmpireCity":
+                result = "고대 수오미 제국 도시";
+                break;
+            case "Casino":
+                result = "카지노";
+                break;
+            case "FIRFortress":
+                result = "5차 산업혁명 요새";
+                break;
+            case "ZapFactoryBuilding":
+                result = "공장";
+                break;
+            case "FactoryBuilding":
+                result = "공장";
+                break;
+            case "LaboratoryBuilding":
+                result = "연구소";
+                break;
             default:
-                result = "unknown : " + name;
+                result = "Unknown: " + name;
                 break;
         }
         return result;

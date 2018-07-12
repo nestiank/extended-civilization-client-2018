@@ -147,7 +147,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1402407758237472
 GameObject:
   m_ObjectHideFlags: 1
@@ -350,7 +350,7 @@ GameObject:
   m_Layer: 0
   m_Name: hextile
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -842,7 +842,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: 2e3302a2294b5d64598b10ee1a9cb4b4, type: 2}
+  - {fileID: 2100000, guid: f04e803f8819b574d8fe6e3d96466079, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1227,7 +1227,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: caab72b9dfac1034ebffc1d2032ef15d, type: 2}
+  - {fileID: 2100000, guid: 44bcbd998f58292419e665afa8111b65, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1367,7 +1367,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: c7e25b98b87691f409a433b716fcbb3c, type: 2}
+  - {fileID: 2100000, guid: 67bd9f3dcec70a040b5c1d82951d50b2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1748,3 +1748,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1247cbdcf055e0a4aaa35a3a7dd9ddee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unityPoint: {x: 0, y: 0, z: 0}
+  isFirstClick: 1
+  isFlickering: 0

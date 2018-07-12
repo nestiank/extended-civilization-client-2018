@@ -19,6 +19,10 @@ public class GameManager : MonoBehaviour {
 	private GameObject[,] _tiles;
 	public GameObject[,] Tiles { get { return _tiles; } }
 
+	public GameObject MinimaptilePrefab;
+	private GameObject[,] _minimap_tiles;
+	public GameObject[,] Minimap_tiles { get { return _minimap_tiles; } }
+
 	public GameObject UnitPrefab;
 	private List<GameObject> _units = new List<GameObject>();
 	public List<GameObject> Units { get { return _units; } }
@@ -62,11 +66,24 @@ public class GameManager : MonoBehaviour {
 	void Start() {
 		InitiateMap();
 		InitiateUnit();
+		InitiateMiniMap();
 	}
 
 	// Update is called once per frame
 	void Update() {
 
+	}
+
+	public void UpdateMinimap() {
+		for (int i = 0; i<_game.Terrain.Width; i++) {
+			for(int j = 0; j<_game.Terrain.Height; j++) {
+				CivModel.Terrain.Point point = _game.Terrain.GetPoint(i, j);
+				MinimapTile tile = _minimap_tiles[i, j].GetComponent<MinimapTile>();
+				tile.SetPoints(point);
+				tile.SetCity();
+				tile.SetOwner();
+			}
+		}
 	}
 
 	public void UpdateMap() {
@@ -82,14 +99,13 @@ public class GameManager : MonoBehaviour {
 	}
 
     public void UpdateUnit() {
+        List<GameObject> unitToDelete = new List<GameObject>();
 
 		// POSITION FIX AND DELETETION
 		foreach (GameObject unitGameObject in _units) {
 			CivModel.Unit unitModel = unitGameObject.GetComponent<Unit>().unitModel;
 			if (unitModel.Owner == null) {
-				_units.Remove(unitGameObject);
-				Destroy(unitGameObject);
-				Debug.Log("Deleted!");
+                unitToDelete.Add(unitGameObject);
 			}
 			else {
 				if (unitModel.PlacedPoint.HasValue) {
@@ -98,6 +114,14 @@ public class GameManager : MonoBehaviour {
 				}
 			}
 		}
+
+        foreach(GameObject unit in unitToDelete) {
+            _units.Remove(unit);
+            Destroy(unit);
+            Debug.Log("Deleted!");
+        }
+
+        unitToDelete.Clear();
 
 		// INSERTION
 		int plyrIdx = 0;
@@ -140,6 +164,22 @@ public class GameManager : MonoBehaviour {
 				_tiles[i, j].name = String.Format("({0},{1})", i, j);
                 CivModel.Terrain.Point pnt = _game.Terrain.GetPoint(i, j);
                 _tiles[i, j].GetComponent<HexTile>().SetPoints(pnt, pos);
+			}
+		}
+	}
+
+	private void InitiateMiniMap() {
+		_minimap_tiles = new GameObject[_game.Terrain.Width, _game.Terrain.Height];
+
+		for (int i = 0; i < _game.Terrain.Width; i++) {
+			for (int j = 0; j < _game.Terrain.Height; j++) {
+
+				Vector3 pos = ModelPntToUnityPnt(i, j, -200f);
+
+				_minimap_tiles[i, j] = Instantiate(MinimaptilePrefab, pos, Quaternion.identity);
+				_minimap_tiles[i, j].name = String.Format("Minimap({0},{1})", i, j);
+				CivModel.Terrain.Point pnt = _game.Terrain.GetPoint(i, j);
+				_minimap_tiles[i, j].GetComponent<MinimapTile>().SetPoints(pnt, pos);
 			}
 		}
 	}
@@ -189,21 +229,22 @@ public class GameManager : MonoBehaviour {
 		}
         return null;
 	}
+
+    static void Focus(CivModel.Actor actor)
+    {
+        if (actor.PlacedPoint == null)
+        {
+            return;
+        }
+        Focus(actor.PlacedPoint.Value);
+    }
+    static void Focus(CivModel.Terrain.Point point)
+    {
+        Vector3 tilePos = GameManager.Instance.Tiles[point.Position.X, point.Position.Y].transform.position;
+        float x = tilePos.x;
+        float z = tilePos.z - (Camera.main.transform.position.y / Mathf.Tan(40 * Mathf.Deg2Rad));
+
+        Camera.main.transform.position = new Vector3(x, Camera.main.transform.position.y, z);
+    }
+
 }
-
-
-
-// 버려진 코드
-// private void InitiateUnit(CivModel.Unit unit) {
-//	if (unit?.PlacedPoint != null) {
-//		var pt = unit.PlacedPoint.Value;
-
-//           Vector3 pos = ModelPntToUnityPnt(pt, 1.25f);
-
-//		GameObject unt = Instantiate(UnitPrefab, pos, Quaternion.identity);
-//		unt.name = String.Format("Unit[{0},{1}]", pt.Position.X, pt.Position.Y);
-//           unt.GetComponent<Unit>().SetPoints(pt, pos);
-
-//           _units.Add(unt);
-//	}
-//}

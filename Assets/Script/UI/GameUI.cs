@@ -34,23 +34,21 @@ public class GameUI : MonoBehaviour {
             if (GameManager.Instance.isThereTodos && !PseudoFSM.Instance.DepState)
             {
                 mapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().text = "유닛이 명령을 기다리고 있습니다";
-                mapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().fontSize = Screen.height / 40;
+                mapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().fontSize = Screen.height / 15;
             }
             else if (PseudoFSM.Instance.DepState)
             {
                 mapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().text = "배치 취소";
-                mapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().fontSize = Screen.height / 25;
+                mapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().fontSize = Screen.height / 10;
             }
             else
             {
             */
                 mapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().text = "다음 턴";
-                mapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().fontSize = Screen.height / 25;
+                mapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().fontSize = Screen.height / 10;
             //}
 
             updatePanel();
-            if (GameObject.Find("GameUI").activeSelf) updateQuest();
-            else if (GameObject.Find("ManagementUI").activeSelf) updateManagement();
         }
     }
 

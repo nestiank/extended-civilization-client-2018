@@ -137,7 +137,7 @@ public class Quests : MonoBehaviour {
                         but.onClick.AddListener(delegate () { AcceptItem(quest); });
                         break;
                     case "DQuest":
-                        but.onClick.AddListener(delegate () { ShowInfoofQuest(quest); });
+                        but.onClick.AddListener(delegate () { ShowInfoofQuest(quest, 1); });
                         break;
                     default:
                         Debug.Log("Undefined Button: " + but.name);
@@ -245,7 +245,7 @@ public class Quests : MonoBehaviour {
                 switch (but.name)
                 {
                     case "AQuest":
-                        but.onClick.AddListener(delegate () { ShowInfoofQuest(quest); });
+                        but.onClick.AddListener(delegate () { ShowInfoofQuest(quest, 2); });
                         break;
                     default:
                         Debug.Log("Undefined Button: " + but.name);
@@ -345,7 +345,7 @@ public class Quests : MonoBehaviour {
                 switch (but.name)
                 {
                     case "CQuest":
-                        but.onClick.AddListener(delegate () { ShowInfoofQuest(quest); });
+                        but.onClick.AddListener(delegate () { ShowInfoofQuest(quest, 3); });
                         break;
                     default:
                         Debug.Log("Undefined Button: " + but.name);
@@ -355,9 +355,9 @@ public class Quests : MonoBehaviour {
         }
     }
 
-    public void ShowInfoofQuest(Quest quest)
+    public void ShowInfoofQuest(Quest quest, int type)
     {
-        UIController.GetUIController().SetQuestInfo(quest);
+        UIController.GetUIController().SetQuestInfo(quest, type);
         return;
     }
 }
