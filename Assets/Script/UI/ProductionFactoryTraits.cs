@@ -459,7 +459,7 @@ public class ProductionFactoryTraits : MonoBehaviour {
                 result = "연구소";
                 break;
             default:
-                result = "Unknown: " + name;
+                result = name;
                 break;
         }
         return result;
@@ -480,7 +480,7 @@ public class ProductionFactoryTraits : MonoBehaviour {
                         result = "hwan_jedi";
                     else if (unit.Owner == GameManager.Instance.Game.Players[CivModel.Finno.FinnoPlayerConstant.FinnoPlayer])
                         result = "finno_jedi";
-                    else result = "unknown : " + name;
+                    else result = name;
                 }
                 break;
             case "FakeKnight":
@@ -495,7 +495,7 @@ public class ProductionFactoryTraits : MonoBehaviour {
                         result = "hwan_decentralized_soldier";
                     else if (unit.Owner == GameManager.Instance.Game.Players[CivModel.Finno.FinnoPlayerConstant.FinnoPlayer])
                         result = "finno_decentralized_soldier";
-                    else result = "unknown : " + name;
+                    else result = name;
                 }
                 break;
             case "JackieChan":
@@ -510,7 +510,7 @@ public class ProductionFactoryTraits : MonoBehaviour {
                         result = "hwan_ninja";
                     else if (unit.Owner == GameManager.Instance.Game.Players[CivModel.Finno.FinnoPlayerConstant.FinnoPlayer])
                         result = "finno_ninja";
-                    else result = "unknown : " + name;
+                    else result = name;
                 }
                 break;
             case "UnicornOrder":
@@ -522,7 +522,7 @@ public class ProductionFactoryTraits : MonoBehaviour {
                         result = "hwan_spy";
                     else if (unit.Owner == GameManager.Instance.Game.Players[CivModel.Finno.FinnoPlayerConstant.FinnoPlayer])
                         result = "finno_spy";
-                    else result = "unknown : " + name;
+                    else result = name;
                 }
                 break;
             case "AncientSorcerer":
@@ -553,7 +553,7 @@ public class ProductionFactoryTraits : MonoBehaviour {
                 result = "닌자";
                 break;
             default:
-                result = "unknown : " + name;
+                result = name;
                 break;
         }
         return result;

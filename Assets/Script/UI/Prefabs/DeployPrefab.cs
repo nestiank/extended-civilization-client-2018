@@ -125,86 +125,15 @@ public class DeployPrefab : MonoBehaviour
     {
         if (dep.IsCompleted)
         {
+            gameManager.DepStateEnter(dep, this);
             UIManager.Instance.mapUI.SetActive(true);
             UIManager.Instance.managementUI.SetActive(false);
             UIManager.Instance.questUI.SetActive(false);
-            DepStateEnter(dep);
         }
         else
         {
             //Debug.Log("Error : not finished product");
             throw new AccessViolationException();
-        }
-    }
-
-    public void DepStateEnter(Production dep)
-    {
-        // State change
-        if (dep == null || _inDepState) return;
-        _inDepState = true;
-        _deployment = dep;
-        // Select deploy tile
-        CivModel.Terrain terrain = GameManager.Instance.Game.Terrain;
-        for (int i = 0; i < terrain.Width; i++)
-        {
-            for (int j = 0; j < terrain.Height; j++)
-            {
-                CivModel.Terrain.Point point = terrain.GetPoint(i, j);
-                if (dep.IsPlacable(point))
-                {
-                    GameManager.Instance.Tiles[point.Position.X, point.Position.Y].GetComponent<HexTile>().FlickerBlue();
-                }
-            }
-            IEnumerator _coroutine = DeployUnit(GameManager.Instance.selectedPoint, dep);
-            StartCoroutine(_coroutine);
-        }
-    }
-
-    IEnumerator DeployUnit(CivModel.Terrain.Point point, Production dep)
-    {
-        while (true)
-        {
-            CivModel.Terrain.Point destPoint = GameManager.Instance.selectedPoint;
-            // 새로운 Point 을 선택했을 때
-            if (point != destPoint)
-            {
-                // Flicker하고 있는 Tile을 선택했을 때
-                if (GameManager.Instance.selectedTile.isFlickering)
-                {
-                    if (dep.IsPlacable(destPoint))
-                    {
-                        game.PlayerInTurn.Deployment.Remove(dep);
-                        dep.Place(destPoint);
-                        //여기에 유닛을 생성하는 걸 추가해야 함
-                        GameManager.Instance.UpdateUnit();
-                        break;
-                    }
-                    else
-                    {
-                        DepStateExit();
-                    }
-                }
-                // Flicker 하지 않는 타일 선택
-                else
-                {
-                    DepStateExit();
-                }
-            }
-            yield return null;
-        }
-    }
-    void DepStateExit()
-    {
-        _inDepState = false;
-        _deployment = null;
-        CivModel.Terrain terrain = GameManager.Instance.Game.Terrain;
-        for (int i = 0; i < terrain.Width; i++)
-        {
-            for (int j = 0; j < terrain.Height; j++)
-            {
-                CivModel.Terrain.Point point = terrain.GetPoint(i, j);
-                GameManager.Instance.Tiles[point.Position.X, point.Position.Y].GetComponent<HexTile>().StopFlickering();
-            }
         }
     }
 }

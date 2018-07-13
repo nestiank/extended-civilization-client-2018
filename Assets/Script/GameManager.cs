@@ -5,6 +5,7 @@ using UnityEngine;
 using CivModel;
 using System.Threading.Tasks;
 using System.IO;
+using UnityEngine.EventSystems;
 
 
 public class GameManager : MonoBehaviour {
@@ -30,7 +31,17 @@ public class GameManager : MonoBehaviour {
 	private List<GameObject> _units = new List<GameObject>();
 	public List<GameObject> Units { get { return _units; } }
 
-	public Material[] materials;
+    //Deploy를 위한 추가
+
+    private bool _inDepState = false;
+    public bool DepState { get { return _inDepState; } }
+
+    private Production _deployment;
+    public Production Deployment { get { return _deployment; } }
+
+    ///Deploy를 위한 추가 끝
+
+    public Material[] materials;
 
 	public CivModel.Terrain.Point selectedPoint;
     public HexTile selectedTile;
@@ -298,5 +309,81 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+    // Deploy 하는 부분
+    public void DepStateEnter(Production dep, DeployPrefab deployprefab)
+    {
+        // State change
+        if (dep == null || _inDepState) return;
+        _inDepState = true;
+        _deployment = dep;
+        // Select deploy tile
+        CivModel.Terrain terrain = Instance.Game.Terrain;
+        for (int i = 0; i < terrain.Width; i++)
+        {
+            for (int j = 0; j < terrain.Height; j++)
+            {
+                CivModel.Terrain.Point point = terrain.GetPoint(i, j);
+                if (dep.IsPlacable(point))
+                {
+                   Instance.Tiles[point.Position.X, point.Position.Y].GetComponent<HexTile>().FlickerBlue();
+                }
+            }
+        }
+        CivModel.Terrain.Point StartPoint = Instance.selectedPoint;
+        IEnumerator _coroutine = DeployUnit(StartPoint, dep, deployprefab);
+        StartCoroutine(_coroutine);
+    }
+
+    IEnumerator DeployUnit(CivModel.Terrain.Point point, Production dep, DeployPrefab deployprefab)
+    {
+        while (true)
+        {
+            CivModel.Terrain.Point destPoint = Instance.selectedPoint;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (!EventSystem.current.IsPointerOverGameObject() && Input.GetMouseButtonDown(0))
+            {
+                // Flicker하고 있는 Tile을 선택했을 때
+                if (Instance.selectedTile.isFlickering)
+                {
+                    if (dep.IsPlacable(destPoint))
+                    {
+                        Game.PlayerInTurn.Deployment.Remove(dep);
+                        dep.Place(destPoint);
+                        DepStateExit(deployprefab);
+                        GameManager.Instance.UpdateUnit();
+                        GameManager.Instance.UpdateMap();
+                        break;
+                    }
+                    else
+                    {
+                        DepStateExit(deployprefab);
+                        break;
+                    }
+                }
+                DepStateExit(deployprefab);
+                break;
+            }
+            yield return null;
+        }
+    }
+
+
+
+    void DepStateExit(DeployPrefab deployprefab)
+    {
+        _inDepState = false;
+        _deployment = null;
+        CivModel.Terrain terrain = Instance.Game.Terrain;
+        for (int i = 0; i < terrain.Width; i++)
+        {
+            for (int j = 0; j < terrain.Height; j++)
+            {
+                CivModel.Terrain.Point point = terrain.GetPoint(i, j);
+                Instance.Tiles[point.Position.X, point.Position.Y].GetComponent<HexTile>().StopFlickering();
+            }
+        }
+        GameManager.Instance.UpdateUnit();
+        GameManager.Instance.UpdateMap();
+    }
 
 }

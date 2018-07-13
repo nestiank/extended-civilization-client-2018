@@ -75,7 +75,7 @@ public class InvestmentController : MonoBehaviour {
         tiSlider.maxValue = 2f;
         tiSlider.minValue = 0f;
 
-        logiSlider.maxValue = 2f;
+        logiSlider.maxValue = 1f;
         logiSlider.minValue = 0f;
 
         taxSlider.value = (float)GameManager.Instance.Game.PlayerInTurn.TaxRate;
@@ -127,5 +127,47 @@ public class InvestmentController : MonoBehaviour {
     public void ChangeLogiValue(float adden)
     {
         logiSlider.value += adden;
+    }
+
+    public void ChangeTaxPlus(float adden)
+    {
+        taxSlider.value += 0.01f;
+        if (taxSlider.value > 1) taxSlider.value = 1;
+    }
+    public void ChangeEIPlus(float adden)
+    {
+        eiSlider.value += 0.01f;
+        if (taxSlider.value > 2) taxSlider.value = 2;
+    }
+    public void ChangeTIPlus(float adden)
+    {
+        tiSlider.value += 0.01f;
+        if (taxSlider.value > 2) taxSlider.value = 2;
+    }
+    public void ChangeLogiPlus(float adden)
+    {
+        logiSlider.value += 0.01f;
+        if (taxSlider.value > 1) taxSlider.value = 1;
+    }
+
+    public void ChangeTaxMinus(float adden)
+    {
+        taxSlider.value -= 0.01f;
+        if (taxSlider.value < 0) taxSlider.value = 0;
+    }
+    public void ChangeEIMinus(float adden)
+    {
+        eiSlider.value -= 0.01f;
+        if (eiSlider.value < 0) eiSlider.value = 0;
+    }
+    public void ChangeTIMinus(float adden)
+    {
+        tiSlider.value -= 0.01f;
+        if (taxSlider.value < 0) taxSlider.value = 0;
+    }
+    public void ChangeLogiMinus(float adden)
+    {
+        logiSlider.value -= 0.01f;
+        if (taxSlider.value < 0) taxSlider.value = 0;
     }
 }

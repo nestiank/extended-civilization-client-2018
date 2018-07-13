@@ -83,18 +83,19 @@ public class Unit : MonoBehaviour {
             Debug.Log("Selected Actor is NULL");
             return;
         }
+
         else if (GameManager.Instance.selectedActor is CivModel.Unit)
         {
             // Select movable adjacent tiles
             _parameterPoints = GameManager.Instance.selectedActor.PlacedPoint.Value.Adjacents();
             for (int i = 0; i < _parameterPoints.Length; i++)
             {
-                if (GameManager.Instance.selectedActor.MovingAttackAct.IsActable(_parameterPoints[i]))
+                if (GameManager.Instance.selectedActor.MovingAttackAct != null && GameManager.Instance.selectedActor.MovingAttackAct.IsActable(_parameterPoints[i]))
                 {
                     CivModel.Position pos = _parameterPoints[i].Value.Position;
                     GameManager.Instance.Tiles[pos.X, pos.Y].GetComponent<HexTile>().FlickerRed();
                 }
-                else if (GameManager.Instance.selectedActor.MoveAct.IsActable(_parameterPoints[i]))
+                else if (GameManager.Instance.selectedActor.MoveAct != null && GameManager.Instance.selectedActor.MoveAct.IsActable(_parameterPoints[i]))
                 {
                     CivModel.Position pos = _parameterPoints[i].Value.Position;
                     GameManager.Instance.Tiles[pos.X, pos.Y].GetComponent<HexTile>().FlickerBlue();
@@ -146,7 +147,7 @@ public class Unit : MonoBehaviour {
                 else
                 {
                     CivModel.Position pos = _parameterPoints[i].Value.Position;
-                    Debug.Log("Cannot Attack to (" + pos.X + ", " + pos.Y + ")");
+                    //Debug.Log("Cannot Attack to (" + pos.X + ", " + pos.Y + ")");
                 }
             }
             IEnumerator _coroutine = AttackUnit(GameManager.Instance.selectedActor);
@@ -214,12 +215,17 @@ public class Unit : MonoBehaviour {
                         GameManager.Instance.UpdateUnit();
 						break;
 					}
-					else {
+                    else if (unitToMove.MoveAct != null && unitToMove.MoveAct.IsActable(destPoint)){
 						unitToMove.MoveAct.Act(destPoint);
                         MoveStateExit();
                         GameManager.Instance.UpdateUnit();
 						break;
 					}
+                    else {
+                        Debug.Log("The Unit Cannot Move");
+                        MoveStateExit();
+                        break;
+                    }
 				}
 				// Flicker 하지 않는 타일 선택
 				else {
@@ -309,7 +315,6 @@ public class Unit : MonoBehaviour {
 
     public void SkillStateExit(CivModel.Actor unitToSkill) {
 		foreach (CivModel.Terrain.Point pnt in _skillParameterPoints) {
-			Debug.Log(pnt);
 			CivModel.Position pos = pnt.Position;
 			GameManager.Instance.Tiles[pos.X, pos.Y].GetComponent<HexTile>().StopFlickering();
 		}
