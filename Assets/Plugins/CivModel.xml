@@ -564,7 +564,7 @@
         </member>
         <member name="M:CivModel.Game.Load(System.IO.StreamReader,System.Collections.Generic.IEnumerable{CivModel.IGameSchemeFactory})">
             <summary>
-            Re-initializes the <see cref="T:CivModel.Game"/> object, by loading a existing save file.
+            Re-initializes the <see cref="T:CivModel.Game"/> object, by loading a existing save file from stream.
             </summary>
             <param name="stream"><see cref="T:System.IO.StreamReader"/> object which contains a save file.</param>
             <param name="knownSchemes">
@@ -710,6 +710,24 @@
              This constructor is wrapper of <see cref="M:CivModel.Game.Load(System.IO.StreamReader,System.Collections.Generic.IEnumerable{CivModel.IGameSchemeFactory})"/>.
              See <see cref="M:CivModel.Game.Load(System.IO.StreamReader,System.Collections.Generic.IEnumerable{CivModel.IGameSchemeFactory})"/> for more information.
             </para>
+            </remarks>
+            <seealso cref="M:CivModel.Game.Load(System.IO.StreamReader,System.Collections.Generic.IEnumerable{CivModel.IGameSchemeFactory})"/>
+        </member>
+        <member name="M:CivModel.Game.#ctor(System.IO.StreamReader,System.Collections.Generic.IEnumerable{CivModel.IGameSchemeFactory})">
+            <summary>
+            Initializes a new instance of the <see cref="T:CivModel.Game"/> class, by loading a existing save file from stream.
+            </summary>
+            <param name="stream"><see cref="T:System.IO.StreamReader"/> object which contains a save file.</param>
+            <param name="schemeFactories">the candidates of factories for <see cref="T:CivModel.IGameScheme"/> of the game.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="schemeFactories"/> is <c>null</c>.</exception>
+            <exception cref="T:System.IO.InvalidDataException">
+            save file is invalid
+            or
+            there is no <see cref="T:CivModel.IGameSchemeFactory"/> for this save file.
+            </exception>
+            <remarks>
+            This constructor is wrapper of <see cref="M:CivModel.Game.Load(System.IO.StreamReader,System.Collections.Generic.IEnumerable{CivModel.IGameSchemeFactory})"/>.
+            See <see cref="M:CivModel.Game.Load(System.IO.StreamReader,System.Collections.Generic.IEnumerable{CivModel.IGameSchemeFactory})"/> for more information.
             </remarks>
             <seealso cref="M:CivModel.Game.Load(System.IO.StreamReader,System.Collections.Generic.IEnumerable{CivModel.IGameSchemeFactory})"/>
         </member>
@@ -1766,6 +1784,45 @@
             <returns>the created <see cref="T:CivModel.Position"/></returns>
             <exception cref="T:System.ArgumentException">logical coordinate is invalid</exception>
         </member>
+        <member name="M:CivModel.Position.AdjacentsWithinDistance(System.Int32)">
+            <summary>
+            Gets the list of positions, within the specified distance, in left-to-right, top-to-bottom order.
+            </summary>
+            <param name="distance">The distance</param>
+            <returns>The list of positions</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="distance"/> is negative</exception>
+            <seealso cref="M:CivModel.Position.AdjacentsAtDistance(System.Int32)"/>
+            <seealso cref="M:CivModel.Terrain.Point.AdjacentsWithinDistance(System.Int32)"/>
+        </member>
+        <member name="M:CivModel.Position.AdjacentsAtDistance(System.Int32)">
+            <summary>
+            Gets the list of positions, at the specified distance, in clockwise order.
+            </summary>
+            <param name="distance">The distance</param>
+            <returns>The list of positions</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="distance"/> is negative</exception>
+            <remarks>
+            Get the list of the adjacent points in clockwise order.
+            A first element of the list is the left one.
+            <code>
+            // the result when distance = 1
+            //   1   2
+            // 0  pt  3
+            //   5   4
+            </code>
+            </remarks>
+            <seealso cref="M:CivModel.Position.AdjacentsWithinDistance(System.Int32)"/>
+            <seealso cref="M:CivModel.Terrain.Point.AdjacentsAtDistance(System.Int32)"/>
+        </member>
+        <member name="M:CivModel.Position.Adjacents">
+            <summary>
+            Gets the list of adjacent positions, in clockwise order.
+            </summary>
+            <returns>The list of positions</returns>
+            <seealso cref="M:CivModel.Position.AdjacentsWithinDistance(System.Int32)"/>
+            <seealso cref="M:CivModel.Position.AdjacentsAtDistance(System.Int32)"/>
+            <seealso cref="M:CivModel.Terrain.Point.Adjacents"/>
+        </member>
         <member name="M:CivModel.Position.op_UnaryPlus(CivModel.Position)">
             <summary>
             Implements the operator +.
@@ -2386,19 +2443,34 @@
             A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
             </returns>
         </member>
+        <member name="M:CivModel.Terrain.Point.AdjacentsWithinDistance(System.Int32)">
+            <summary>
+            Gets the list of points, within the specified distance, in left-to-right, top-to-bottom order.
+            </summary>
+            <param name="distance">The distance</param>
+            <returns>The list of points</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="distance"/> is negative</exception>
+            <seealso cref="M:CivModel.Terrain.Point.AdjacentsAtDistance(System.Int32)"/>
+            <seealso cref="M:CivModel.Position.AdjacentsWithinDistance(System.Int32)"/>
+        </member>
+        <member name="M:CivModel.Terrain.Point.AdjacentsAtDistance(System.Int32)">
+            <summary>
+            Gets the list of points, at the specified distance, in clockwise order.
+            </summary>
+            <param name="distance">The distance</param>
+            <returns>The list of points</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="distance"/> is negative</exception>
+            <seealso cref="M:CivModel.Terrain.Point.AdjacentsWithinDistance(System.Int32)"/>
+            <seealso cref="M:CivModel.Position.AdjacentsAtDistance(System.Int32)"/>
+        </member>
         <member name="M:CivModel.Terrain.Point.Adjacents">
             <summary>
-            get adjacent points, in clockwise order.
+            Gets the list of adjacent points, in clockwise order.
             </summary>
-            <remarks>
-            Get the array of the adjacent points in clockwise order.
-            If the position is invalid, the value is null.
-            A first element of the array is the left one.
-              1   2
-            0  pt  3
-              5   4
-            </remarks>
-            <returns>an array of the adjacent points</returns>
+            <returns>The list of points</returns>
+            <seealso cref="M:CivModel.Terrain.Point.AdjacentsWithinDistance(System.Int32)"/>
+            <seealso cref="M:CivModel.Terrain.Point.AdjacentsAtDistance(System.Int32)"/>
+            <seealso cref="M:CivModel.Position.Adjacents"/>
         </member>
         <member name="P:CivModel.Terrain.AllTiles">
             <summary>
@@ -2451,7 +2523,14 @@
             Gets the <see cref="T:CivModel.Terrain.Point"/> from <see cref="T:CivModel.Position"/>
             </summary>
             <param name="pos">The <see cref="T:CivModel.Position"/> object.</param>
-            <returns>the <see cref="T:CivModel.Terrain.Point"/> objec</returns>
+            <returns>the <see cref="T:CivModel.Terrain.Point"/> object</returns>
+        </member>
+        <member name="M:CivModel.Terrain.TryGetPoint(CivModel.Position)">
+            <summary>
+            Tries to get the <see cref="T:CivModel.Terrain.Point"/> from <see cref="T:CivModel.Position"/>
+            </summary>
+            <param name="pos">The <see cref="T:CivModel.Position"/> object.</param>
+            <returns>The <see cref="T:CivModel.Terrain.Point"/> object. If <paramref name="pos"/> is invalid, <c>null</c>.</returns>
         </member>
         <member name="M:CivModel.Terrain.PlaceObject(CivModel.TileObject)">
             <summary>
@@ -2594,9 +2673,14 @@
             </summary>
             <seealso cref="M:CivModel.Actor.AttackTo(System.Double,CivModel.Actor,System.Double,System.Boolean,System.Boolean)"/>
         </member>
-        <member name="F:CivModel.BattleResult.Draw">
+        <member name="F:CivModel.BattleResult.DrawAlive">
             <summary>
-            Indicating that battle result is draw.
+            Indicating that battle result is draw, and no one has died.
+            </summary>
+        </member>
+        <member name="F:CivModel.BattleResult.DrawDead">
+            <summary>
+            Indicating that battle result is draw, and both one have died.
             </summary>
         </member>
         <member name="F:CivModel.BattleResult.Victory">
@@ -2932,7 +3016,7 @@
               <ul>
                 <li>if <paramref name="opposite"/> has died, <see cref="F:CivModel.BattleResult.Victory"/>.</li>
                 <li>if this object has died, <see cref="F:CivModel.BattleResult.Defeated"/>.</li>
-                <li>if both have died or survived, <see cref="F:CivModel.BattleResult.Draw"/>.</li>
+                <li>if both have died or survived, <see cref="!:BattleResult.Draw"/>.</li>
                 <li>if the battle is cancelled, <see cref="F:CivModel.BattleResult.Cancelled"/>.</li>
               </ul>
             </returns>

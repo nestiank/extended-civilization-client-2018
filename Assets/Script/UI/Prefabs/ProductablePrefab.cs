@@ -44,7 +44,7 @@ public class ProductablePrefab : MonoBehaviour {
     {
         //Debug.Log("Selection Queue Item Made");
         string nameofFactory = ProductionFactoryTraits.GetFactoryName(fact);
-        unitPrt.sprite = Resources.Load(("Portraits/" + (ProductionFactoryTraits.GetFacPortName(fact)).ToLower()), typeof(Sprite)) as Sprite;
+        unitPrt.sprite = Resources.Load(("Portraits/" + (ProductionFactoryTraits.GetFacPortName(fact))), typeof(Sprite)) as Sprite;
         foreach (Text txt in textarguments)
         {
             switch (txt.name)

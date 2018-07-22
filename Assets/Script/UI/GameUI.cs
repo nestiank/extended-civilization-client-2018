@@ -12,12 +12,14 @@ public class GameUI : MonoBehaviour {
 
     private UIController uicontroller;
     private ManagementController managementcontroller;
+    private SpecialResourceView specialResourceView;
 
     // Use this for initialization
     void Start () {
         mapUI = GameObject.Find("MapUI");
         uicontroller = UIController.GetUIController();
         managementcontroller = ManagementController.GetManagementController();
+        specialResourceView = SpecialResourceView.GetSpecialResourceView();
     }
 	
 	// Update is called once per frame
@@ -78,6 +80,11 @@ public class GameUI : MonoBehaviour {
         managementcontroller.begin();
     }
 
+    public void updateSpecialResource()
+    {
+        specialResourceView.begin();
+    }
+
     public void onClickNextTurn()
     {
         if (GameManager.Instance.isThereTodos)
@@ -103,3 +110,25 @@ public class GameUI : MonoBehaviour {
         }
     }
 }
+
+// Finno도 플레이하고 싶을 때 else 안을 대체
+//if (GameManager.Instance.Game.PlayerInTurn == GameManager.Instance.Game.Players[0])
+//            {
+//                GameManager.Instance.Game.EndTurn();
+//                GameManager.Instance.Game.StartTurn();
+//            }
+//            else if (GameManager.Instance.Game.PlayerInTurn == GameManager.Instance.Game.Players[1])
+//            {
+//                GameManager.Instance.Game.EndTurn();
+//                GameManager.Instance.Game.StartTurn();
+//                while (GameManager.Instance.Game.PlayerInTurn.IsAIControlled)
+//                {
+//                    // Debug.Log(Game.PlayerNumberInTurn);
+//                    GameManager.Instance.Game.PlayerInTurn.DoAITurnAction().GetAwaiter().GetResult();
+//GameManager.Instance.Game.EndTurn();
+            //        GameManager.Instance.Game.StartTurn();
+            //    }
+            //    GameManager.Instance.UpdateMap();
+            //    GameManager.Instance.UpdateUnit();
+            //    UIManager.Instance.ButtonInteractChange();
+            //}

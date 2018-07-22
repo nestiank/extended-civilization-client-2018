@@ -114,10 +114,10 @@ public class ProductionFactoryTraits : MonoBehaviour {
             case "HwanEmpireVigilantProductionFactory":
                 result = "자경단";
                 break;
-            case "AnciencFinnoVigilantProductionFactory":
+            case "AncientFinnoVigilantProductionFactory":
                 result = "자경단";
                 break;
-            case "AnciencFinnoXylitolProductionFactory":
+            case "AncientFinnoXylitolProductionFactory":
                 result = "자일리톨 생산지";
                 break;
             case "AncientFinnoFineDustFactoryProductionFactory":
@@ -161,7 +161,10 @@ public class ProductionFactoryTraits : MonoBehaviour {
         char[] sep = { '.' };
         string name = Factory.ToString().Split(sep)[2];
         string result;
-        switch (name)
+
+		// 추후 수정을 위한 디버그 로그
+		// Debug.Log(name);
+		switch (name)
         {
             case "PioneerProductionFactory":
                 result = "Pioneer";
@@ -244,80 +247,107 @@ public class ProductionFactoryTraits : MonoBehaviour {
             case "ZapNinjaProductionFactory":
                 result = "ZapNinja";
                 break;
+
+            // 0. City
             case "CityCenterProductionFactory":
                 {
                     if (Factory.ToString().Split(sep)[1].Equals("Hwan"))
                         result = "City Buildings/hwan_city";
                     else if (Factory.ToString().Split(sep)[1].Equals("Finno"))
                         result = "City Buildings/finno_city";
-                    else result = "unknown : " + name;
+                    else result = "City Buildings/hwan_city";
+
                 }
                 break;
-            case "HwanEmpireCityProductionFactory":
+            case "HwanEmpireCityProductionFactory": // NEEDS WORK
                 result = "HwanEmpireCity";
                 break;
-            case "HwanEmpireFIRFortressProductionFactory":
-                result = "HwanEmpireFIRFortress";
-                break;
-            case "HwanEmpireCityCentralLabProductionFactory":
-                result = "HwanEmpireCityCentralLab";
-                break;
-            case "HwanEmpireFIRFactoryProductionFactory":
-                result = "City Buildings/hwan_factory";
-                break;
-            case "HwanEmpireIbizaProductionFactory":
-                result = "HwanEmpireIbiza";
-                break;
-            case "HwanEmpireKimchiFactoryProductionFactory":
-                result = "HwanEmpireKimchiFactory";
-                break;
-            case "HwanEmpireLatifundiumProductionFactory":
-                result = "HwanEmpireLatifundium";
-                break;
-            case "AncientFinnoFineDustFactoryProductionFactory":
-                result = "AncientFinnoFineDustFactory";
-                break;
-            case "AncientFinnoFIRFortressProductionFactory":
-                result = "AncientFinnoFIRFortress";
-                break;
-            case "AncientFinnoGermaniumMineProductionFactory":
-                result = "AncientFinnoGermaniumMine";
-                break;
-            case "AncientFinnoOctagonProductionFactory":
-                result = "AncientFinnoOctagon";
-                break;
-            case "FinnoEmpireCityProductionFactory":
+
+            case "FinnoEmpireCityProductionFactory": // NEEDS WORK
                 result = "FinnoEmpireCity";
                 break;
-            case "CasinoProductionFactory":
-                result = "Casino";
-                break;
-            case "FIRFortressProductionFactory":
-                result = "FIRFortress";
-                break;
-            case "ZapFactoryBuildingProductionFactory":
-                result = "ZapFactoryBuilding";
-                break;
-            case "FactoryBuildingProductionFactory":
+
+			// 1. City Buildings
+            case "FactoryBuildingProductionFactory": // 공장
                 {
                     if (Factory.ToString().Split(sep)[1].Equals("Hwan"))
                         result = "City Buildings/hwan_factory";
                     else if (Factory.ToString().Split(sep)[1].Equals("Finno"))
                         result = "City Buildings/finno_factory";
-                    else result = "unknown : " + name;
+                    else result = "City Buildings/hwan_factory";
+
                 }
                 break;
-            case "LaboratoryBuildingProductionFactory":
+            case "LaboratoryBuildingProductionFactory": // 연구소
                 {
                     if (Factory.ToString().Split(sep)[1].Equals("Hwan"))
                         result = "City Buildings/hwan_city_lab";
                     else if (Factory.ToString().Split(sep)[1].Equals("Finno"))
                         result = "City Buildings/finno_city_lab";
-                    else result = "unknown : " + name;
+                    else result = "City Buildings/hwan_city_lab";
+
                 }
+                break;
+
+            case "HwanEmpireCityCentralLabProductionFactory": // 환제국도시연구소 NEEDS WORK
+                result = "HwanEmpireCityCentralLab";
+                break;
+
+            case "HwanEmpireFIRFactoryProductionFactory": // 5차산업혁명공장 NEEDS WORK
+                result = "City Buildings/hwan_factory";
+                break;
+
+            case "HwanEmpireSungsimdangProductionFactory": // 성심당
+                result = "City Buildings/hwan_sungsimdang";
+                break;
+            case "AncientFinnoXylitol": // 자일리톨
+                result = "City Buildings/finno_xylitol";
+                break;
+            case "HwanEmpireVigilantProductionFactory": // 환 자경단
+                result = "City Buildings/hwan_vigilante";
+                break;
+            case "AncientFinnoVigilantProductionFactory": //피노 자경단
+                result = "City Buildings/finno_vigilante";
+                break;
+            
+
+            // 2. Normal Buildings
+
+            case "HwanEmpireFIRFortressProductionFactory": // 환 5차산업혁명요새
+                result = "Normal Buildings/hwan_FIR_fort";
+                break;
+            case "HwanEmpireIbizaProductionFactory": // 이비자
+                result = "Normal Buildings/hwan_ibiza";
+                break;
+            case "HwanEmpireKimchiFactoryProductionFactory": // 김치팩토리
+                result = "Normal Buildings/hwan_kimchi_factory";
+                break;
+            case "HwanEmpireLatifundiumProductionFactory": // 라티푼티움
+                result = "Normal Buildings/hwan_latifundium";
+                break;
+            case "AncientFinnoFineDustFactoryProductionFactory": // 미세먼지공장
+                result = "Normal Buildings/finno_fine_dust_factory";
+                break;
+            case "AncientFinnoFIRFortressProductionFactory": // 피노 5차산업혁명요새
+                result = "Normal Buildings/finno_FIR_fort";
+                break;
+            case "AncientFinnoGermaniumMineProductionFactory": // 게르마늄광산
+                result = "Normal Buildings/finno_germanium_mine";
+                break;
+            case "AncientFinnoOctagonProductionFactory": // 옥타곤
+                result = "Normal Buildings/finno_ocatagon";
+                break;
+            
+            case "CasinoProductionFactory": // 카지노
+                result = "Casino";
+                break;
+            
+            case "ZapFactoryBuildingProductionFactory": // 잡국 공장
+                result = "ZapFactoryBuilding";
                 break;
             default:
                 result = "unknown : " + name;
+                Debug.Log(result);
                 break;
         }
         return result;
@@ -422,10 +452,10 @@ public class ProductionFactoryTraits : MonoBehaviour {
             case "HwanEmpireVigilant":
                 result = "자경단";
                 break;
-            case "AnciencFinnoVigilant":
+            case "AncientFinnoVigilant":
                 result = "자경단";
                 break;
-            case "AnciencFinnoXylitol":
+            case "AncientFinnoXylitol":
                 result = "자일리톨 생산지";
                 break;
             case "AncientFinnoFineDustFactory":

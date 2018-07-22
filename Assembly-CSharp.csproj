@@ -61,9 +61,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Script\Camera\CameraControl.cs" />
+    <Compile Include="Assets\Script\GameInfo.cs" />
     <Compile Include="Assets\Script\GameManager.cs" />
+    <Compile Include="Assets\Script\GameStarter.cs" />
+    <Compile Include="Assets\Script\QuestInfo.cs" />
     <Compile Include="Assets\Script\Tile\HexTile.cs" />
     <Compile Include="Assets\Script\Tile\MinimapTile.cs" />
+    <Compile Include="Assets\Script\UI\AlarmManager.cs" />
     <Compile Include="Assets\Script\UI\GameUI.cs" />
     <Compile Include="Assets\Script\UI\InvestmentController.cs" />
     <Compile Include="Assets\Script\UI\ManagementController.cs" />
@@ -71,7 +75,10 @@
     <Compile Include="Assets\Script\UI\Prefabs\ProductablePrefab.cs" />
     <Compile Include="Assets\Script\UI\Prefabs\ProductionPrefab.cs" />
     <Compile Include="Assets\Script\UI\Prefabs\Quests.cs" />
+    <Compile Include="Assets\Script\UI\Prefabs\SpecialResourcePrefab.cs" />
     <Compile Include="Assets\Script\UI\ProductionFactoryTraits.cs" />
+    <Compile Include="Assets\Script\UI\SpecialResourceTraits.cs" />
+    <Compile Include="Assets\Script\UI\SpecialResourceView.cs" />
     <Compile Include="Assets\Script\UI\UIController.cs" />
     <Compile Include="Assets\Script\UI\UIManager.cs" />
     <Compile Include="Assets\Script\UI\ViewFieldSquareControl.cs" />
@@ -279,45 +286,6 @@
     <Reference Include="UnityEngine.SpatialTracking">
       <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnitySpatialTracking/RuntimeEditor/UnityEngine.SpatialTracking.dll</HintPath>
     </Reference>
-    <Reference Include="Accord">
-      <HintPath>E:/civilization-iii/Assets/Plugins/Accord.dll</HintPath>
-    </Reference>
-    <Reference Include="Accord.Fuzzy">
-      <HintPath>E:/civilization-iii/Assets/Plugins/Accord.Fuzzy.dll</HintPath>
-    </Reference>
-    <Reference Include="CivModel.AI">
-      <HintPath>E:/civilization-iii/Assets/Plugins/CivModel.AI.dll</HintPath>
-    </Reference>
-    <Reference Include="CivModel.Common">
-      <HintPath>E:/civilization-iii/Assets/Plugins/CivModel.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="CivModel">
-      <HintPath>E:/civilization-iii/Assets/Plugins/CivModel.dll</HintPath>
-    </Reference>
-    <Reference Include="CivModel.Finno">
-      <HintPath>E:/civilization-iii/Assets/Plugins/CivModel.Finno.dll</HintPath>
-    </Reference>
-    <Reference Include="CivModel.Hwan">
-      <HintPath>E:/civilization-iii/Assets/Plugins/CivModel.Hwan.dll</HintPath>
-    </Reference>
-    <Reference Include="CivModel.Quest">
-      <HintPath>E:/civilization-iii/Assets/Plugins/CivModel.Quest.dll</HintPath>
-    </Reference>
-    <Reference Include="CivModel.Zap">
-      <HintPath>E:/civilization-iii/Assets/Plugins/CivModel.Zap.dll</HintPath>
-    </Reference>
-    <Reference Include="CivPresenter">
-      <HintPath>E:/civilization-iii/Assets/Plugins/CivPresenter.dll</HintPath>
-    </Reference>
-    <Reference Include="FSharp.Core">
-      <HintPath>E:/civilization-iii/Assets/Plugins/FSharp.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ValueTuple">
-      <HintPath>E:/civilization-iii/Assets/Plugins/System.ValueTuple.dll</HintPath>
-    </Reference>
-    <Reference Include="FSharp.Core.resources">
-      <HintPath>E:/civilization-iii/Assets/Plugins/ko/FSharp.Core.resources.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine.Analytics">
       <HintPath>C:/Users/USER/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.analytics@2.0.16/UnityEngine.Analytics.dll</HintPath>
     </Reference>
@@ -326,6 +294,45 @@
     </Reference>
     <Reference Include="UnityEngine.StandardEvents">
       <HintPath>C:/Users/USER/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.standardevents@1.0.13/UnityEngine.StandardEvents.dll</HintPath>
+    </Reference>
+    <Reference Include="Accord">
+      <HintPath>E:/civilization-iii/Assets/Plugins/Accord.dll</HintPath>
+    </Reference>
+    <Reference Include="CivModel.Zap">
+      <HintPath>E:/civilization-iii/Assets/Plugins/CivModel.Zap.dll</HintPath>
+    </Reference>
+    <Reference Include="FSharp.Core.resources">
+      <HintPath>E:/civilization-iii/Assets/Plugins/ko/FSharp.Core.resources.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple">
+      <HintPath>E:/civilization-iii/Assets/Plugins/System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="FSharp.Core">
+      <HintPath>E:/civilization-iii/Assets/Plugins/FSharp.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="CivModel.Hwan">
+      <HintPath>E:/civilization-iii/Assets/Plugins/CivModel.Hwan.dll</HintPath>
+    </Reference>
+    <Reference Include="CivModel.Quest">
+      <HintPath>E:/civilization-iii/Assets/Plugins/CivModel.Quest.dll</HintPath>
+    </Reference>
+    <Reference Include="CivModel.Common">
+      <HintPath>E:/civilization-iii/Assets/Plugins/CivModel.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="CivModel.AI">
+      <HintPath>E:/civilization-iii/Assets/Plugins/CivModel.AI.dll</HintPath>
+    </Reference>
+    <Reference Include="Accord.Fuzzy">
+      <HintPath>E:/civilization-iii/Assets/Plugins/Accord.Fuzzy.dll</HintPath>
+    </Reference>
+    <Reference Include="CivModel.Finno">
+      <HintPath>E:/civilization-iii/Assets/Plugins/CivModel.Finno.dll</HintPath>
+    </Reference>
+    <Reference Include="CivModel">
+      <HintPath>E:/civilization-iii/Assets/Plugins/CivModel.dll</HintPath>
+    </Reference>
+    <Reference Include="CivPresenter">
+      <HintPath>E:/civilization-iii/Assets/Plugins/CivPresenter.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>C:/Program Files/Unity/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>

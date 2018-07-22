@@ -101,6 +101,7 @@ public class ManagementController : MonoBehaviour {
         //Debug.Log("ALL SelectList Updated");
 
         DeleteAllSQ();
+        game.PlayerInTurn.EstimateResourceInputs();
         foreach (IProductionFactory fac in facList)
         {
             //여기서 분리 

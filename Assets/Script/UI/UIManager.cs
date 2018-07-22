@@ -8,6 +8,8 @@ using CivModel.Common;
 
 public class UIManager : MonoBehaviour
 {
+
+    // Get UI GameObjects from the Scene
     public GameObject mapUI;
     public GameObject managementUI;
     public GameObject questUI;
@@ -30,9 +32,11 @@ public class UIManager : MonoBehaviour
 
     public Image UnitPortrait;
 
+    // RayCast For Selection
     public Ray ray;
     public RaycastHit hit;
 
+    // UIManager Class Instance Singleton
     private static UIManager _manager = null;
     public static UIManager Instance { get { return _manager; } }
 
@@ -77,14 +81,18 @@ public class UIManager : MonoBehaviour
     void Update()
     {
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        // Selecting Actor(Tile, Unit) of the Game
         if (!EventSystem.current.IsPointerOverGameObject() && Input.GetMouseButtonDown(0))
         {
             if (Physics.Raycast(ray, out hit))
             {
                 selectedActor = hit.transform.gameObject;
-                //Debug.Log(selectedActor.name);
                 HexTile tile = selectedActor.GetComponent<HexTile>();
+
+                // Update selectedTile
                 GameManager.Instance.selectedTile = tile;
+                // Update selectedPoint using tile information
                 GameManager.Instance.selectedPoint = tile.point;
 
                 if (tile.point.Unit != null && tile.point.TileBuilding != null)
@@ -114,15 +122,21 @@ public class UIManager : MonoBehaviour
                     tile.isFirstClick = false;
                     GameManager.Instance.selectedGameObject = GameManager.GetUnitGameObject(tile.point);
                 }
+                // If neither Unit nor TileBuilding exists on the selected tile
                 else
                 {
                     GameManager.Instance.selectedActor = null;
                 }
+
+                // Change Button Interaction correponds to the selected Actor
                 ButtonInteractChange();
+
+                // Filcker Selected Tile with Cyan
                 IEnumerator _tileCoroutine = FlickerSelectedTile(tile);
                 StartCoroutine(_tileCoroutine);
             }
         }
+        // Set Unit Information
         if (questUI.activeSelf == false && managementUI.activeSelf == false)
         {
             if (GameManager.Instance.selectedActor != null)
@@ -145,15 +159,14 @@ public class UIManager : MonoBehaviour
                 GameObject.Find("HealthPoint").GetComponent<RectTransform>().sizeDelta = new Vector2(30, 280 * (float)GameManager.Instance.selectedActor.RemainHP / (float)GameManager.Instance.selectedActor.MaxHP);
             }
             else unitInfo.SetActive(false);
-
-            if (SpecialSpec.activeSelf == true)
-            {
-                string specialText = "";
-                GameObject.Find("SpecialSpecText").GetComponent<Text>().text = specialText;
-            }
+        }
+        if(SpecialSpec.activeSelf == true)
+        {
+            SpecialSpec.transform.position = Input.mousePosition;
         }
     }
 
+    // Flicker Selected Tile With Cyan
     IEnumerator FlickerSelectedTile(HexTile prevTile)
     {
         while (true)
@@ -171,10 +184,11 @@ public class UIManager : MonoBehaviour
                 }
                 break;
             }
-            yield return null;
+            yield return null; 
         }
     }
 
+    // On Click UI Button
     public void onClick(GameObject go)
     {
         if (GameManager.Instance.selectedGameObject != null)
@@ -185,7 +199,7 @@ public class UIManager : MonoBehaviour
                     GameManager.Instance.selectedGameObject.GetComponent<Unit>().MoveStateExit();
 
                 if (GameManager.Instance.selectedGameObject.GetComponent<Unit>().AttackState)
-                    GameManager.Instance.selectedGameObject.GetComponent<Unit>().AttackStateExit();
+                    GameManager.Instance.selectedGameObject.GetComponent<Unit>().MoveStateExit();
 
                 if (GameManager.Instance.selectedGameObject.GetComponent<Unit>().SkillState)
                     GameManager.Instance.selectedGameObject.GetComponent<Unit>().SkillStateExit(GameManager.Instance.selectedActor);
@@ -205,8 +219,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-
-
+    // On Click Move Button
     public void onClickMove()
     {
         if (GameManager.Instance.selectedActor is CivModel.Unit && GameManager.Instance.selectedActor.Owner == GameManager.Instance.Game.PlayerInTurn)
@@ -214,6 +227,7 @@ public class UIManager : MonoBehaviour
             GameManager.Instance.selectedGameObject.GetComponent<Unit>().MoveStateEnter();
         }
     }
+    // On Click Attack Button
     public void onClickAttack()
     {
         if (GameManager.Instance.selectedActor is CivModel.Unit && GameManager.Instance.selectedActor.Owner == GameManager.Instance.Game.PlayerInTurn)
@@ -221,20 +235,30 @@ public class UIManager : MonoBehaviour
             GameManager.Instance.selectedGameObject.GetComponent<Unit>().AttackStateEnter();
         }
     }
+    // On Click Skill Button
     public void onClickSkill()
     {
         if (skillSet.activeSelf == false)
             skillSet.SetActive(true);
         else skillSet.SetActive(false);
     }
+    // On Click a Specific Skill
     public void onClickSkillBtn(int idx)
     {
-        if (GameManager.Instance.selectedActor is CivModel.Unit && GameManager.Instance.selectedActor.Owner == GameManager.Instance.Game.PlayerInTurn)
+        if (GameManager.Instance.selectedActor.Owner == GameManager.Instance.Game.PlayerInTurn)
         {
-            GameManager.Instance.selectedGameObject.GetComponent<Unit>().SkillStateEnter(idx);
+            // Unit Skill
+            if (GameManager.Instance.selectedActor is CivModel.Unit)
+                GameManager.Instance.selectedGameObject.GetComponent<Unit>().SkillStateEnter(idx);
+            // Tile Building Skill
+            else if (GameManager.Instance.selectedActor is CivModel.TileBuilding)
+            {
+                GameManager.Instance.selectedTile.SkillStateEnter(idx);
+            }
+            else Debug.Log("Cannot Use Skill");
         }
     }
-
+    // On Click Skip Button
     public void onClickSkip()
     {
         if (GameManager.Instance.selectedActor is CivModel.Unit && GameManager.Instance.selectedActor.Owner == GameManager.Instance.Game.PlayerInTurn)
@@ -315,6 +339,7 @@ public class UIManager : MonoBehaviour
         NormalBuildingTab.SetActive(true);
     }
 
+    // Change Button Interaction according to selectedActor
     public void ButtonInteractChange()
     {
         // Hide Actions Tab
@@ -389,6 +414,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    // Update Unit Info & selectedActor information according to the given actor
     public void updateSelectedInfo(CivModel.Actor actor)
     {
         GameManager.Instance.selectedActor = actor;
