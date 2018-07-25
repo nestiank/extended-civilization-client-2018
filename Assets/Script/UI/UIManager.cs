@@ -132,38 +132,40 @@ public class UIManager : MonoBehaviour
                 ButtonInteractChange();
 
                 // Filcker Selected Tile with Cyan
-                IEnumerator _tileCoroutine = FlickerSelectedTile(tile);
-                StartCoroutine(_tileCoroutine);
+                // IEnumerator _tileCoroutine = FlickerSelectedTile(tile);
+                // StartCoroutine(_tileCoroutine);
             }
-        }
-        // Set Unit Information
-        if (questUI.activeSelf == false && managementUI.activeSelf == false)
-        {
-            if (GameManager.Instance.selectedActor != null)
+            // Set Unit Information
+            if (questUI.activeSelf == false && managementUI.activeSelf == false)
             {
-                unitInfo.SetActive(true);
-                UnitPortrait.sprite = Resources.Load(("Portraits/" + (ProductionFactoryTraits.GetPortName(GameManager.Instance.selectedActor)).ToLower()), typeof(Sprite)) as Sprite;
-                if (GameManager.Instance.selectedActor is CivModel.Actor)
+                if (GameManager.Instance.selectedActor != null)
                 {
-                    GameObject.Find("UnitName").GetComponent<Text>().text = ProductionFactoryTraits.GetName(GameManager.Instance.selectedActor);
-                }
-                if (GameManager.Instance.selectedActor is CivModel.CityBase)
-                {
-                    GameObject.Find("UnitName").GetComponent<Text>().text = GameManager.Instance.selectedActor.Name;
-                }
+                    unitInfo.SetActive(true);
+                    UnitPortrait.sprite = Resources.Load(("Portraits/" + (ProductionFactoryTraits.GetPortName(GameManager.Instance.selectedActor)).ToLower()), typeof(Sprite)) as Sprite;
+                    if (GameManager.Instance.selectedActor is CivModel.Actor)
+                    {
+                        GameObject.Find("UnitName").GetComponent<Text>().text = ProductionFactoryTraits.GetName(GameManager.Instance.selectedActor);
+                    }
+                    if (GameManager.Instance.selectedActor is CivModel.CityBase)
+                    {
+                        GameObject.Find("UnitName").GetComponent<Text>().text = GameManager.Instance.selectedActor.Name;
+                    }
 
-                GameObject.Find("UnitAttack").GetComponent<Text>().text = GameManager.Instance.selectedActor.AttackPower.ToString();
-                GameObject.Find("UnitDefence").GetComponent<Text>().text = GameManager.Instance.selectedActor.DefencePower.ToString();
-                GameObject.Find("UnitEffect").GetComponent<Text>().text = GameManager.Instance.selectedActor.RemainHP.ToString() + "/" + GameManager.Instance.selectedActor.MaxHP;
-                GameObject.Find("ActionPoint").GetComponent<Text>().text = GameManager.Instance.selectedActor.RemainAP.ToString() + "/" + GameManager.Instance.selectedActor.MaxAP;
-                GameObject.Find("HealthPoint").GetComponent<RectTransform>().sizeDelta = new Vector2(30, 280 * (float)GameManager.Instance.selectedActor.RemainHP / (float)GameManager.Instance.selectedActor.MaxHP);
+                    GameObject.Find("UnitAttack").GetComponent<Text>().text = GameManager.Instance.selectedActor.AttackPower.ToString();
+                    GameObject.Find("UnitDefence").GetComponent<Text>().text = GameManager.Instance.selectedActor.DefencePower.ToString();
+                    GameObject.Find("UnitEffect").GetComponent<Text>().text = GameManager.Instance.selectedActor.RemainHP.ToString() + "/" + GameManager.Instance.selectedActor.MaxHP;
+                    GameObject.Find("ActionPoint").GetComponent<Text>().text = GameManager.Instance.selectedActor.RemainAP.ToString() + "/" + GameManager.Instance.selectedActor.MaxAP;
+                    GameObject.Find("HealthPoint").GetComponent<RectTransform>().sizeDelta = new Vector2(30, 280 * (float)GameManager.Instance.selectedActor.RemainHP / (float)GameManager.Instance.selectedActor.MaxHP);
+                }
+                else unitInfo.SetActive(false);
             }
-            else unitInfo.SetActive(false);
         }
         if(SpecialSpec.activeSelf == true)
         {
             SpecialSpec.transform.position = Input.mousePosition;
         }
+
+
     }
 
     // Flicker Selected Tile With Cyan

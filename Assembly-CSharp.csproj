@@ -87,10 +87,10 @@
     <Compile Include="Assets\Script\Unit\UnitEnum.cs" />
     <None Include="Assets\map.txt" />
     <Reference Include="UnityEditor.StandardEvents">
-      <HintPath>/Users/seungwon/civilization-iii/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
+      <HintPath>/Users/seungwon/Desktop/civilization-iii/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>
     <Reference Include="Unity.PackageManagerUI.Editor">
-      <HintPath>/Users/seungwon/civilization-iii/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
+      <HintPath>/Users/seungwon/Desktop/civilization-iii/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>/Applications/Unity/Hub/Editor/2018.1.6f1/Unity.app/Contents/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
@@ -288,43 +288,43 @@
       <HintPath>/Applications/Unity/Hub/Editor/2018.1.6f1/Unity.app/Contents/UnityExtensions/Unity/UnitySpatialTracking/RuntimeEditor/UnityEngine.SpatialTracking.dll</HintPath>
     </Reference>
     <Reference Include="Accord">
-      <HintPath>/Users/seungwon/civilization-iii/Assets/Plugins/Accord.dll</HintPath>
+      <HintPath>/Users/seungwon/Desktop/civilization-iii/Assets/Plugins/Accord.dll</HintPath>
     </Reference>
     <Reference Include="CivModel.Common">
-      <HintPath>/Users/seungwon/civilization-iii/Assets/Plugins/CivModel.Common.dll</HintPath>
+      <HintPath>/Users/seungwon/Desktop/civilization-iii/Assets/Plugins/CivModel.Common.dll</HintPath>
     </Reference>
     <Reference Include="CivModel.Zap">
-      <HintPath>/Users/seungwon/civilization-iii/Assets/Plugins/CivModel.Zap.dll</HintPath>
+      <HintPath>/Users/seungwon/Desktop/civilization-iii/Assets/Plugins/CivModel.Zap.dll</HintPath>
     </Reference>
     <Reference Include="CivModel.Hwan">
-      <HintPath>/Users/seungwon/civilization-iii/Assets/Plugins/CivModel.Hwan.dll</HintPath>
+      <HintPath>/Users/seungwon/Desktop/civilization-iii/Assets/Plugins/CivModel.Hwan.dll</HintPath>
     </Reference>
     <Reference Include="CivModel.Finno">
-      <HintPath>/Users/seungwon/civilization-iii/Assets/Plugins/CivModel.Finno.dll</HintPath>
+      <HintPath>/Users/seungwon/Desktop/civilization-iii/Assets/Plugins/CivModel.Finno.dll</HintPath>
     </Reference>
     <Reference Include="CivModel.Quest">
-      <HintPath>/Users/seungwon/civilization-iii/Assets/Plugins/CivModel.Quest.dll</HintPath>
+      <HintPath>/Users/seungwon/Desktop/civilization-iii/Assets/Plugins/CivModel.Quest.dll</HintPath>
     </Reference>
     <Reference Include="CivModel">
-      <HintPath>/Users/seungwon/civilization-iii/Assets/Plugins/CivModel.dll</HintPath>
+      <HintPath>/Users/seungwon/Desktop/civilization-iii/Assets/Plugins/CivModel.dll</HintPath>
     </Reference>
     <Reference Include="System.ValueTuple">
-      <HintPath>/Users/seungwon/civilization-iii/Assets/Plugins/System.ValueTuple.dll</HintPath>
+      <HintPath>/Users/seungwon/Desktop/civilization-iii/Assets/Plugins/System.ValueTuple.dll</HintPath>
     </Reference>
     <Reference Include="CivPresenter">
-      <HintPath>/Users/seungwon/civilization-iii/Assets/Plugins/CivPresenter.dll</HintPath>
+      <HintPath>/Users/seungwon/Desktop/civilization-iii/Assets/Plugins/CivPresenter.dll</HintPath>
     </Reference>
     <Reference Include="Accord.Fuzzy">
-      <HintPath>/Users/seungwon/civilization-iii/Assets/Plugins/Accord.Fuzzy.dll</HintPath>
+      <HintPath>/Users/seungwon/Desktop/civilization-iii/Assets/Plugins/Accord.Fuzzy.dll</HintPath>
     </Reference>
     <Reference Include="FSharp.Core">
-      <HintPath>/Users/seungwon/civilization-iii/Assets/Plugins/FSharp.Core.dll</HintPath>
+      <HintPath>/Users/seungwon/Desktop/civilization-iii/Assets/Plugins/FSharp.Core.dll</HintPath>
     </Reference>
     <Reference Include="CivModel.AI">
-      <HintPath>/Users/seungwon/civilization-iii/Assets/Plugins/CivModel.AI.dll</HintPath>
+      <HintPath>/Users/seungwon/Desktop/civilization-iii/Assets/Plugins/CivModel.AI.dll</HintPath>
     </Reference>
     <Reference Include="FSharp.Core.resources">
-      <HintPath>/Users/seungwon/civilization-iii/Assets/Plugins/ko/FSharp.Core.resources.dll</HintPath>
+      <HintPath>/Users/seungwon/Desktop/civilization-iii/Assets/Plugins/ko/FSharp.Core.resources.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Analytics">
       <HintPath>/Users/seungwon/Library/Unity/cache/packages/packages.unity.com/com.unity.analytics@2.0.16/UnityEngine.Analytics.dll</HintPath>

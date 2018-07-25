@@ -117,28 +117,40 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
-	public void UpdateMap() {
-		for (int i = 0; i < _game.Terrain.Width; i++) {
-			for (int j = 0; j < _game.Terrain.Height; j++) {
-				CivModel.Terrain.Point point = _game.Terrain.GetPoint(i, j);
-				HexTile tile = _tiles[i, j].GetComponent<HexTile>();
+    public void UpdateMap()
+    {
+        for (int i = 0; i < _game.Terrain.Width; i++)
+        {
+            for (int j = 0; j < _game.Terrain.Height; j++)
+            {
+                CivModel.Terrain.Point point = _game.Terrain.GetPoint(i, j);
+                HexTile tile = _tiles[i, j].GetComponent<HexTile>();
                 tile.SetPoints(point);
-				tile.SetTerrain();
-				tile.SetBuilding();
+                tile.SetTerrain();
+                tile.SetBuilding();
                 // The earth is round.
-                _additional_tiles[i, j] = _tiles[i, j];
-			}
-		}
-        // Check if there exists quest that has completed.
-        CheckCompletedQuest();
-	}
+                HexTile additional_tile = _additional_tiles[i, j].GetComponent<HexTile>();
+                Vector3 pos = ModelPntToUnityPnt(point, -0.05f);
+                Vector3 ad_pos;
+                if (point.Position.X < _game.Terrain.Width / 2)
+                    ad_pos = new Vector3(pos.x + Mathf.Sqrt(3) * _game.Terrain.Width, pos.y, pos.z);
+                else
+                    ad_pos = new Vector3(pos.x - Mathf.Sqrt(3) * _game.Terrain.Width, pos.y, pos.z);
+                additional_tile.SetPoints(point, ad_pos);
+                additional_tile.SetTerrain();
+                additional_tile.SetBuilding();
+            }
+            // Check if there exists quest that has completed.
+            CheckCompletedQuest();
+        }
+    }
 
     // Unit Postion Fix, Deletion and Insertion
     public void UpdateUnit() {
         List<GameObject> unitToDelete = new List<GameObject>();
-        List<GameObject> additionalUnitToDelete = new List<GameObject>();
 		// POSITION FIX AND DELETETION
 		foreach (GameObject unitGameObject in _units) {
+            GameObject ad_unitGameObject = _additional_units.Find(x => x.name.Equals("Additional" + unitGameObject.name));
 			CivModel.Unit unitModel = unitGameObject.GetComponent<Unit>().unitModel;
 			if (unitModel.Owner == null) {
                 unitToDelete.Add(unitGameObject);
@@ -147,18 +159,25 @@ public class GameManager : MonoBehaviour {
 				if (unitModel.PlacedPoint.HasValue) {
 					var pt = unitModel.PlacedPoint.Value;
 					unitGameObject.GetComponent<Unit>().SetPoints(pt);
-				}
+                    Vector3 pos = ModelPntToUnityPnt(pt, 1.25f);
+                    Vector3 ad_pos;
+                    if (pt.Position.X < _game.Terrain.Width / 2)
+                        ad_pos = new Vector3(pos.x + Mathf.Sqrt(3) * _game.Terrain.Width, pos.y, pos.z);
+                    else
+                        ad_pos = new Vector3(pos.x - Mathf.Sqrt(3) * _game.Terrain.Width, pos.y, pos.z);
+                    ad_unitGameObject.GetComponent<Unit>().SetPoints(pt, ad_pos);
+                }
 			}
 		}
-
         foreach(GameObject unit in unitToDelete) {
             _units.Remove(unit);
             Destroy(unit);
+            GameObject additionalUnitToDelete = _additional_units.Find(x => x.name.Equals("Additional" + unit.name));
+            _additional_units.Remove(additionalUnitToDelete);
+            Destroy(additionalUnitToDelete);
         }
         unitToDelete.Clear();
-
-        //The earth is round
-        _additional_units = new List<GameObject>(_units);
+        
 
 		// INSERTION
 		int plyrIdx = 0;
@@ -176,12 +195,6 @@ public class GameManager : MonoBehaviour {
                     if (unt?.PlacedPoint != null) {
                         var pt = unt.PlacedPoint.Value;
                         Vector3 pos = ModelPntToUnityPnt(pt, 1.25f);
-                        Vector3 ad_pos;
-                        if (pt.Position.X < _game.Terrain.Width / 2)
-                            ad_pos = new Vector3(pos.x + Mathf.Sqrt(3) * _game.Terrain.Width, pos.y, pos.z);
-                        else
-                            ad_pos = new Vector3(pos.x - Mathf.Sqrt(3) * _game.Terrain.Width, pos.y, pos.z);
-
                         GameObject unit = Instantiate(UnitPrefab, pos, Quaternion.identity);
                         unit.name = String.Format("Unit({0},{1})", plyrIdx, untIdx);
                         unit.GetComponent<Unit>().SetPoints(pt, pos);
@@ -189,6 +202,11 @@ public class GameManager : MonoBehaviour {
                         _units.Add(unit);
 
                         //The earth is round.
+                        Vector3 ad_pos;
+                        if (pt.Position.X < _game.Terrain.Width / 2)
+                            ad_pos = new Vector3(pos.x + Mathf.Sqrt(3) * _game.Terrain.Width, pos.y, pos.z);
+                        else
+                            ad_pos = new Vector3(pos.x - Mathf.Sqrt(3) * _game.Terrain.Width, pos.y, pos.z);
                         GameObject ad_unit = Instantiate(UnitPrefab, ad_pos, Quaternion.identity);
                         ad_unit.name = String.Format("AdditionalUnit({0},{1})", plyrIdx, untIdx);
                         ad_unit.GetComponent<Unit>().SetPoints(pt, ad_pos);
