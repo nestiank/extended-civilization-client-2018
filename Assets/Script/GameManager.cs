@@ -23,6 +23,9 @@ public class GameManager : MonoBehaviour {
 	private GameObject[,] _tiles;
 	public GameObject[,] Tiles { get { return _tiles; } }
 
+    private GameObject[,] _additional_tiles;
+    public GameObject[,] AdditionalTiles { get { return _additional_tiles; } }
+
     // Minimap Tiles Instance Singleton
 	public GameObject MinimaptilePrefab;
 	private GameObject[,] _minimap_tiles;
@@ -32,6 +35,8 @@ public class GameManager : MonoBehaviour {
 	public GameObject UnitPrefab;
 	private List<GameObject> _units = new List<GameObject>();
 	public List<GameObject> Units { get { return _units; } }
+    private List<GameObject> _additional_units = new List<GameObject>();
+    public List<GameObject> Additional_Units { get { return _additional_units; } }
 
     // Deploy State Singleton
     private bool _inDepState = false;
@@ -120,14 +125,18 @@ public class GameManager : MonoBehaviour {
                 tile.SetPoints(point);
 				tile.SetTerrain();
 				tile.SetBuilding();
+                // The earth is round.
+                _additional_tiles[i, j] = _tiles[i, j];
 			}
 		}
+        // Check if there exists quest that has completed.
+        CheckCompletedQuest();
 	}
 
     // Unit Postion Fix, Deletion and Insertion
     public void UpdateUnit() {
         List<GameObject> unitToDelete = new List<GameObject>();
-
+        List<GameObject> additionalUnitToDelete = new List<GameObject>();
 		// POSITION FIX AND DELETETION
 		foreach (GameObject unitGameObject in _units) {
 			CivModel.Unit unitModel = unitGameObject.GetComponent<Unit>().unitModel;
@@ -145,10 +154,11 @@ public class GameManager : MonoBehaviour {
         foreach(GameObject unit in unitToDelete) {
             _units.Remove(unit);
             Destroy(unit);
-            Debug.Log("Deleted!");
         }
-
         unitToDelete.Clear();
+
+        //The earth is round
+        _additional_units = new List<GameObject>(_units);
 
 		// INSERTION
 		int plyrIdx = 0;
@@ -166,26 +176,181 @@ public class GameManager : MonoBehaviour {
                     if (unt?.PlacedPoint != null) {
                         var pt = unt.PlacedPoint.Value;
                         Vector3 pos = ModelPntToUnityPnt(pt, 1.25f);
+                        Vector3 ad_pos;
+                        if (pt.Position.X < _game.Terrain.Width / 2)
+                            ad_pos = new Vector3(pos.x + Mathf.Sqrt(3) * _game.Terrain.Width, pos.y, pos.z);
+                        else
+                            ad_pos = new Vector3(pos.x - Mathf.Sqrt(3) * _game.Terrain.Width, pos.y, pos.z);
+
                         GameObject unit = Instantiate(UnitPrefab, pos, Quaternion.identity);
                         unit.name = String.Format("Unit({0},{1})", plyrIdx, untIdx);
                         unit.GetComponent<Unit>().SetPoints(pt, pos);
                         unit.GetComponent<Unit>().unitModel = unt;
                         _units.Add(unit);
+
+                        //The earth is round.
+                        GameObject ad_unit = Instantiate(UnitPrefab, ad_pos, Quaternion.identity);
+                        ad_unit.name = String.Format("AdditionalUnit({0},{1})", plyrIdx, untIdx);
+                        ad_unit.GetComponent<Unit>().SetPoints(pt, ad_pos);
+                        unit.GetComponent<Unit>().unitModel = unt;
+                        _additional_units.Add(ad_unit);
                     }
                 }
+                
                 untIdx++;
             }
             plyrIdx++;
         }
+        // VISIBILITY SET
+        foreach (GameObject unitGameObject in _units) {
+            if ((unitGameObject.GetComponent<Unit>().unitModel is CivModel.Hwan.Spy) || (unitGameObject.GetComponent<Unit>().unitModel is CivModel.Finno.Spy)) {
+                if (unitGameObject.GetComponent<Unit>().unitModel.Owner != Game.PlayerInTurn) {
+                    if (!IsSpyNear(unitGameObject.GetComponent<Unit>().unitModel.PlacedPoint.Value.Position)) {
+                        unitGameObject.GetComponent<Renderer>().enabled = false;
+                    }
+                }
+                else {
+                    unitGameObject.GetComponent<Renderer>().enabled = true;
+                }
+            }
+        }
+
+        //The earth is round.   
+        foreach (GameObject ad_unitGameObject in _additional_units)
+        {
+            if (ad_unitGameObject.GetComponent<Unit>().unitModel is CivModel.Hwan.Spy || ad_unitGameObject.GetComponent<Unit>().unitModel is CivModel.Finno.Spy)
+            {
+                if (ad_unitGameObject.GetComponent<Unit>().unitModel.Owner != Game.PlayerInTurn)
+                    if (!IsSpyNear(ad_unitGameObject.GetComponent<Unit>().unitModel.PlacedPoint.Value.Position))
+                        ad_unitGameObject.GetComponent<Renderer>().enabled = false;
+                    else
+                        ad_unitGameObject.GetComponent<Renderer>().enabled = true;
+            }
+        }
         // Check if there exists action to do to end turn.
         CheckToDo();
+        // Check if there exists quest that has completed.
+        CheckCompletedQuest();
+    }
+
+    bool IsSpyNear(CivModel.Position pt) {
+        int A = pt.A;
+        int B = pt.B;
+        int C = pt.C;
+        // in range 1
+        if (CheckSpy(A + 1, B - 1, C))
+            return true;
+        if (CheckSpy(A + 1, B, C - 1))
+            return true;
+        if (CheckSpy(A, B + 1, C - 1))
+            return true;
+        if (CheckSpy(A - 1, B + 1, C))
+            return true;
+        if (CheckSpy(A - 1, B, C + 1))
+            return true;
+        if (CheckSpy(A, B - 1, C + 1))
+            return true;
+
+        // in range 2
+        if (CheckSpy(A + 2, B - 2, C))
+            return true;
+        if (CheckSpy(A + 2, B - 1, C - 1))
+            return true;
+        if (CheckSpy(A + 2, B, C - 2))
+            return true;
+        if (CheckSpy(A + 1, B + 1, C - 2))
+            return true;
+        if (CheckSpy(A, B + 2, C - 2))
+            return true;
+        if (CheckSpy(A - 1, B + 2, C - 1))
+            return true;
+        if (CheckSpy(A - 2, B + 2, C))
+            return true;
+        if (CheckSpy(A - 2, B + 1, C + 1))
+            return true;
+        if (CheckSpy(A - 2, B, C + 2))
+            return true;
+        if (CheckSpy(A - 1, B - 1, C + 2))
+            return true;
+        if (CheckSpy(A, B - 2, C + 2))
+            return true;
+        if (CheckSpy(A + 1, B - 2, C + 1))
+            return true;
+
+        // in range 3
+        if (CheckSpy(A + 3, B - 3, C))
+            return true;
+        if (CheckSpy(A + 3, B - 2, C - 1))
+            return true;
+        if (CheckSpy(A + 3, B - 1, C - 2))
+            return true;
+        if (CheckSpy(A + 3, B, C - 3))
+            return true;
+        if (CheckSpy(A + 2, B + 1, C - 3))
+            return true;
+        if (CheckSpy(A + 1, B + 2, C - 3))
+            return true;
+        if (CheckSpy(A, B + 3, C - 3))
+            return true;
+        if (CheckSpy(A - 1, B + 3, C - 2))
+            return true;
+        if (CheckSpy(A - 2, B + 3, C - 1))
+            return true;
+        if (CheckSpy(A - 3, B + 3, C))
+            return true;
+        if (CheckSpy(A - 3, B + 2, C + 1))
+            return true;
+        if (CheckSpy(A - 3, B + 1, C + 2))
+            return true;
+        if (CheckSpy(A - 3, B, C + 3))
+            return true;
+        if (CheckSpy(A - 2, B - 1, C + 3))
+            return true;
+        if (CheckSpy(A - 1, B - 2, C + 3))
+            return true;
+        if (CheckSpy(A, B - 3, C + 3))
+            return true;
+        if (CheckSpy(A + 1, B - 3, C + 2))
+            return true;
+        if (CheckSpy(A + 2, B - 3, C + 1))
+            return true;
+
+        return false;
+    }
+
+    // Check spy by point
+    bool CheckSpy(int A, int B, int C){
+        if (C < 0 || C >= Game.Terrain.Height)
+            return false;
+        if (0 <= B + (C + Math.Sign(C)) / 2 && B + (C + Math.Sign(C)) / 2 < Game.Terrain.Width) {
+            if(Game.Terrain.GetPoint(A,B,C).Unit != null) {
+                if (Game.Terrain.GetPoint(A, B, C).Unit is CivModel.Hwan.Spy || Game.Terrain.GetPoint(A, B, C).Unit is CivModel.Finno.Spy) {
+                    if (Game.Terrain.GetPoint(A, B, C).Unit.Owner != Game.PlayerInTurn)
+                        return true;
+                }
+            }
+        }
+        else {
+            A = A - Game.Terrain.Width;
+            B = B + Game.Terrain.Width;
+            if (Game.Terrain.GetPoint(A, B, C).Unit != null)
+            {
+                if (Game.Terrain.GetPoint(A, B, C).Unit is CivModel.Hwan.Spy || Game.Terrain.GetPoint(A, B, C).Unit is CivModel.Finno.Spy)
+                {
+                    if (Game.Terrain.GetPoint(A, B, C).Unit.Owner != Game.PlayerInTurn)
+                        return true;
+                }
+            }
+        }
+
+        return false;
     }
 
 
     // Initialize Tile Map
 	private void InitiateMap() {
 		_tiles = new GameObject[_game.Terrain.Width, _game.Terrain.Height];
-
+        _additional_tiles = new GameObject[_game.Terrain.Width, _game.Terrain.Height];
 		for (int i = 0; i < _game.Terrain.Width; i++) {
 			for (int j = 0; j < _game.Terrain.Height; j++) {
 
@@ -197,7 +362,29 @@ public class GameManager : MonoBehaviour {
                 _tiles[i, j].GetComponent<HexTile>().SetPoints(pnt, pos);
 			}
 		}
-	}
+
+        // The earth is round.
+        for(int i = 0; i < _game.Terrain.Width; i++)
+            for(int j = 0; j < _game.Terrain.Height; j++)
+            {
+                if(i < _game.Terrain.Width / 2)
+                {
+                    Vector3 pos = ModelPntToUnityPnt(i + _game.Terrain.Width, j, -0.05f);
+                    _additional_tiles[i, j] = Instantiate(HextilePrefab, pos, Quaternion.identity);
+                    _additional_tiles[i, j].name = String.Format("AdditionalTile({0},{1})", i, j);
+                    CivModel.Terrain.Point pnt = _game.Terrain.GetPoint(i, j);
+                    _additional_tiles[i, j].GetComponent<HexTile>().SetPoints(pnt, pos);
+                }
+                else
+                {
+                    Vector3 pos = ModelPntToUnityPnt(i - _game.Terrain.Width, j, -0.05f);
+                    _additional_tiles[i, j] = Instantiate(HextilePrefab, pos, Quaternion.identity);
+                    _additional_tiles[i, j].name = String.Format("AdditionalTile({0},{1})", i, j);
+                    CivModel.Terrain.Point pnt = _game.Terrain.GetPoint(i, j);
+                    _additional_tiles[i, j].GetComponent<HexTile>().SetPoints(pnt, pos);
+                }
+            }
+    }
 
     // Initialize Minimap Tile
 	private void InitiateMiniMap() {
@@ -225,11 +412,23 @@ public class GameManager : MonoBehaviour {
 				if(unt?.PlacedPoint != null) {
 					var pt = unt.PlacedPoint.Value;
 					Vector3 pos = ModelPntToUnityPnt(pt, 1.25f);
+                    
+                    Vector3 ad_pos;
+                    if (pt.Position.X < _game.Terrain.Width / 2)
+                        ad_pos = new Vector3(pos.x + Mathf.Sqrt(3) * _game.Terrain.Width, pos.y, pos.z);
+                    else
+                        ad_pos = new Vector3(pos.x - Mathf.Sqrt(3) * _game.Terrain.Width, pos.y, pos.z);
+                    
 					GameObject unit = Instantiate(UnitPrefab, pos, Quaternion.identity);
-					unit.name = String.Format("[{0},{1}]", plyrIdx, untIdx);
+                    GameObject additional_unit = Instantiate(UnitPrefab, ad_pos, Quaternion.identity);
+					unit.name = String.Format("Unit({0},{1})", plyrIdx, untIdx);
+                    additional_unit.name = String.Format("AdditionalUnit({0},{1})", plyrIdx, untIdx);
 					unit.GetComponent<Unit>().SetPoints(pt, pos);
+                    additional_unit.GetComponent<Unit>().SetPoints(pt, ad_pos);
                     unit.GetComponent<Unit>().unitModel = unt;
+                    additional_unit.GetComponent<Unit>().unitModel = unt;
 					_units.Add(unit);
+                    _additional_units.Add(additional_unit);
 				}
 				untIdx++;
 			}
@@ -416,5 +615,57 @@ public class GameManager : MonoBehaviour {
         GameManager.Instance.UpdateUnit();
         GameManager.Instance.UpdateMap();
     }
+
+    // Check if there exist quest that have finished.
+    public void CheckCompletedQuest()
+    {
+        List<Quest> AlarmedQuests = new List<Quest>();
+        foreach (Quest qst in GameManager.Instance.Game.PlayerInTurn.Quests)
+        {
+            switch (qst.Status)
+            {
+                case QuestStatus.Completed:
+                    if (!AlarmedQuests.Contains(qst))
+                    {
+                        Sprite questPortrait = QuestInfo.GetPortraitImage(qst);
+                        AlarmManager.Instance.AddAlarm(questPortrait,
+                                                       qst.Name + " 완료됨",
+                                                       delegate {
+                                                           UIManager.Instance.mapUI.SetActive(false);
+                                                           UIManager.Instance.questUI.SetActive(true);
+                                                       },
+                                                       0);
+                        AlarmedQuests.Add(qst);
+                    }
+                    break;
+            }
+        }
+    }
+
+    // Check if there exist production that have finished.
+    public void CheckCompletedProduction()
+    {
+        List<Production> AlarmedProduction = new List<Production>();
+
+        foreach (Production prod in GameManager.Instance.Game.PlayerInTurn.Deployment)
+        {
+            if (!AlarmedProduction.Contains(prod))
+            {
+                Sprite prodPortrait = Resources.Load<Sprite>("Portraits/" + ProductionFactoryTraits.GetFacPortName(prod.Factory));
+                AlarmManager.Instance.AddAlarm(prodPortrait,
+                                               ProductionFactoryTraits.GetFactoryName(prod.Factory) + " 배치 가능",
+                                               delegate {
+                                                   UIManager.Instance.mapUI.SetActive(false);
+                                                   UIManager.Instance.managementUI.SetActive(true);
+                                               },
+                                               0);
+                AlarmedProduction.Add(prod);
+            }
+        }
+
+        // If you do not want to re-alarm production, Comment this line.
+        AlarmedProduction.Clear();
+    }
+
 
 }

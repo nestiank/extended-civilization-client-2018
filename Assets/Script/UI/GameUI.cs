@@ -107,6 +107,10 @@ public class GameUI : MonoBehaviour {
             GameManager.Instance.UpdateMap();
             GameManager.Instance.UpdateUnit();
             UIManager.Instance.ButtonInteractChange();
+
+            AlarmManager.Instance.updateAlarmQueue();
+            GameManager.Instance.CheckCompletedProduction();
+            //AlarmManager.Instance.AddAlarm(null, "HI", null, 0);
         }
     }
 }

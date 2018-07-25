@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class CameraControl : MonoBehaviour {
 
@@ -17,6 +18,7 @@ public class CameraControl : MonoBehaviour {
 
     public GameObject QuestUI;
     public GameObject ManagementUI;
+    public GameObject MapUI;
 
 	// Use this for initialization
 	void Start () {
@@ -24,18 +26,20 @@ public class CameraControl : MonoBehaviour {
 	}
 
     // Update is called once per frame
-    void Update() {
+    void Update()
+    {
 
         if (Camera.main.transform.position.x < 0)
-            Camera.main.transform.position = new Vector3(215, Camera.main.transform.position.y, Camera.main.transform.position.z);
-        if (Camera.main.transform.position.x > 220)
-            Camera.main.transform.position = new Vector3(5, Camera.main.transform.position.y, Camera.main.transform.position.z);
+            Camera.main.transform.position = new Vector3(Camera.main.transform.position.x + Mathf.Sqrt(3) * GameManager.Instance.Game.Terrain.Width, Camera.main.transform.position.y, Camera.main.transform.position.z);
+        if (Camera.main.transform.position.x > Mathf.Sqrt(3) * GameManager.Instance.Game.Terrain.Width)
+            Camera.main.transform.position = new Vector3(Camera.main.transform.position.x - Mathf.Sqrt(3) * GameManager.Instance.Game.Terrain.Width, Camera.main.transform.position.y, Camera.main.transform.position.z);
 
         if (!QuestUI.activeSelf && !ManagementUI.activeSelf)
         {
             if (Input.GetAxis("Mouse ScrollWheel") < 0 && Camera.main.transform.position.y < MaxHeight)
             {
-                Camera.main.transform.Translate(0, 0, -10);
+                if (!EventSystem.current.IsPointerOverGameObject())
+                    Camera.main.transform.Translate(0, 0, -10);
             }
             else if (Camera.main.transform.position.y > MaxHeight)
             {
@@ -44,51 +48,69 @@ public class CameraControl : MonoBehaviour {
 
             if (Input.GetAxis("Mouse ScrollWheel") > 0 && Camera.main.transform.position.y > MinHeight)
             {
-                Camera.main.transform.Translate(0, 0, 10);
+                if (!EventSystem.current.IsPointerOverGameObject())
+                    Camera.main.transform.Translate(0, 0, 10);
             }
             else if (Camera.main.transform.position.y < MinHeight)
             {
                 Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, MinHeight, Camera.main.transform.position.z);
             }
         }
-        
 
-        if (Input.mousePosition.x > screen_width - boundary && !Input.GetMouseButton(0)) {
-            if (Camera.main.transform.position.x <= 220)
-                Camera.main.transform.Translate(5 * speed * Time.deltaTime, 0, 0);
+
+        if (Input.mousePosition.x > screen_width - boundary && !Input.GetMouseButton(0))
+            Camera.main.transform.Translate(5 * speed * Time.deltaTime, 0, 0);
+
+        if (Input.mousePosition.x < 0 + boundary && !Input.GetMouseButton(0))
+            Camera.main.transform.Translate(-5 * speed * Time.deltaTime, 0, 0);
+
+
+
+        if (Input.mousePosition.y > screen_height - boundary && !Input.GetMouseButton(0))
+        {
+            if (Camera.main.transform.position.z < -10 - (Camera.main.transform.position.y - 10) / Mathf.Sqrt(3))
+                Camera.main.transform.Translate(0, 3 * speed * Time.deltaTime * Mathf.Sqrt(3), 3 * speed * Time.deltaTime);
         }
-
-		if (Input.mousePosition.x < 0 + boundary && !Input.GetMouseButton(0)) {
-            if(Camera.main.transform.position.x >= 0)
-			    Camera.main.transform.Translate(-5 * speed * Time.deltaTime, 0, 0);
-        }
-
-
-
-		if (Input.mousePosition.y > screen_height - boundary && !Input.GetMouseButton(0)) {
-            if(Camera.main.transform.position.z < -10 - (Camera.main.transform.position.y - 10) / Mathf.Sqrt(3))
-			    Camera.main.transform.Translate(0 , 3 * speed * Time.deltaTime * Mathf.Sqrt(3), 3 * speed * Time.deltaTime);
-        }
-        else if(Camera.main.transform.position.z > -10 - (Camera.main.transform.position.y - 10) / Mathf.Sqrt(3))
+        else if (Camera.main.transform.position.z > -10 - (Camera.main.transform.position.y - 10) / Mathf.Sqrt(3))
             Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, -10 - (Camera.main.transform.position.y - 10) / Mathf.Sqrt(3));
 
 
 
-        if (Input.mousePosition.y < 0 + boundary && !Input.GetMouseButton(0)) {
+        if (Input.mousePosition.y < 0 + boundary && !Input.GetMouseButton(0))
+        {
             if (Camera.main.transform.position.z > -120)
                 Camera.main.transform.Translate(0, -3 * speed * Time.deltaTime * Mathf.Sqrt(3), -3 * speed * Time.deltaTime);
         }
-        else if(Camera.main.transform.position.z < -120)
+        else if (Camera.main.transform.position.z < -120)
             Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, -120);
 
-        if(Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
         {
             mouse_position = new Vector3(Input.GetAxis("Mouse X"), 0, Input.GetAxis("Mouse Y"));
             Camera.main.transform.position -= mouse_position;
         }
-        
+
+        if (is_mouse_on_minimap() && MapUI.activeSelf)
+        {
+            float adjust_by_zoom;
+            adjust_by_zoom = 24.5f - (2 - ViewFieldSquareControl.ViewInstance.zoom_counter) * 6;
+            
+            if (Input.GetMouseButton(0))
+            {
+                Camera.main.transform.position = new Vector3(
+                    (0 + 220 * (Input.mousePosition.x - (705 * Screen.width / 1022)) / (315 * Screen.width / 1022)),
+                    Camera.main.transform.position.y,
+                    (-120f + 99 * Input.mousePosition.y / (150 * Screen.height / 639) - adjust_by_zoom)
+                    );
+            }
+        }
+    }
+    public bool is_mouse_on_minimap()
+    {
+        if (Input.mousePosition.x > 705 * Screen.width / 1022 && Input.mousePosition.x < Screen.width && Input.mousePosition.y > 0 && Input.mousePosition.y < 170 * Screen.height / 639)
+            return true;
+        else
+            return false;
     }
 }
-
-
 

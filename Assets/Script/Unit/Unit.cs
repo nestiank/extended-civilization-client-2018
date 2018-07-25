@@ -264,8 +264,35 @@ public class Unit : MonoBehaviour
         // If SpecialActs[_currentSkill] is not parametered skill, this skill is immediately activated.
         if (!GameManager.Instance.selectedActor.SpecialActs[_currentSkill].IsParametered)
         {
-            GameManager.Instance.selectedActor.SpecialActs[_currentSkill].Act(null);
-            GameManager.Instance.UpdateUnit();
+            if (GameManager.Instance.selectedActor.SpecialActs[_currentSkill].IsActable(null))
+            {
+                //if spy
+                if(unitModel is CivModel.Hwan.Spy || unitModel is CivModel.Finno.Spy)
+                {
+                    CivModel.Player SpiedPlayer = unitModel.PlacedPoint.Value.TileOwner;
+                    // 금 정보
+                    double gold = SpiedPlayer.Gold;
+                    double goldTurn = SpiedPlayer.GoldIncome;
+                    // 인구 정보
+                    double population = SpiedPlayer.Population;
+                    // 행복도 정보
+                    double happiness = SpiedPlayer.Happiness;
+                    double happinessTurn = SpiedPlayer.HappinessIncome;
+                    // 기술력 정보
+                    double research = SpiedPlayer.Research;
+                    double researchTurn = SpiedPlayer.ResearchIncome;
+                    // 노동력 정보
+                    double labor = SpiedPlayer.Labor;
+
+                    string text = "금: "+gold+"\n(턴당 "+goldTurn+")\n"+"인구: "+population+"\n"+"행복: "+happiness+"\n(턴당 "+happinessTurn+")\n"+"기술력: "+research+"\n(턴당 "+researchTurn+")\n"+"노동력: "+labor;
+
+                    AlarmManager.Instance.AddAlarm(null, text, null, 0);
+                }
+                // 공통적인 부분
+                GameManager.Instance.selectedActor.SpecialActs[_currentSkill].Act(null);
+                GameManager.Instance.UpdateUnit();
+            }
+            _inSkillState = false;
             return;
         }
         else

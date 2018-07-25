@@ -248,8 +248,9 @@ public class ProductionFactoryTraits : MonoBehaviour {
                 result = "ZapNinja";
                 break;
 
-            // 0. City
-            case "CityCenterProductionFactory":
+            // DEPRECATED
+
+            case "CityCenterProductionFactory": // 도심부
                 {
                     if (Factory.ToString().Split(sep)[1].Equals("Hwan"))
                         result = "City Buildings/hwan_city";
@@ -259,15 +260,7 @@ public class ProductionFactoryTraits : MonoBehaviour {
 
                 }
                 break;
-            case "HwanEmpireCityProductionFactory": // NEEDS WORK
-                result = "HwanEmpireCity";
-                break;
 
-            case "FinnoEmpireCityProductionFactory": // NEEDS WORK
-                result = "FinnoEmpireCity";
-                break;
-
-			// 1. City Buildings
             case "FactoryBuildingProductionFactory": // 공장
                 {
                     if (Factory.ToString().Split(sep)[1].Equals("Hwan"))
@@ -289,11 +282,22 @@ public class ProductionFactoryTraits : MonoBehaviour {
                 }
                 break;
 
-            case "HwanEmpireCityCentralLabProductionFactory": // 환제국도시연구소 NEEDS WORK
-                result = "HwanEmpireCityCentralLab";
+            // 0. City
+            case "HwanEmpireCityProductionFactory": // 환 제국 도시
+                result = "hwan_empire_city";
                 break;
 
-            case "HwanEmpireFIRFactoryProductionFactory": // 5차산업혁명공장 NEEDS WORK
+            case "FinnoEmpireCityProductionFactory": // 피도 제국 도시
+                result = "finno_empire_city";
+                break;
+
+			// 1. City Buildings
+
+            case "HwanEmpireCityCentralLabProductionFactory": // 환제국도시연구소
+                result = "City Buildings/hwan_city_lab";
+                break;
+
+            case "HwanEmpireFIRFactoryProductionFactory": // 5차산업혁명공장
                 result = "City Buildings/hwan_factory";
                 break;
 
@@ -337,14 +341,16 @@ public class ProductionFactoryTraits : MonoBehaviour {
             case "AncientFinnoOctagonProductionFactory": // 옥타곤
                 result = "Normal Buildings/finno_ocatagon";
                 break;
-            
+            case "PreternaturalityProductionFactory": // 불가사의
+                result = "Normal Buildings/wonders";
+                break;
             case "CasinoProductionFactory": // 카지노
                 result = "Casino";
                 break;
-            
             case "ZapFactoryBuildingProductionFactory": // 잡국 공장
                 result = "ZapFactoryBuilding";
                 break;
+
             default:
                 result = "unknown : " + name;
                 Debug.Log(result);

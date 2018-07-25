@@ -55,13 +55,30 @@ GameObject:
   - component: {fileID: 224678099103924212}
   - component: {fileID: 114166279479683586}
   - component: {fileID: 114629431975265818}
+  - component: {fileID: 114099225236326680}
   m_Layer: 5
   m_Name: AlarmContent
-  m_TagString: Untagged
-  m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
+  m_TagString: AlarmContent
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &114099225236326680
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1957132441411150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad7a7b42447fe43ddb5bd583fa07c3e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  alarmImage: {fileID: 0}
+  alarmText: 
+  leftTurn: 0
+  imageAlarm: {fileID: 114330478525383744}
+  textAlarm: {fileID: 114488961626476080}
 --- !u!114 &114166279479683586
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -151,15 +168,15 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 12800000, guid: d716ac8e5646a55448ac141489d12c16, type: 3}
-    m_FontSize: 14
-    m_FontStyle: 0
+    m_FontSize: 18
+    m_FontStyle: 1
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 0
     m_MaxSize: 40
     m_Alignment: 5
     m_AlignByGeometry: 0
     m_RichText: 1
-    m_HorizontalOverflow: 1
+    m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: Quest Completed!
@@ -232,7 +249,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -1.6677806e+38}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!224 &224712891025248912

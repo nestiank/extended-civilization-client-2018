@@ -13,6 +13,7 @@ public class ProductablePrefab : MonoBehaviour {
     private Text[] textarguments;
     private Image unitPrt;
     private Button[] buttons;
+    private int numberToProduce = 1;
 
     void Awake()
     {
@@ -53,7 +54,7 @@ public class ProductablePrefab : MonoBehaviour {
                     txt.text = nameofFactory;
                     break;
                 case "NumberOfUnits":
-                    txt.text = "X 1";
+                    txt.text = "X " + numberToProduce.ToString();
                     break;
             }
         }
@@ -93,15 +94,50 @@ public class ProductablePrefab : MonoBehaviour {
                 case "Deploy":
                     but.onClick.AddListener(delegate () { ProduceItem(fac); });
                     break;
+                case "Up":
+                    but.onClick.AddListener(delegate () { IncreseProduction(); });
+                    break;
+                case "Down":
+                    but.onClick.AddListener(delegate () { DecreaseProduction(); });
+                    break;
+            }
+        }
+    }
+    private void IncreseProduction()
+    {
+        numberToProduce++;
+        foreach (Text txt in textarguments)
+        {
+            switch (txt.name)
+            {
+                case "NumberOfUnits":
+                    txt.text = "X " + numberToProduce.ToString();
+                    break;
+            }
+        }
+    }
+    private void DecreaseProduction()
+    {
+        if (numberToProduce <= 1)
+            return;
+        numberToProduce--;
+        foreach (Text txt in textarguments)
+        {
+            switch (txt.name)
+            {
+                case "NumberOfUnits":
+                    txt.text = "X " + numberToProduce.ToString();
+                    break;
             }
         }
     }
 
     private void ProduceItem(IProductionFactory fac)
     {
-        GameManager.Instance.Game.PlayerInTurn.Production.AddLast(fac.Create(GameManager.Instance.Game.PlayerInTurn));
-
-        //Debug.Log(i + " inputed");
+        for (int i = 0; i < numberToProduce; i++)
+        {
+            GameManager.Instance.Game.PlayerInTurn.Production.AddLast(fac.Create(GameManager.Instance.Game.PlayerInTurn));
+        }
         uicontroller.MakeProductionQ();
         uicontroller.MakeDeploymentQ();
     }
