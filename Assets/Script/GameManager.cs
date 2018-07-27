@@ -66,6 +66,9 @@ public class GameManager : MonoBehaviour {
 
     public bool isThereTodos = false;
 
+    // Indicates whether Maptile or AdditionalMapTile is clicked.
+    public bool isAdClicked = true;
+
 	void Awake() {
 		// Singleton
 		if (_manager != null) {
@@ -574,7 +577,8 @@ public class GameManager : MonoBehaviour {
                 CivModel.Terrain.Point point = terrain.GetPoint(i, j);
                 if (dep.IsPlacable(point))
                 {
-                   Instance.Tiles[point.Position.X, point.Position.Y].GetComponent<HexTile>().FlickerBlue();
+                    Instance.Tiles[point.Position.X, point.Position.Y].GetComponent<HexTile>().FlickerBlue();
+                    Instance.AdditionalTiles[point.Position.X, point.Position.Y].GetComponent<HexTile>().FlickerBlue();
                 }
             }
         }
@@ -628,6 +632,7 @@ public class GameManager : MonoBehaviour {
             {
                 CivModel.Terrain.Point point = terrain.GetPoint(i, j);
                 Instance.Tiles[point.Position.X, point.Position.Y].GetComponent<HexTile>().StopFlickering();
+                Instance.AdditionalTiles[point.Position.X, point.Position.Y].GetComponent<HexTile>().StopFlickering();
             }
         }
         GameManager.Instance.UpdateUnit();

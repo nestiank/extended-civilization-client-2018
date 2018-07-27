@@ -103,11 +103,13 @@ public class Unit : MonoBehaviour
                 {
                     CivModel.Position pos = _parameterPoints[i].Value.Position;
                     GameManager.Instance.Tiles[pos.X, pos.Y].GetComponent<HexTile>().FlickerRed();
+                    GameManager.Instance.AdditionalTiles[pos.X, pos.Y].GetComponent<HexTile>().FlickerRed();
                 }
                 else if (GameManager.Instance.selectedActor.MoveAct != null && GameManager.Instance.selectedActor.MoveAct.IsActable(_parameterPoints[i]))
                 {
                     CivModel.Position pos = _parameterPoints[i].Value.Position;
                     GameManager.Instance.Tiles[pos.X, pos.Y].GetComponent<HexTile>().FlickerBlue();
+                    GameManager.Instance.AdditionalTiles[pos.X, pos.Y].GetComponent<HexTile>().FlickerBlue();
                 }
                 else
                 {
@@ -177,6 +179,7 @@ public class Unit : MonoBehaviour
             {
                 CivModel.Position pos = _parameterPoints[i].Value.Position;
                 GameManager.Instance.Tiles[pos.X, pos.Y].GetComponent<HexTile>().StopFlickering();
+                GameManager.Instance.AdditionalTiles[pos.X, pos.Y].GetComponent<HexTile>().StopFlickering();
             }
         }
         _parameterPoints = null;
@@ -212,6 +215,7 @@ public class Unit : MonoBehaviour
                 {
                     CivModel.Position pos = _parameterPoints[i].Value.Position;
                     GameManager.Instance.Tiles[pos.X, pos.Y].GetComponent<HexTile>().FlickerRed();
+                    GameManager.Instance.AdditionalTiles[pos.X, pos.Y].GetComponent<HexTile>().FlickerRed();
                     Debug.Log(pos.X + " " + pos.Y + " Filcker Red");
                 }
                 else
@@ -314,6 +318,7 @@ public class Unit : MonoBehaviour
                         CivModel.Position pos = pnt.Value.Position;
                         // Debug.Log("Skill @ ( " + pos.X + " ," + pos.Y + " )");
                         GameManager.Instance.Tiles[pos.X, pos.Y].GetComponent<HexTile>().FlickerBlue();
+                        GameManager.Instance.AdditionalTiles[pos.X, pos.Y].GetComponent<HexTile>().FlickerBlue();
                         _skillParameterPoints.Add(pnt.Value);
                     }
                 }
@@ -376,6 +381,7 @@ public class Unit : MonoBehaviour
         {
             CivModel.Position pos = pnt.Position;
             GameManager.Instance.Tiles[pos.X, pos.Y].GetComponent<HexTile>().StopFlickering();
+            GameManager.Instance.AdditionalTiles[pos.X, pos.Y].GetComponent<HexTile>().StopFlickering();
         }
         _skillParameterPoints.Clear();
     }

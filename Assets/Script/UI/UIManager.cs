@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using CivModel;
 using CivModel.Common;
+using System.Text.RegularExpressions;
 
 public class UIManager : MonoBehaviour
 {
@@ -56,10 +57,10 @@ public class UIManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        mapUI = GameObject.Find("MapUI");
+        /*mapUI = GameObject.Find("MapUI");
         managementUI = GameObject.Find("ManagementUI");
         questUI = GameObject.Find("QuestUI");
-        SpecialSpec = GameObject.Find("SpecialSpec");
+        SpecialSpec = GameObject.Find("SpecialSpec");*/
         skillSet = GameObject.Find("Skill Set");
         unitInfo = GameObject.Find("UnitInfo");
         UnitPortrait = GameObject.Find("Portrait").GetComponent<Image>();
@@ -75,6 +76,8 @@ public class UIManager : MonoBehaviour
         questUI.SetActive(false);
         SpecialSpec.SetActive(false);
         skillSet.SetActive(false);
+        mapUI.transform.GetChild(1).gameObject.SetActive(false);
+        
     }
 
     // Update is called once per frame
@@ -89,14 +92,22 @@ public class UIManager : MonoBehaviour
             {
                 selectedActor = hit.transform.gameObject;
                 HexTile tile = selectedActor.GetComponent<HexTile>();
-
+                Debug.Log("A: " + selectedActor.name);
                 // Update selectedTile
                 GameManager.Instance.selectedTile = tile;
                 // Update selectedPoint using tile information
                 GameManager.Instance.selectedPoint = tile.point;
 
+                Match isAdditionalclicked = Regex.Match(selectedActor.name, "Additional");
+
+                if (isAdditionalclicked.Success)
+                    GameManager.Instance.isAdClicked = true;
+                else
+                    GameManager.Instance.isAdClicked = false;
+                
                 if (tile.point.Unit != null && tile.point.TileBuilding != null)
                 {
+                    
                     if (tile.isFirstClick)
                     {
                         GameManager.Instance.selectedActor = tile.point.Unit;
@@ -141,8 +152,13 @@ public class UIManager : MonoBehaviour
            
         }
         if(SpecialSpec.activeSelf == true)
-        {
             SpecialSpec.transform.position = Input.mousePosition;
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            managementUI.SetActive(false);
+            questUI.SetActive(false);
+            mapUI.SetActive(true);
         }
     }
     // Set Unit Information
