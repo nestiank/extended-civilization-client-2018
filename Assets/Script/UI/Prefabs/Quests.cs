@@ -55,6 +55,7 @@ public class Quests : MonoBehaviour {
 					img.enabled = true;
 					break;
 				case "ResourceImage":
+                    img.sprite = ResourceInfo.GetResourceSprite(quest);
 					img.enabled = true;
 					break;
 			}
@@ -159,6 +160,7 @@ public class Quests : MonoBehaviour {
 					img.enabled = true;
 					break;
 				case "ResourceImage":
+                    img.sprite = ResourceInfo.GetResourceSprite(quest);
 					img.enabled = true;
 					break;
 			}
@@ -252,6 +254,7 @@ public class Quests : MonoBehaviour {
 					img.enabled = true;
 					break;
 				case "ResourceImage":
+                    img.sprite = ResourceInfo.GetResourceSprite(quest);
 					img.enabled = true;
 					break;
 			}

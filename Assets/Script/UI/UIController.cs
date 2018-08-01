@@ -55,7 +55,7 @@ public class UIController : MonoBehaviour {
 		List<GameObject> tempAList = new List<GameObject>();
 		List<GameObject> tempCList = new List<GameObject>();
 
-		Debug.Log("QuestQueue making");
+		// Debug.Log("QuestQueue making");
 		foreach (GameObject item in DQQlist) {
 			Destroy(item);
 		}

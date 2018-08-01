@@ -4,10 +4,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using CivModel;
 using System.Threading.Tasks;
+using System;
 
 public class GameUI : MonoBehaviour {
 
     public GameObject mapUI;
+    public GameObject EndTurn;
     public Text goldText, populationText, happinessText, researchText, laborText;
 
     private UIController uicontroller;
@@ -16,7 +18,7 @@ public class GameUI : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        mapUI = GameObject.Find("MapUI");
+        //mapUI = GameObject.Find("MapUI");
         uicontroller = UIController.GetUIController();
         managementcontroller = ManagementController.GetManagementController();
         specialResourceView = SpecialResourceView.GetSpecialResourceView();
@@ -26,23 +28,23 @@ public class GameUI : MonoBehaviour {
 	void Update () {
         if (GameManager.Instance.Game.PlayerInTurn.IsAIControlled)
         {
-            mapUI.transform.Find("EndTurn").GetComponentInChildren<Button>().enabled = false;
-            mapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().text = "다른 플레이어가 턴 진행 중입니다.\n잠시만 기다려 주십시오.";
-            mapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().fontSize = 20;
+            EndTurn.GetComponentInChildren<Button>().enabled = false;
+            EndTurn.GetComponentInChildren<Text>().text = "다른 플레이어가 턴 진행 중입니다.\n잠시만 기다려 주십시오.";
+            EndTurn.GetComponentInChildren<Text>().fontSize = 20;
         }
         else
         {
-            mapUI.transform.Find("EndTurn").GetComponentInChildren<Button>().enabled = true;
+            EndTurn.GetComponentInChildren<Button>().enabled = true;
 
             if (GameManager.Instance.isThereTodos)
             {
-                mapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().text = "유닛이 명령을 기다리고 있습니다";
-                mapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().fontSize = 40;
+                EndTurn.GetComponentInChildren<Text>().text = "유닛이 명령을 기다리고 있습니다";
+                EndTurn.GetComponentInChildren<Text>().fontSize = 30;
             }
             else
             {
-                mapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().text = "다음 턴";
-                mapUI.transform.Find("EndTurn").GetComponentInChildren<Text>().fontSize = 40;
+                EndTurn.GetComponentInChildren<Text>().text = "다음 턴";
+                EndTurn.GetComponentInChildren<Text>().fontSize = 40;
             }
 
             updatePanel();
@@ -51,23 +53,25 @@ public class GameUI : MonoBehaviour {
 
     public void updatePanel()
     {
+        GameManager.Instance.Game.PlayerInTurn.EstimateResourceInputs();
+
         double gold = GameManager.Instance.Game.PlayerInTurn.Gold;
-        double goldTurn = GameManager.Instance.Game.PlayerInTurn.GoldIncome;
-        goldText.text = "금: " + gold + "\n(턴당 " + goldTurn + ")";
+        double goldTurn = GameManager.Instance.Game.PlayerInTurn.GoldNetIncome;
+        goldText.text = Math.Round(gold, 2) + "\n(턴당 " + Math.Round(goldTurn, 2) + ")";
 
         double population = GameManager.Instance.Game.PlayerInTurn.Population;
-        populationText.text = "인구: " + population;
+        populationText.text = population.ToString();
 
         double happiness = GameManager.Instance.Game.PlayerInTurn.Happiness;
         double happinessTurn = GameManager.Instance.Game.PlayerInTurn.HappinessIncome;
-        happinessText.text = "행복: " + happiness + "\n(턴당 " + happinessTurn + ")";
+        happinessText.text = happiness + "\n(턴당 " + happinessTurn + ")";
 
         double research = GameManager.Instance.Game.PlayerInTurn.Research;
         double researchTurn = GameManager.Instance.Game.PlayerInTurn.ResearchIncome;
-        researchText.text = "기술력: " + research + "\n(턴당 " + researchTurn + ")";
+        researchText.text = research + "\n(턴당 " + researchTurn + ")";
 
         double labor = GameManager.Instance.Game.PlayerInTurn.Labor;
-        laborText.text = "노동력: " + labor;
+        laborText.text = labor.ToString();
     }
 
     public void updateQuest()
@@ -78,6 +82,10 @@ public class GameUI : MonoBehaviour {
     public void updateManagement()
     {
         managementcontroller.begin();
+        InvestmentController.I.Tax.GetComponentInChildren<Slider>().normalizedValue = (float)GameManager.Instance.Game.PlayerInTurn.TaxRate;
+        InvestmentController.I.EcoInv.GetComponentInChildren<Slider>().normalizedValue = (float)GameManager.Instance.Game.PlayerInTurn.EconomicInvestmentRatio / 2;
+        InvestmentController.I.TechInv.GetComponentInChildren<Slider>().normalizedValue = (float)GameManager.Instance.Game.PlayerInTurn.ResearchInvestmentRatio / 2;
+        InvestmentController.I.Logistics.GetComponentInChildren<Slider>().normalizedValue = (float)GameManager.Instance.Game.PlayerInTurn.RepairInvestmentRatio;
     }
 
     public void updateSpecialResource()
@@ -109,15 +117,15 @@ public class GameUI : MonoBehaviour {
                     GameManager.Instance.Game.EndTurn();
                     GameManager.Instance.Game.StartTurn();
                 }
-                GameManager.Instance.UpdateMap();
-                GameManager.Instance.UpdateUnit();
-                UIManager.Instance.UpdateUnitInfo();
-                UIManager.Instance.ButtonInteractChange();
-
-                AlarmManager.Instance.updateAlarmQueue();
-                GameManager.Instance.CheckCompletedProduction();
-                //AlarmManager.Instance.AddAlarm(null, "HI", null, 0);
             }
+            GameManager.Instance.UpdateMap();
+            GameManager.Instance.UpdateUnit();
+            //UIManager.Instance.UpdateUnitInfo(); Done in UpdateUnit
+            UIManager.Instance.ButtonInteractChange();
+
+            AlarmManager.Instance.updateAlarmQueue();
+            GameManager.Instance.CheckCompletedProduction();
+            //AlarmManager.Instance.AddAlarm(null, "HI", null, 0);
         }
     }
 }

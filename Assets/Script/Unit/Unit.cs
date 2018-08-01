@@ -294,12 +294,11 @@ public class Unit : MonoBehaviour
 
                     string text = "금: " + gold + "\n(턴당 " + goldTurn + ")\n" + "인구: " + population + "\n" + "행복: " + happiness + "\n(턴당 " + happinessTurn + ")\n" + "기술력: " + research + "\n(턴당 " + researchTurn + ")\n" + "노동력: " + labor;
 
-                    AlarmManager.Instance.AddAlarm(null, text, null, 0);
                 }
                 // 공통적인 부분
                 GameManager.Instance.selectedActor.SpecialActs[_currentSkill].Act(null);
                 GameManager.Instance.UpdateUnit();
-                UIManager.Instance.UpdateUnitInfo();
+                // UIManager.Instance.UpdateUnitInfo(); Done in UpdateUnit
             }
             _inSkillState = false;
             return;
@@ -341,7 +340,7 @@ public class Unit : MonoBehaviour
         while (true)
         {
             // 새로운 Point 을 선택했을 때
-            if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
+            if (Input.GetMouseButtonUp(0) && !EventSystem.current.IsPointerOverGameObject())
             {
                 // Flicker하고 있는 Tile을 선택했을 때
                 if (GameManager.Instance.selectedTile.isFlickering)

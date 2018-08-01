@@ -50,18 +50,22 @@ public class InvestmentController : MonoBehaviour {
         logiSlider = Logistics.GetComponentInChildren<Slider>();
         initSlider();
     }
-	
-	// Update is called once per frame
-	void Update () {
-        GameManager.Instance.Game.PlayerInTurn.TaxRate = ((double)((int)(taxSlider.value * 100))) / 100f;
-        GameManager.Instance.Game.PlayerInTurn.EconomicInvestmentRatio = ((double)((int)(eiSlider.value * 100))) / 100f;
-        GameManager.Instance.Game.PlayerInTurn.ResearchInvestmentRatio = ((double)((int)(tiSlider.value * 100))) / 100f;
-        GameManager.Instance.Game.PlayerInTurn.RepairInvestmentRatio = ((double)((int)(logiSlider.value * 100))) / 100f;
 
-        taxRateText.text = ((int)(taxSlider.value * 100)).ToString() + "%";
-        eiRateText.text = ((int)(eiSlider.value * 100)).ToString() + "%";
-        tiRateText.text = ((int)(tiSlider.value * 100)).ToString() + "%";
-        logiRateText.text = ((int)(logiSlider.value * 100)).ToString() + "%";
+    // Update is called once per frame
+    void Update()
+    {
+        if (UIManager.Instance.managementUI.activeSelf)
+        {
+            GameManager.Instance.Game.PlayerInTurn.TaxRate = ((double)((int)(taxSlider.value * 100))) / 100f;
+            GameManager.Instance.Game.PlayerInTurn.EconomicInvestmentRatio = ((double)((int)(eiSlider.value * 100))) / 100f;
+            GameManager.Instance.Game.PlayerInTurn.ResearchInvestmentRatio = ((double)((int)(tiSlider.value * 100))) / 100f;
+            GameManager.Instance.Game.PlayerInTurn.RepairInvestmentRatio = ((double)((int)(logiSlider.value * 100))) / 100f;
+
+            taxRateText.text = ((int)(taxSlider.value * 100)).ToString() + "%";
+            eiRateText.text = ((int)(eiSlider.value * 100)).ToString() + "%";
+            tiRateText.text = ((int)(tiSlider.value * 100)).ToString() + "%";
+            logiRateText.text = ((int)(logiSlider.value * 100)).ToString() + "%";
+        }
     }
 
     public void initSlider()

@@ -203,6 +203,7 @@ public class GameManager : MonoBehaviour {
                         unit.GetComponent<Unit>().SetPoints(pt, pos);
                         unit.GetComponent<Unit>().unitModel = unt;
                         _units.Add(unit);
+                        unit.GetComponent<Unit>().unitModel.SkipFlag = true;
 
                         //The earth is round.
                         Vector3 ad_pos;
@@ -213,8 +214,9 @@ public class GameManager : MonoBehaviour {
                         GameObject ad_unit = Instantiate(UnitPrefab, ad_pos, Quaternion.identity);
                         ad_unit.name = String.Format("AdditionalUnit({0},{1})", plyrIdx, untIdx);
                         ad_unit.GetComponent<Unit>().SetPoints(pt, ad_pos);
-                        unit.GetComponent<Unit>().unitModel = unt;
+                        ad_unit.GetComponent<Unit>().unitModel = unt;
                         _additional_units.Add(ad_unit);
+                        ad_unit.GetComponent<Unit>().unitModel.SkipFlag = true;
                     }
                 }
                 
@@ -252,6 +254,8 @@ public class GameManager : MonoBehaviour {
         CheckToDo();
         // Check if there exists quest that has completed.
         CheckCompletedQuest();
+        // Update Unit Info
+        UIManager.Instance.UpdateUnitInfo();
     }
 
     bool IsSpyNear(CivModel.Position pt) {
@@ -479,15 +483,14 @@ public class GameManager : MonoBehaviour {
     {
         isThereTodos = false;
         // Only For Testing!
-        //foreach (CivModel.Unit unit in this.Game.PlayerInTurn.Units)
-        //{
-        //    if(!unit.RemainAP.Equals(0)) {
-        //        if(unit.SkipFlag == false) {
-        //            isThereTodos = true;
-        //            break;
-        //        }
-        //    }
-        //}
+
+        /*
+        foreach (CivModel.Unit unit in this.Game.PlayerInTurn.Units)
+            if (!unit.RemainAP.Equals(0) && !unit.SkipFlag)
+            {
+                isThereTodos = true;
+                return;
+            }*/
     }
 
     // Input: CivModel.Terrain.Point and Position of Y
@@ -592,9 +595,13 @@ public class GameManager : MonoBehaviour {
     {
         while (true)
         {
-            CivModel.Terrain.Point destPoint = Instance.selectedPoint;
             if (!EventSystem.current.IsPointerOverGameObject() && Input.GetMouseButtonDown(0))
             {
+                if (Instance.selectedTile == null)
+                    yield return new WaitUntil(() => Instance.selectedTile != null);
+                
+                CivModel.Terrain.Point destPoint = Instance.selectedPoint;
+
                 // Flicker하고 있는 Tile을 선택했을 때
                 if (Instance.selectedTile.isFlickering)
                 {

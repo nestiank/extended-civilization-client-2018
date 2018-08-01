@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 using CivModel;
 using CivModel.Common;
 using System.Text.RegularExpressions;
+using System.Linq;
 
 public class UIManager : MonoBehaviour
 {
@@ -22,14 +23,22 @@ public class UIManager : MonoBehaviour
     public GameObject EpicTab, HighTab, IntermediateTab, LowTab;    // Unit production
     public GameObject CityTab, CityBuildingTab, NormalBuildingTab;  // Building production
 
-    GameObject skillSet;
-    GameObject unitInfo;
+    public GameObject skillSet;
+    public GameObject unitInfo;
 
-    GameObject Actions;
-    GameObject moveBtn;
-    GameObject attackBtn;
-    GameObject skipBtn;
-    GameObject skillBtn;
+    public GameObject Actions;
+    public GameObject moveBtn;
+    public GameObject attackBtn;
+    public GameObject skipBtn;
+    public GameObject skillBtn;
+
+    public GameObject unitName;
+    public GameObject unitAttack;
+    public GameObject unitDefence;
+    public GameObject unitEffect;
+    public GameObject actionPoint;
+    public GameObject healthPoint;
+    public GameObject cityBuildingInfo;
 
     public Image UnitPortrait;
 
@@ -57,25 +66,14 @@ public class UIManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        /*mapUI = GameObject.Find("MapUI");
-        managementUI = GameObject.Find("ManagementUI");
-        questUI = GameObject.Find("QuestUI");
-        SpecialSpec = GameObject.Find("SpecialSpec");*/
-        skillSet = GameObject.Find("Skill Set");
-        unitInfo = GameObject.Find("UnitInfo");
         UnitPortrait = GameObject.Find("Portrait").GetComponent<Image>();
-
-        Actions = GameObject.Find("Actions");
-        moveBtn = GameObject.Find("Move");
-        attackBtn = GameObject.Find("Attact");
-        skipBtn = GameObject.Find("Wait");
-        skillBtn = GameObject.Find("Skill");
 
         Actions.SetActive(false);
         managementUI.SetActive(false);
         questUI.SetActive(false);
         SpecialSpec.SetActive(false);
         skillSet.SetActive(false);
+        cityBuildingInfo.SetActive(false);
         mapUI.transform.GetChild(1).gameObject.SetActive(false);
         
     }
@@ -86,13 +84,12 @@ public class UIManager : MonoBehaviour
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         // Selecting Actor(Tile, Unit) of the Game
-        if (!EventSystem.current.IsPointerOverGameObject() && Input.GetMouseButtonDown(0))
+        if (!EventSystem.current.IsPointerOverGameObject() && Input.GetMouseButtonUp(0))
         {
             if (Physics.Raycast(ray, out hit))
             {
                 selectedActor = hit.transform.gameObject;
                 HexTile tile = selectedActor.GetComponent<HexTile>();
-                Debug.Log("A: " + selectedActor.name);
                 // Update selectedTile
                 GameManager.Instance.selectedTile = tile;
                 // Update selectedPoint using tile information
@@ -139,6 +136,9 @@ public class UIManager : MonoBehaviour
                     GameManager.Instance.selectedActor = null;
                 }
 
+                // Set Unit Information
+                UpdateUnitInfo();
+
                 // Change Button Interaction correponds to the selected Actor
                 ButtonInteractChange();
 
@@ -147,8 +147,7 @@ public class UIManager : MonoBehaviour
                 // StartCoroutine(_tileCoroutine);
             }
 
-            // Set Unit Information
-            UpdateUnitInfo();
+
            
         }
         if(SpecialSpec.activeSelf == true)
@@ -172,18 +171,36 @@ public class UIManager : MonoBehaviour
                 UnitPortrait.sprite = Resources.Load(("Portraits/" + (ProductionFactoryTraits.GetPortName(GameManager.Instance.selectedActor)).ToLower()), typeof(Sprite)) as Sprite;
                 if (GameManager.Instance.selectedActor is CivModel.Actor)
                 {
-                    GameObject.Find("UnitName").GetComponent<Text>().text = ProductionFactoryTraits.GetName(GameManager.Instance.selectedActor);
+                    unitName.GetComponent<Text>().text = ProductionFactoryTraits.GetName(GameManager.Instance.selectedActor);
                 }
                 if (GameManager.Instance.selectedActor is CivModel.CityBase)
                 {
-                    GameObject.Find("UnitName").GetComponent<Text>().text = GameManager.Instance.selectedActor.Name;
+                    unitName.GetComponent<Text>().text = GameManager.Instance.selectedActor.Name;
                 }
 
-                GameObject.Find("UnitAttack").GetComponent<Text>().text = GameManager.Instance.selectedActor.AttackPower.ToString();
-                GameObject.Find("UnitDefence").GetComponent<Text>().text = GameManager.Instance.selectedActor.DefencePower.ToString();
-                GameObject.Find("UnitEffect").GetComponent<Text>().text = GameManager.Instance.selectedActor.RemainHP.ToString() + "/" + GameManager.Instance.selectedActor.MaxHP;
-                GameObject.Find("ActionPoint").GetComponent<Text>().text = GameManager.Instance.selectedActor.RemainAP.ToString() + "/" + GameManager.Instance.selectedActor.MaxAP;
-                GameObject.Find("HealthPoint").GetComponent<RectTransform>().sizeDelta = new Vector2(30, 280 * (float)GameManager.Instance.selectedActor.RemainHP / (float)GameManager.Instance.selectedActor.MaxHP);
+                unitAttack.GetComponent<Text>().text = GameManager.Instance.selectedActor.AttackPower.ToString();
+                unitDefence.GetComponent<Text>().text = GameManager.Instance.selectedActor.DefencePower.ToString();
+                unitEffect.GetComponent<Text>().text = GameManager.Instance.selectedActor.RemainHP.ToString() + "/" + GameManager.Instance.selectedActor.MaxHP;
+                actionPoint.GetComponent<Text>().text = GameManager.Instance.selectedActor.RemainAP.ToString() + "/" + GameManager.Instance.selectedActor.MaxAP;
+                healthPoint.GetComponent<RectTransform>().sizeDelta = new Vector2(30, 280 * (float)GameManager.Instance.selectedActor.RemainHP / (float)GameManager.Instance.selectedActor.MaxHP);
+                if (GameManager.Instance.selectedActor.RemainHP / GameManager.Instance.selectedActor.MaxHP * 100 > 66)
+                    healthPoint.GetComponent<Image>().color = Color.green;
+                else if (GameManager.Instance.selectedActor.RemainHP / GameManager.Instance.selectedActor.MaxHP * 100 > 33)
+                    healthPoint.GetComponent<Image>().color = Color.yellow;
+                else
+                    healthPoint.GetComponent<Image>().color = Color.red;
+
+                // CityBuilding 표시
+                if(GameManager.Instance.selectedActor is CivModel.CityBase)
+                {
+                    cityBuildingInfo.SetActive(true);
+                    cityBuildingInfo.GetComponentInChildren<Text>().text = CityBuilding.ListCityBuildings(((CityBase)GameManager.Instance.selectedActor).InteriorBuildings);
+                }
+                else
+                {
+                    cityBuildingInfo.SetActive(false);
+                }
+
             }
             else unitInfo.SetActive(false);
         }
@@ -374,7 +391,7 @@ public class UIManager : MonoBehaviour
             Actions.SetActive(true);
         }
         // Move Button
-        if(GameManager.Instance.selectedActor is CivModel.Unit && GameManager.Instance.selectedActor.Owner == GameManager.Instance.Game.PlayerInTurn)
+        if(GameManager.Instance.selectedActor is CivModel.Unit && GameManager.Instance.selectedActor.Owner == GameManager.Instance.Game.PlayerInTurn && GameManager.Instance.selectedActor.RemainAP != 0)
         {
             moveBtn.GetComponent<Button>().interactable = true;
         } else
@@ -383,7 +400,7 @@ public class UIManager : MonoBehaviour
         }
 
         // Attack Button
-        if (GameManager.Instance.selectedActor is CivModel.Unit && GameManager.Instance.selectedActor.Owner == GameManager.Instance.Game.PlayerInTurn)
+        if (GameManager.Instance.selectedActor is CivModel.Unit && GameManager.Instance.selectedActor.Owner == GameManager.Instance.Game.PlayerInTurn && GameManager.Instance.selectedActor.RemainAP != 0)
         {
             attackBtn.GetComponent<Button>().interactable = true;
         }
@@ -415,17 +432,28 @@ public class UIManager : MonoBehaviour
                 skillBtn.GetComponent<Button>().interactable = true;
 
                 Button[] skillsBtn = skillSet.GetComponentsInChildren<Button>();
-                foreach (var skill in skillsBtn) {
-                    skill.interactable = false;
-                }
-                if (GameManager.Instance.selectedActor.RemainAP.CompareTo(0) != 0)
+                foreach (var skill in skillsBtn)
                 {
-                    int skillIdx = 0;
-                    foreach (var skill in GameManager.Instance.selectedActor.SpecialActs)
+                    skill.gameObject.SetActive(true);
+                    skill.interactable = true;
+                }
+                int skillIdx = 0;
+                foreach (var skill in GameManager.Instance.selectedActor.SpecialActs)
+                {
+                    skillsBtn[skillIdx].GetComponentInChildren<Text>().text = GameManager.Instance.selectedActor.SpecialActs[skillIdx].Owner.Name;
+                    skillIdx++;
+                }
+                foreach (var skill in skillsBtn.Skip(skillIdx))
+                {
+                    skill.gameObject.SetActive(false);
+                }
+
+                if (GameManager.Instance.selectedActor is CivModel.Unit && GameManager.Instance.selectedActor.RemainAP.CompareTo(0) == 0)
+                {
+                    Button[] skillsBtnNoAP = skillSet.GetComponentsInChildren<Button>();
+                    foreach (var skill in skillsBtnNoAP)
                     {
-                        skillsBtn[skillIdx].interactable = true;
-                        skillsBtn[skillIdx].GetComponentInChildren<Text>().text = GameManager.Instance.selectedActor.SpecialActs[skillIdx].Owner.Name;
-                        skillIdx++;
+                        skill.interactable = false;
                     }
                 }
             }
@@ -455,7 +483,8 @@ public class UIManager : MonoBehaviour
             }
         }
         GameManager.Instance.selectedTile = GameManager.Instance.Tiles[pt.Position.X, pt.Position.Y].GetComponent<HexTile>();
-        UIManager.Instance.Actions.SetActive(true);
+        Instance.Actions.SetActive(true);
+        UpdateUnitInfo();
         ButtonInteractChange();
     }
 

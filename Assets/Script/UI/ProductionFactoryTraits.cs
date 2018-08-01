@@ -301,10 +301,18 @@ public class ProductionFactoryTraits : MonoBehaviour {
                 result = "City Buildings/hwan_factory";
                 break;
 
+            case "AncientFinnoLaboratoryProductionFactory": // 피노 연구소
+                result = "City Buildings/finno_city_lab";
+                break;
+
+            case "AncientFinnoFIRFactoryProductionFactory": // 5차산업혁명공장
+                result = "City Buildings/finno_factory";
+                break;
+
             case "HwanEmpireSungsimdangProductionFactory": // 성심당
                 result = "City Buildings/hwan_sungsimdang";
                 break;
-            case "AncientFinnoXylitol": // 자일리톨
+            case "AncientFinnoXylitolProductionRegionProductionFactory": // 자일리톨
                 result = "City Buildings/finno_xylitol";
                 break;
             case "HwanEmpireVigilantProductionFactory": // 환 자경단
@@ -358,6 +366,8 @@ public class ProductionFactoryTraits : MonoBehaviour {
         }
         return result;
     }
+
+
     public static string GetName(CivModel.Actor unit)
     {
         char[] sep = { '.' };
