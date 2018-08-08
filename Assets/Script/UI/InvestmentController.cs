@@ -54,7 +54,7 @@ public class InvestmentController : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        if (UIManager.Instance.managementUI.activeSelf)
+        if (UIManager.Instance != null && UIManager.Instance.managementUI.activeSelf)
         {
             GameManager.Instance.Game.PlayerInTurn.TaxRate = ((double)((int)(taxSlider.value * 100))) / 100f;
             GameManager.Instance.Game.PlayerInTurn.EconomicInvestmentRatio = ((double)((int)(eiSlider.value * 100))) / 100f;

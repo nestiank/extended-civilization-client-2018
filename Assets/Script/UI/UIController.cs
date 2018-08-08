@@ -75,7 +75,7 @@ public class UIController : MonoBehaviour {
 			switch (qst.Status) {
 				case QuestStatus.Deployed:
 					var dqPrefab = Instantiate(DQPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
-					dqPrefab.transform.SetParent(DQQueue.transform);
+					dqPrefab.transform.SetParent(DQQueue.transform, false);
 					dqPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
 					dqPrefab.transform.localPosition = new Vector3(0f, 0f, 0f);
 					dqPrefab.name = "DQuest";
@@ -83,7 +83,7 @@ public class UIController : MonoBehaviour {
 					break;
 				case QuestStatus.Accepted:
 					var aqPrefab = Instantiate(AQPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
-					aqPrefab.transform.SetParent(AQQueue.transform);
+					aqPrefab.transform.SetParent(AQQueue.transform, false);
 					aqPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
 					aqPrefab.transform.localPosition = new Vector3(0f, 0f, 0f);
 					aqPrefab.name = "AQuest";
@@ -91,7 +91,7 @@ public class UIController : MonoBehaviour {
 					break;
 				case QuestStatus.Completed:
 					var cqPrefab = Instantiate(CQPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
-					cqPrefab.transform.SetParent(CQQueue.transform);
+					cqPrefab.transform.SetParent(CQQueue.transform, false);
 					cqPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
 					cqPrefab.transform.localPosition = new Vector3(0f, 0f, 0f);
 					cqPrefab.name = "CQuest";
@@ -108,7 +108,7 @@ public class UIController : MonoBehaviour {
 
 		if (tempDList.Count == 0) {
 			var dqPrefab = Instantiate(DQPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
-			dqPrefab.transform.SetParent(DQQueue.transform);
+			dqPrefab.transform.SetParent(DQQueue.transform, false);
 			dqPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
 			dqPrefab.transform.localPosition = new Vector3(0f, 0f, 0f);
 			dqPrefab.name = "DQuest_null";
@@ -117,7 +117,7 @@ public class UIController : MonoBehaviour {
 		DQQlist = tempDList;
 		if (tempAList.Count == 0) {
 			var aqPrefab = Instantiate(AQPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
-			aqPrefab.transform.SetParent(AQQueue.transform);
+			aqPrefab.transform.SetParent(AQQueue.transform, false);
 			aqPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
 			aqPrefab.transform.localPosition = new Vector3(0f, 0f, 0f);
 			aqPrefab.name = "AQuest_null";
@@ -126,7 +126,7 @@ public class UIController : MonoBehaviour {
 		AQQlist = tempAList;
 		if (tempCList.Count == 0) {
 			var cqPrefab = Instantiate(CQPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
-			cqPrefab.transform.SetParent(CQQueue.transform);
+			cqPrefab.transform.SetParent(CQQueue.transform, false);
 			cqPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
 			cqPrefab.transform.localPosition = new Vector3(0f, 0f, 0f);
 			cqPrefab.name = "CQuest_null";

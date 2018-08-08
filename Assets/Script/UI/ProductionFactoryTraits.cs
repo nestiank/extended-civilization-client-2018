@@ -2,17 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using static CivModel.Finno.FinnoPlayerNumber;
+using static CivModel.Hwan.HwanPlayerNumber;
+
 public class ProductionFactoryTraits : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    // Use this for initialization
+    void Start () {
+        
+    }
+    
+    // Update is called once per frame
+    void Update () {
+        
+    }
 
     public static string GetFactoryName(CivModel.IProductionFactory Factory)
     {
@@ -117,7 +120,13 @@ public class ProductionFactoryTraits : MonoBehaviour {
             case "AncientFinnoVigilantProductionFactory":
                 result = "자경단";
                 break;
-            case "AncientFinnoXylitolProductionFactory":
+            case "AncientFinnoFIRFactoryProductionFactory":
+                result = "5차 산업혁명 공장";
+                break;
+            case "AncientFinnoLabortoryFactoryProductionFactory":
+                result = "고대 핀란드 도시 연구소 ";
+                break;
+            case "AncientFinnoXylitolProductionRegionProductionFactory":
                 result = "자일리톨 생산지";
                 break;
             case "AncientFinnoFineDustFactoryProductionFactory":
@@ -162,9 +171,9 @@ public class ProductionFactoryTraits : MonoBehaviour {
         string name = Factory.ToString().Split(sep)[2];
         string result;
 
-		// 추후 수정을 위한 디버그 로그
-		// Debug.Log(name);
-		switch (name)
+        // 추후 수정을 위한 디버그 로그
+        // Debug.Log(name);
+        switch (name)
         {
             case "PioneerProductionFactory":
                 result = "Pioneer";
@@ -291,7 +300,7 @@ public class ProductionFactoryTraits : MonoBehaviour {
                 result = "finno_empire_city";
                 break;
 
-			// 1. City Buildings
+            // 1. City Buildings
 
             case "HwanEmpireCityCentralLabProductionFactory": // 환제국도시연구소
                 result = "City Buildings/hwan_city_lab";
@@ -301,7 +310,7 @@ public class ProductionFactoryTraits : MonoBehaviour {
                 result = "City Buildings/hwan_factory";
                 break;
 
-            case "AncientFinnoLaboratoryProductionFactory": // 피노 연구소
+            case "AncientFinnoLabortoryProductionFactory": // 피노 연구소
                 result = "City Buildings/finno_city_lab";
                 break;
 
@@ -522,9 +531,9 @@ public class ProductionFactoryTraits : MonoBehaviour {
                 break;
             case "JediKnight":
                 {
-                    if (unit.Owner == GameManager.Instance.Game.Players[CivModel.Hwan.HwanPlayerConstant.HwanPlayer])
+                    if (unit.Owner == GameManager.Instance.Game.GetPlayerHwan())
                         result = "hwan_jedi";
-                    else if (unit.Owner == GameManager.Instance.Game.Players[CivModel.Finno.FinnoPlayerConstant.FinnoPlayer])
+                    else if (unit.Owner == GameManager.Instance.Game.GetPlayerFinno())
                         result = "finno_jedi";
                     else result = name;
                 }
@@ -537,9 +546,9 @@ public class ProductionFactoryTraits : MonoBehaviour {
                 break;
             case "DecentralizedMilitary":
                 {
-                    if (unit.Owner == GameManager.Instance.Game.Players[CivModel.Hwan.HwanPlayerConstant.HwanPlayer])
+                    if (unit.Owner == GameManager.Instance.Game.GetPlayerHwan())
                         result = "hwan_decentralized_soldier";
-                    else if (unit.Owner == GameManager.Instance.Game.Players[CivModel.Finno.FinnoPlayerConstant.FinnoPlayer])
+                    else if (unit.Owner == GameManager.Instance.Game.GetPlayerFinno())
                         result = "finno_decentralized_soldier";
                     else result = name;
                 }
@@ -552,9 +561,9 @@ public class ProductionFactoryTraits : MonoBehaviour {
                 break;
             case "ProtoNinja":
                 {
-                    if (unit.Owner == GameManager.Instance.Game.Players[CivModel.Hwan.HwanPlayerConstant.HwanPlayer])
+                    if (unit.Owner == GameManager.Instance.Game.GetPlayerHwan())
                         result = "hwan_ninja";
-                    else if (unit.Owner == GameManager.Instance.Game.Players[CivModel.Finno.FinnoPlayerConstant.FinnoPlayer])
+                    else if (unit.Owner == GameManager.Instance.Game.GetPlayerFinno())
                         result = "finno_ninja";
                     else result = name;
                 }
@@ -564,9 +573,9 @@ public class ProductionFactoryTraits : MonoBehaviour {
                 break;
             case "Spy":
                 {
-                    if (unit.Owner == GameManager.Instance.Game.Players[CivModel.Hwan.HwanPlayerConstant.HwanPlayer])
+                    if (unit.Owner == GameManager.Instance.Game.GetPlayerHwan())
                         result = "hwan_spy";
-                    else if (unit.Owner == GameManager.Instance.Game.Players[CivModel.Finno.FinnoPlayerConstant.FinnoPlayer])
+                    else if (unit.Owner == GameManager.Instance.Game.GetPlayerFinno())
                         result = "finno_spy";
                     else result = name;
                 }

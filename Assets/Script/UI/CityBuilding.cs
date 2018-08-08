@@ -104,4 +104,31 @@ public class CityBuilding : MonoBehaviour
         }
         return result;
     }
+
+    public static Sprite GetPortraiteImage(CivModel.CityBase city)
+    {
+        char[] sep = { '.' };
+        string name = city.ToString().Split(sep)[2];
+        string result;
+        switch (name)
+        {
+            case "CityCenter":
+                result = "zap_city";
+                break;
+
+            case "HwanEmpireCity":
+                result = "hwan_empire_city";
+                break;
+
+            case "FinnoEmpireCity":
+                result = "finno_empire_city";
+                break;
+            default:
+                result = "unknown : " + name;
+                Debug.Log(result);
+                break;
+        }
+        return Resources.Load<Sprite>("Portraits/" + result);
+    }
+
 }

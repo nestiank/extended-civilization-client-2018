@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using CivModel;
 using System.Threading.Tasks;
 using System;
+using UnityEngine.SceneManagement;
 
 public class GameUI : MonoBehaviour {
 
@@ -57,21 +58,21 @@ public class GameUI : MonoBehaviour {
 
         double gold = GameManager.Instance.Game.PlayerInTurn.Gold;
         double goldTurn = GameManager.Instance.Game.PlayerInTurn.GoldNetIncome;
-        goldText.text = Math.Round(gold, 2) + "\n(턴당 " + Math.Round(goldTurn, 2) + ")";
+        goldText.text = Math.Round(gold, 1) + "\n(+ " + Math.Round(goldTurn, 1) + ")";
 
         double population = GameManager.Instance.Game.PlayerInTurn.Population;
-        populationText.text = population.ToString();
+        populationText.text = Math.Round(population, 1).ToString();
 
         double happiness = GameManager.Instance.Game.PlayerInTurn.Happiness;
         double happinessTurn = GameManager.Instance.Game.PlayerInTurn.HappinessIncome;
-        happinessText.text = happiness + "\n(턴당 " + happinessTurn + ")";
+        happinessText.text = Math.Round(happiness, 1) + "\n(+ " + Math.Round(happinessTurn, 1) + ")";
 
         double research = GameManager.Instance.Game.PlayerInTurn.Research;
         double researchTurn = GameManager.Instance.Game.PlayerInTurn.ResearchIncome;
-        researchText.text = research + "\n(턴당 " + researchTurn + ")";
+        researchText.text = Math.Round(research, 1) + "\n(+ " + Math.Round(researchTurn, 1) + ")";
 
         double labor = GameManager.Instance.Game.PlayerInTurn.Labor;
-        laborText.text = labor.ToString();
+        laborText.text = Math.Round(labor, 1).ToString();
     }
 
     public void updateQuest()
@@ -93,6 +94,22 @@ public class GameUI : MonoBehaviour {
         specialResourceView.begin();
     }
 
+    public static void CheckEnd()
+    {
+        if(GameManager.Instance.Game.PlayerInTurn.IsVictoried)
+        {
+            SceneManager.LoadScene("Ending");
+        }
+        else if (GameManager.Instance.Game.PlayerInTurn.IsDefeated)
+        {
+            SceneManager.LoadScene("Ending");
+        }
+        else if (GameManager.Instance.Game.PlayerInTurn.IsDrawed)
+        {
+            SceneManager.LoadScene("Ending");
+        }
+    }
+
     public void onClickNextTurn()
     {
         if (GameManager.Instance.isThereTodos)
@@ -101,15 +118,19 @@ public class GameUI : MonoBehaviour {
         }
         else
         {
+            // Pressed Next Turn when the player is WHAN
             if (GameManager.Instance.Game.PlayerInTurn == GameManager.Instance.Game.Players[0])
             {
                 GameManager.Instance.Game.EndTurn();
                 GameManager.Instance.Game.StartTurn();
             }
+            // Pressed Next Turn when the player is FINNO
             else if (GameManager.Instance.Game.PlayerInTurn == GameManager.Instance.Game.Players[1])
             {
                 GameManager.Instance.Game.EndTurn();
                 GameManager.Instance.Game.StartTurn();
+
+                // Proceeds AI's Turns
                 while (GameManager.Instance.Game.PlayerInTurn.IsAIControlled)
                 {
                     // Debug.Log(Game.PlayerNumberInTurn);
@@ -118,16 +139,21 @@ public class GameUI : MonoBehaviour {
                     GameManager.Instance.Game.StartTurn();
                 }
             }
+
             GameManager.Instance.UpdateMap();
             GameManager.Instance.UpdateUnit();
+            GameManager.Instance.UpdateMinimap();
             //UIManager.Instance.UpdateUnitInfo(); Done in UpdateUnit
             UIManager.Instance.ButtonInteractChange();
 
             AlarmManager.Instance.updateAlarmQueue();
             GameManager.Instance.CheckCompletedProduction();
-            //AlarmManager.Instance.AddAlarm(null, "HI", null, 0);
+
+            managementcontroller.MakeProductionQ();
+            managementcontroller.MakeDeploymentQ();
         }
     }
+
 }
 
 // HWAN ONLY PLAY

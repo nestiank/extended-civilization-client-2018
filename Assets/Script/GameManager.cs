@@ -69,6 +69,8 @@ public class GameManager : MonoBehaviour {
     // Indicates whether Maptile or AdditionalMapTile is clicked.
     public bool isAdClicked = true;
 
+    public Camera minimap_camera;
+
 	void Awake() {
 		// Singleton
 		if (_manager != null) {
@@ -92,23 +94,26 @@ public class GameManager : MonoBehaviour {
         string path = Path.Combine(pathStr);
 		_game = new CivModel.Game(path, factories);
 		_game.StartTurn();
-	}
+        InitiateMiniMap();
+        InitiateMap();
+        InitiateUnit();
+    }
 
 	// Use this for initialization
 	void Start() {
-		InitiateMap();
-		InitiateUnit();
-		InitiateMiniMap();
         InitiateTurn();
         CheckToDo();
 	}
+    void Update()
+    {
+        if(minimap_camera.gameObject.activeSelf)
+        {
+            minimap_camera.gameObject.SetActive(false);
+            minimap_camera.Render();
+        }
+    }
 
-	// Update is called once per frame
-	void Update() {
-
-	}
-
-	public void UpdateMinimap() {
+    public void UpdateMinimap() {
 		for (int i = 0; i<_game.Terrain.Width; i++) {
 			for(int j = 0; j<_game.Terrain.Height; j++) {
 				CivModel.Terrain.Point point = _game.Terrain.GetPoint(i, j);
@@ -118,6 +123,7 @@ public class GameManager : MonoBehaviour {
 				tile.SetOwner();
 			}
 		}
+        minimap_camera.Render();
 	}
 
     public void UpdateMap()
@@ -670,6 +676,8 @@ public class GameManager : MonoBehaviour {
                     break;
             }
         }
+
+        GameUI.CheckEnd();
     }
 
     // Check if there exist production that have finished.

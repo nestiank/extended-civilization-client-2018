@@ -136,6 +136,9 @@ public class UIManager : MonoBehaviour
                     GameManager.Instance.selectedActor = null;
                 }
 
+                //if (GameManager.Instance.selectedActor != null)
+                    //Debug.Log(GameManager.Instance.selectedActor.ToString());
+
                 // Set Unit Information
                 UpdateUnitInfo();
 
@@ -168,14 +171,11 @@ public class UIManager : MonoBehaviour
             if (GameManager.Instance.selectedActor != null)
             {
                 unitInfo.SetActive(true);
-                UnitPortrait.sprite = Resources.Load(("Portraits/" + (ProductionFactoryTraits.GetPortName(GameManager.Instance.selectedActor)).ToLower()), typeof(Sprite)) as Sprite;
+
                 if (GameManager.Instance.selectedActor is CivModel.Actor)
                 {
+                    UnitPortrait.sprite = Resources.Load(("Portraits/" + (ProductionFactoryTraits.GetPortName(GameManager.Instance.selectedActor)).ToLower()), typeof(Sprite)) as Sprite;
                     unitName.GetComponent<Text>().text = ProductionFactoryTraits.GetName(GameManager.Instance.selectedActor);
-                }
-                if (GameManager.Instance.selectedActor is CivModel.CityBase)
-                {
-                    unitName.GetComponent<Text>().text = GameManager.Instance.selectedActor.Name;
                 }
 
                 unitAttack.GetComponent<Text>().text = GameManager.Instance.selectedActor.AttackPower.ToString();
@@ -190,9 +190,11 @@ public class UIManager : MonoBehaviour
                 else
                     healthPoint.GetComponent<Image>().color = Color.red;
 
-                // CityBuilding 표시
+                // CityBase Portrait 및 CityBuilding 리스트 표시
                 if(GameManager.Instance.selectedActor is CivModel.CityBase)
                 {
+                    unitName.GetComponent<Text>().text = GameManager.Instance.selectedActor.Name;
+                    UnitPortrait.sprite = CityBuilding.GetPortraiteImage((CivModel.CityBase)GameManager.Instance.selectedActor);
                     cityBuildingInfo.SetActive(true);
                     cityBuildingInfo.GetComponentInChildren<Text>().text = CityBuilding.ListCityBuildings(((CityBase)GameManager.Instance.selectedActor).InteriorBuildings);
                 }

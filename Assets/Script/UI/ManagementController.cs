@@ -45,6 +45,7 @@ public class ManagementController : MonoBehaviour {
         {
             dq.GetComponent<DeployPrefab>().SetButton(DQlist.IndexOf(dq));
         }
+
     }
 
     void Awake()
@@ -66,6 +67,7 @@ public class ManagementController : MonoBehaviour {
         {
             gameManager = GameManager.Instance;
             game = gameManager.Game;
+
             ASQlist = new List<List<GameObject>>();
             ASQlist.Add(EpicQlist = new List<GameObject>());
             ASQlist.Add(HighQlist = new List<GameObject>());

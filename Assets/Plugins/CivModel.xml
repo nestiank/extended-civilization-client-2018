@@ -252,6 +252,20 @@
             </summary>
             <returns>The copy of this object.</returns>
         </member>
+        <member name="T:CivModel.IActorProductionFactory">
+            <summary>
+            The factory interface of <see cref="T:CivModel.Production"/> which products <see cref="T:CivModel.Actor"/> objects.
+            This interface also provides <see cref="P:CivModel.IActorProductionFactory.ActorConstants"/> of production results.
+            </summary>
+            <seealso cref="T:CivModel.ActorConstants"/>
+            <seealso cref="T:CivModel.ITileObjectProductionFactory"/>
+        </member>
+        <member name="P:CivModel.IActorProductionFactory.ActorConstants">
+            <summary>
+            The constants of production result <see cref="T:CivModel.Actor"/>.
+            </summary>
+            <seealso cref="P:CivModel.IActorProductionFactory.ActorConstants"/>
+        </member>
         <member name="T:CivModel.IAIController">
             <summary>
             The interface represents AI controlling a player.
@@ -298,12 +312,13 @@
             </param>
             <exception cref="T:System.ArgumentNullException"><paramref name="owner"/> is <c>null</c>.</exception>
         </member>
-        <member name="M:CivModel.AttackActorAction.GetRequiredAP(System.Nullable{CivModel.Terrain.Point})">
+        <member name="M:CivModel.AttackActorAction.GetRequiredAP(CivModel.Terrain.Point,System.Nullable{CivModel.Terrain.Point})">
             <summary>
             Test if the action with given parameter is valid and return required AP to act.
             Returns <see cref="F:CivModel.ActionPoint.NonAvailable"/> if the action is invalid.
             </summary>
-            <param name="pt">the parameter with which action will be tested.</param>
+            <param name="origin">the point where <see cref="P:CivModel.AttackActorAction.Owner"/> would be while testing.</param>
+            <param name="target">the parameter with which action will be tested.</param>
             <returns>
             the required AP to act. If the action is invalid, <see cref="F:CivModel.ActionPoint.NonAvailable"/>.
             </returns>
@@ -375,13 +390,14 @@
             The list of <see cref="T:CivModel.InteriorBuilding"/> this city owns.
             </summary>
         </member>
-        <member name="M:CivModel.CityBase.#ctor(CivModel.Player,CivModel.ActorConstants,CivModel.Terrain.Point)">
+        <member name="M:CivModel.CityBase.#ctor(CivModel.Player,CivModel.ActorConstants,CivModel.Terrain.Point,CivModel.Player)">
             <summary>
             Initializes a new instance of the <see cref="T:CivModel.CityBase"/> class.
             </summary>
             <param name="owner">The player who owns this city.</param>
             <param name="constants">constants of this actor.</param>
             <param name="point">The tile where the object will be.</param>
+            <param name="donator">The player donated this TileBuilding. If this TileBuilding is not donated, <c>null</c>.</param>
             <exception cref="T:System.ArgumentNullException">
             <paramref name="owner"/> is <c>null</c>.
             or
@@ -751,6 +767,11 @@
             An <see cref="T:CivModel.Observable`1"/> object which can be observed by <see cref="T:CivModel.ITurnObserver"/>.
             </summary>
         </member>
+        <member name="P:CivModel.Game.ProductionObservable">
+            <summary>
+            An <see cref="T:CivModel.Observable`1"/> object which can be observed by <see cref="T:CivModel.IProductionObserver"/>.
+            </summary>
+        </member>
         <member name="P:CivModel.Game.TileObjectObservable">
             <summary>
             An <see cref="T:CivModel.Observable`1"/> object which can be observed by <see cref="T:CivModel.ITileObjectObserver"/>.
@@ -764,6 +785,11 @@
         <member name="P:CivModel.Game.QuestObservable">
             <summary>
             An <see cref="T:CivModel.Observable`1"/> object which can be observed by <see cref="T:CivModel.IQuestObserver"/>.
+            </summary>
+        </member>
+        <member name="P:CivModel.Game.VictoryObservable">
+            <summary>
+            An <see cref="T:CivModel.Observable`1"/> object which can be observed by <see cref="T:CivModel.IVictoryObserver"/>.
             </summary>
         </member>
         <member name="T:CivModel.GameConstants">
@@ -856,6 +882,47 @@
             If an <see cref="T:CivModel.Actor"/> engaged in battle die, its <see cref="P:CivModel.Actor.Owner"/> becomes <c>null</c>.
             In this case, <paramref name="atkOwner"/> and <paramref name="defOwner"/> parameters can be used to get their previous value.
             </remarks>
+        </member>
+        <member name="T:CivModel.IProductionResult">
+            <summary>
+            The interface represents the result of <see cref="T:CivModel.Production"/>
+            </summary>
+            <seealso cref="T:CivModel.Production"/>
+        </member>
+        <member name="M:CivModel.IProductionResult.OnAfterProduce(CivModel.Production)">
+            <summary>
+            Called when production is finished, that is, <see cref="M:CivModel.Production.Place(CivModel.Terrain.Point)"/> is succeeded.
+            </summary>
+            <param name="production">
+            The <see cref="T:CivModel.Production"/> object that produced this object.
+            If this method is called by initialization purpose, <c>null</c>.
+            </param>
+        </member>
+        <member name="T:CivModel.IVictoryObserver">
+            <summary>
+            The interface to observe victories and defeats of <see cref="T:CivModel.Player"/>.
+            </summary>
+        </member>
+        <member name="M:CivModel.IVictoryObserver.OnVictory(CivModel.Player,CivModel.IVictoryCondition)">
+            <summary>
+            Called when a player achieves victory.
+            </summary>
+            <param name="player">The player.</param>
+            <param name="victory">The victory that player achieves.</param>
+        </member>
+        <member name="M:CivModel.IVictoryObserver.OnDefeat(CivModel.Player,CivModel.IDefeatCondition)">
+            <summary>
+            Called when a player achieves defeat.
+            </summary>
+            <param name="player">The player.</param>
+            <param name="defeat">The defeat that player achieves.</param>
+        </member>
+        <member name="M:CivModel.IVictoryObserver.OnDraw(CivModel.Player,CivModel.IDrawCondition)">
+            <summary>
+            Called when a player achieves draw.
+            </summary>
+            <param name="player">The player.</param>
+            <param name="draw">The draw that player achieves.</param>
         </member>
         <member name="T:CivModel.IGameSchemeFactory">
             <summary>
@@ -1047,12 +1114,13 @@
             Whether the action has a target parameter or not.
             </summary>
         </member>
-        <member name="M:CivModel.IReadOnlyActorAction.GetRequiredAP(System.Nullable{CivModel.Terrain.Point})">
+        <member name="M:CivModel.IReadOnlyActorAction.GetRequiredAP(CivModel.Terrain.Point,System.Nullable{CivModel.Terrain.Point})">
             <summary>
             Test if the action with given parameter is valid and return required AP to act.
             Returns <see cref="F:CivModel.ActionPoint.NonAvailable"/> if the action is invalid.
             </summary>
-            <param name="pt">the parameter with which action will be tested.</param>
+            <param name="origin">the point where <see cref="P:CivModel.IReadOnlyActorAction.Owner"/> would be while testing.</param>
+            <param name="target">the parameter with which action will be tested.</param>
             <returns>
             the required AP to act. If the action is invalid, <see cref="F:CivModel.ActionPoint.NonAvailable"/>.
             </returns>
@@ -1067,7 +1135,7 @@
             <summary>
             Acts with the specified parameter.
             </summary>
-            <param name="pt">The parameter.</param>
+            <param name="target">The parameter.</param>
             <exception cref="T:System.ArgumentException">the parameter is invalid.</exception>
             <exception cref="T:System.InvalidOperationException">Action cannot be done now.</exception>
         </member>
@@ -1085,6 +1153,7 @@
             <returns>
               <c>true</c> if the action is actable; otherwise, <c>false</c>.
             </returns>
+            <exception cref="T:System.ArgumentException">actor is already destroyed</exception>
         </member>
         <member name="T:CivModel.IGuidTaggedObject">
             <summary>
@@ -1139,6 +1208,66 @@
             <param name="point">The tile where the object will be.</param>
             <returns>the created <see cref="T:CivModel.IGuidTaggedObject"/> object. If arguments are invalid, <c>null</c>.</returns>
             <exception cref="T:System.Collections.Generic.KeyNotFoundException">the value of <paramref name="guid"/> is not registered.</exception>
+        </member>
+        <member name="T:CivModel.IMovePath">
+            <summary>
+            The interface represents the path of <see cref="P:CivModel.IMovePath.Actor"/> to move along.
+            </summary>
+        </member>
+        <member name="P:CivModel.IMovePath.Actor">
+            <summary>
+            The <see cref="P:CivModel.IMovePath.Actor"/> to move along path, while acting <see cref="T:System.Action"/>.
+            </summary>
+        </member>
+        <member name="P:CivModel.IMovePath.StartPoint">
+            <summary>
+            The start point of path.
+            </summary>
+        </member>
+        <member name="P:CivModel.IMovePath.EndPoint">
+            <summary>
+            The end point of path.
+            </summary>
+        </member>
+        <member name="P:CivModel.IMovePath.Path">
+            <summary>
+            The list of points of path. If this path is invalid, this value is an empty collection.
+            </summary>
+        </member>
+        <member name="P:CivModel.IMovePath.FinalAction">
+            <summary>
+            The <see cref="T:CivModel.IActorAction"/> of <see cref="P:CivModel.IMovePath.Actor"/> to act at <see cref="P:CivModel.IMovePath.EndPoint"/> of path.
+            </summary>
+        </member>
+        <member name="P:CivModel.IMovePath.IsInvalid">
+            <summary>
+            Whether path is invalid.
+            Path is invalid if <see cref="P:CivModel.IMovePath.Actor"/> is destroyed or no available path exists.
+            </summary>
+        </member>
+        <member name="P:CivModel.IMovePath.IsFirstMoveInvalid">
+            <summary>
+            Whether the first walk of path is invalid now.
+            If this value is <c>true</c>, <see cref="M:CivModel.IMovePath.ActFirstWalk"/> calls <see cref="M:CivModel.IMovePath.RecalculateFirstWalk"/> before walk.
+            </summary>
+        </member>
+        <member name="M:CivModel.IMovePath.RecalculateFirstWalk">
+            <summary>
+            Recalculates the first walk of path.
+            </summary>
+        </member>
+        <member name="M:CivModel.IMovePath.ActFirstWalk">
+            <summary>
+            Make <see cref="P:CivModel.IMovePath.Actor"/> move from <see cref="P:CivModel.IMovePath.StartPoint"/> to the next point,
+             then set <see cref="P:CivModel.IMovePath.StartPoint"/> to where <see cref="P:CivModel.IMovePath.Actor"/> is.
+            If necessary, calls <see cref="M:CivModel.IMovePath.RecalculateFirstWalk"/> before walk.
+            If the next point is <see cref="P:CivModel.IMovePath.EndPoint"/>, make <see cref="P:CivModel.IMovePath.Actor"/> act <see cref="P:CivModel.IMovePath.FinalAction"/> instead of moving.
+            </summary>
+            <returns>Whether <see cref="M:CivModel.IMovePath.RecalculateFirstWalk"/> is called before moving.</returns>
+            <exception cref="T:System.InvalidOperationException">
+            the path or the first walk of path is invalid
+            </exception>
+            <returns>Whether the walk is done or not. The walk is not done if AP is not enough.</returns>
         </member>
         <member name="T:CivModel.InteriorBuildingConstants">
             <summary>
@@ -1284,6 +1413,12 @@
             <paramref name="city"/> is <c>null</c>.
             </exception>
         </member>
+        <member name="M:CivModel.InteriorBuilding.OnAfterProduce(CivModel.Production)">
+            <summary>
+            Called when production is finished, that is, <see cref="M:CivModel.Production.Place(CivModel.Terrain.Point)" /> is succeeded.
+            </summary>
+            <param name="production">The <see cref="T:CivModel.Production" /> object that produced this object.</param>
+        </member>
         <member name="M:CivModel.InteriorBuilding.Destroy">
             <summary>
             Destroys this building. <see cref="M:CivModel.InteriorBuilding.OnBeforeDestroy"/> is called before the building is destroyed.
@@ -1379,7 +1514,7 @@
             <paramref name="owner"/> is <c>null</c>
             </exception>
         </member>
-        <member name="M:CivModel.InteriorBuildingProduction.IsPlacable(CivModel.Terrain.Point)">
+        <member name="M:CivModel.InteriorBuildingProduction.CoreIsPlacable(CivModel.Terrain.Point)">
             <summary>
             Determines whether the production result is placable at the specified point.
             </summary>
@@ -1388,13 +1523,14 @@
               <c>true</c> if the production is placable; otherwise, <c>false</c>.
             </returns>
         </member>
-        <member name="M:CivModel.InteriorBuildingProduction.Place(CivModel.Terrain.Point)">
+        <member name="M:CivModel.InteriorBuildingProduction.CorePlace(CivModel.Terrain.Point)">
             <summary>
             Places the production result at the specified point.
             </summary>
             <param name="point">The point to place the production result.</param>
             <exception cref="T:System.InvalidOperationException">production is not completed yet</exception>
             <exception cref="T:System.ArgumentException">point is invalid</exception>
+            <returns>The production result.</returns>
         </member>
         <member name="T:CivModel.IQuestObserver">
             <summary>
@@ -1428,7 +1564,7 @@
             <seealso cref="T:CivModel.Game"/>
             <seealso cref="T:CivModel.TileObject"/>
         </member>
-        <member name="M:CivModel.ITileObjectObserver.TileObjectCreated(CivModel.TileObject)">
+        <member name="M:CivModel.ITileObjectObserver.TileObjectProduced(CivModel.TileObject)">
             <summary>
             Called when <see cref="T:CivModel.TileObject"/> is created.
             </summary>
@@ -1439,6 +1575,21 @@
             Called when <see cref="P:CivModel.TileObject.PlacedPoint"/> is changed or initially set.
             </summary>
             <param name="obj">The <see cref="T:CivModel.TileObject"/>.</param>
+        </member>
+        <member name="T:CivModel.IProductionObserver">
+            <summary>
+            The interface to observe <see cref="T:CivModel.Production"/> related events.
+            </summary>
+            <seealso cref="T:CivModel.Game"/>
+            <seealso cref="T:CivModel.Production"/>
+        </member>
+        <member name="M:CivModel.IProductionObserver.OnProductionDeploy(CivModel.Terrain.Point,CivModel.Production,System.Object)">
+            <summary>
+            Called when the result of <see cref="T:CivModel.Production"/> is deployed, that is, <see cref="M:CivModel.Production.Place(CivModel.Terrain.Point)"/> is succeeded.
+            </summary>
+            <param name="point">The point to place the production result.</param>
+            <param name="production">The <see cref="T:CivModel.Production"/> object.</param>
+            <param name="result">The production result object</param>
         </member>
         <member name="T:CivModel.Observable`1">
             <summary>
@@ -1623,6 +1774,13 @@
             </exception>
             <seealso cref="P:CivModel.Quest.Status"/>
         </member>
+        <member name="M:CivModel.Quest.OnQuestDeployTime">
+            <summary>
+            Called when Quest Deploy Time of the game.
+            Override this method to implement when to deploy the quest.
+            This method is called only if <see cref="P:CivModel.Quest.Status"/> is <see cref="F:CivModel.QuestStatus.Disabled"/>.
+            </summary>
+        </member>
         <member name="M:CivModel.Quest.PreTurn">
             <summary>
             Called before a turn.
@@ -1711,12 +1869,13 @@
             <param name="owner">The <see cref="T:CivModel.Actor"/> who will own the action.</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="owner"/> is <c>null</c>.</exception>
         </member>
-        <member name="M:CivModel.MoveActorAction.GetRequiredAP(System.Nullable{CivModel.Terrain.Point})">
+        <member name="M:CivModel.MoveActorAction.GetRequiredAP(CivModel.Terrain.Point,System.Nullable{CivModel.Terrain.Point})">
             <summary>
             Test if the action with given parameter is valid and return required AP to act.
             Returns <see cref="F:CivModel.ActionPoint.NonAvailable"/> if the action is invalid.
             </summary>
-            <param name="pt">the parameter with which action will be tested.</param>
+            <param name="origin">the point where <see cref="P:CivModel.MoveActorAction.Owner"/> would be while testing.</param>
+            <param name="target">the parameter with which action will be tested.</param>
             <returns>
             the required AP to act. If the action is invalid, <see cref="F:CivModel.ActionPoint.NonAvailable"/>.
             </returns>
@@ -1997,6 +2156,11 @@
             The player who owns this production.
             </summary>
         </member>
+        <member name="P:CivModel.Production.Game">
+            <summary>
+            The <see cref="T:CivModel.Game"/> object.
+            </summary>
+        </member>
         <member name="P:CivModel.Production.TotalLaborCost">
             <summary>
             The total labor cost to finish this production.
@@ -2130,6 +2294,10 @@
             <returns>
               <c>true</c> if the production is placable; otherwise, <c>false</c>.
             </returns>
+            <remarks>
+            To implement this method, derived class must override <see cref="M:CivModel.Production.CoreIsPlacable(CivModel.Terrain.Point)"/> method.
+            </remarks>
+            <seealso cref="M:CivModel.Production.CoreIsPlacable(CivModel.Terrain.Point)"/>
         </member>
         <member name="M:CivModel.Production.Place(CivModel.Terrain.Point)">
             <summary>
@@ -2138,6 +2306,33 @@
             <param name="point">The point to place the production result.</param>
             <exception cref="T:System.InvalidOperationException">production is not completed yet</exception>
             <exception cref="T:System.ArgumentException">point is invalid</exception>
+            <returns>The production result.</returns>
+            <remarks>
+            To implement this method, derived class must override <see cref="M:CivModel.Production.CorePlace(CivModel.Terrain.Point)"/> method.
+            </remarks>
+            <seealso cref="M:CivModel.Production.CorePlace(CivModel.Terrain.Point)"/>
+        </member>
+        <member name="M:CivModel.Production.CoreIsPlacable(CivModel.Terrain.Point)">
+            <summary>
+            Determines whether the production result is placable at the specified point.
+            Override this method to implement <see cref="M:CivModel.Production.IsPlacable(CivModel.Terrain.Point)"/>.
+            </summary>
+            <param name="point">The point to test to place the production result.</param>
+            <returns>
+              <c>true</c> if the production is placable; otherwise, <c>false</c>.
+            </returns>
+            <seealso cref="M:CivModel.Production.IsPlacable(CivModel.Terrain.Point)"/>
+        </member>
+        <member name="M:CivModel.Production.CorePlace(CivModel.Terrain.Point)">
+            <summary>
+            Places the production result at the specified point.
+            Override this method to implement <see cref="M:CivModel.Production.Place(CivModel.Terrain.Point)"/>.
+            </summary>
+            <param name="point">The point to place the production result.</param>
+            <returns>The production result.</returns>
+            <exception cref="T:System.InvalidOperationException">production is not completed yet</exception>
+            <exception cref="T:System.ArgumentException">point is invalid</exception>
+            <seealso cref="M:CivModel.Production.Place(CivModel.Terrain.Point)"/>
         </member>
         <member name="T:CivModel.SafeIterationCollection`1">
             <summary>
@@ -2631,13 +2826,26 @@
             <seealso cref="P:CivModel.InteriorBuilding.ProvidedLabor"/>
             <seealso cref="P:CivModel.Player.Labor"/>
         </member>
-        <member name="M:CivModel.TileBuilding.#ctor(CivModel.Player,CivModel.ActorConstants,CivModel.Terrain.Point)">
+        <member name="P:CivModel.TileBuilding.IsDonated">
+            <summary>
+            Whether this TileBuilding is given to <see cref="P:CivModel.Actor.Owner"/> by donation or not.
+            </summary>
+            <seealso cref="P:CivModel.TileBuilding.Donator"/>
+        </member>
+        <member name="P:CivModel.TileBuilding.Donator">
+            <summary>
+            The player donated this TileBuilding. If this TileBuilding is not donated, <c>null</c>.
+            </summary>
+            <seealso cref="P:CivModel.TileBuilding.IsDonated"/>
+        </member>
+        <member name="M:CivModel.TileBuilding.#ctor(CivModel.Player,CivModel.ActorConstants,CivModel.Terrain.Point,CivModel.Player)">
             <summary>
             Initializes a new instance of the <see cref="T:CivModel.TileBuilding"/> class.
             </summary>
             <param name="owner">The player who owns this TileBuilding.</param>
             <param name="constants">constants of this actor.</param>
             <param name="point">The tile where the object will be.</param>
+            <param name="donator">The player donated this TileBuilding. If this TileBuilding is not donated, <c>null</c>.</param>
             <exception cref="T:System.ArgumentNullException">
             <paramref name="owner"/> is <c>null</c>.
             or
@@ -2862,6 +3070,11 @@
             </summary>
             <seealso cref="P:CivModel.Actor.SkipFlag"/>
         </member>
+        <member name="P:CivModel.Actor.MovePath">
+            <summary>
+            The path of this actor to move along at the end of subturn.
+            </summary>
+        </member>
         <member name="P:CivModel.Actor.IsCloacking">
             <summary>
             Whether this actor is cloacking.
@@ -3016,7 +3229,8 @@
               <ul>
                 <li>if <paramref name="opposite"/> has died, <see cref="F:CivModel.BattleResult.Victory"/>.</li>
                 <li>if this object has died, <see cref="F:CivModel.BattleResult.Defeated"/>.</li>
-                <li>if both have died or survived, <see cref="!:BattleResult.Draw"/>.</li>
+                <li>if both have survived, <see cref="F:CivModel.BattleResult.DrawAlive"/>.</li>
+                <li>if both have died, <see cref="F:CivModel.BattleResult.DrawDead"/>.</li>
                 <li>if the battle is cancelled, <see cref="F:CivModel.BattleResult.Cancelled"/>.</li>
               </ul>
             </returns>
@@ -3115,16 +3329,13 @@
             You must check it by compare <see cref="P:CivModel.Actor.Owner"/> with <c>null</c>.
             </remarks>
         </member>
-        <member name="M:CivModel.Actor.GetRequiredAPToMoveNearBy(CivModel.Terrain.Point)">
+        <member name="M:CivModel.Actor.GetRequiredAPToMoveNearBy(CivModel.Terrain.Point,CivModel.Terrain.Point)">
             <summary>
-            Gets the required AP to move to point, assuming the point is near the position of this actor.
+            Gets the required AP to move from point to point, assuming two points are nearby
             </summary>
-            <param name="point">The <see cref="T:CivModel.Terrain.Point"/> struct object</param>
+            <param name="from">The <see cref="T:CivModel.Terrain.Point"/> to move from</param>
+            <param name="to">The <see cref="T:CivModel.Terrain.Point"/> to move to</param>
             <returns>the required AP.</returns>
-            <remarks>
-            This method assumes <paramref name="point"/> is near <see cref="P:CivModel.TileObject.PlacedPoint"/> of this actor.<br/>
-            Thus, <see cref="P:CivModel.Terrain.Point.Position"/> of <paramref name="point"/> can be ignored.
-            </remarks>
         </member>
         <member name="M:CivModel.Actor.Die(CivModel.Player)">
             <summary>
@@ -3165,6 +3376,68 @@
             </summary>
             <param name="playerInTurn">The player which the sub turn is dedicated to.</param>
             <exception cref="T:System.InvalidOperationException">actor is already destroyed</exception>
+        </member>
+        <member name="T:CivModel.ITileBuildingProductionFactory">
+            <summary>
+            The factory interface of <see cref="T:CivModel.TileBuildingProduction"/>.
+            This interface additionally provides <see cref="M:CivModel.ITileBuildingProductionFactory.CreateDonation(CivModel.Player,CivModel.Terrain.Point,CivModel.Player)"/> methods.
+            If donation is not wanted, use <see cref="T:CivModel.ITileObjectProductionFactory"/>
+            </summary>
+            <remarks>
+            In normal case, <see cref="M:CivModel.ITileObjectProductionFactory.CreateTileObject(CivModel.Player,CivModel.Terrain.Point)"/> is called to make production.
+            <br/>
+            In the case of donation, <see cref="M:CivModel.ITileBuildingProductionFactory.CreateDonation(CivModel.Player,CivModel.Terrain.Point,CivModel.Player)"/> is called instead.
+            </remarks>
+            <seealso cref="T:CivModel.ITileObjectProductionFactory" />
+        </member>
+        <member name="M:CivModel.ITileBuildingProductionFactory.CreateDonation(CivModel.Player,CivModel.Terrain.Point,CivModel.Player)">
+            <summary>
+            Donates the <see cref="T:CivModel.TileBuilding"/> which is the production result.
+            </summary>
+            <param name="owner">The <see cref="T:CivModel.Player"/> who owns the donation result.</param>
+            <param name="point">The tile where the object will be.</param>
+            <param name="donator">The player donated this TileBuilding.</param>
+            <returns>the created <see cref="T:CivModel.TileBuilding"/> result.</returns>
+        </member>
+        <member name="T:CivModel.TileBuildingProduction">
+            <summary>
+            The <see cref="T:CivModel.Production"/> class for <see cref="T:CivModel.TileBuilding"/>.
+            This class enables donation of <see cref="T:CivModel.TileBuilding"/>.
+            If donation is not wanted, use <see cref="T:CivModel.TileObjectProduction"/>
+            </summary>
+            <seealso cref="T:CivModel.TileObjectProduction"/>
+            <seealso cref="T:CivModel.Production"/>
+        </member>
+        <member name="M:CivModel.TileBuildingProduction.#ctor(CivModel.ITileBuildingProductionFactory,CivModel.Player)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CivModel.TileBuildingProduction"/> class.
+            </summary>
+            <param name="factory">The factory object of this production kind.</param>
+            <param name="owner">The <see cref="T:CivModel.Player"/> who will own the production.</param>
+            <exception cref="T:System.ArgumentException">
+            <see cref="P:CivModel.IProductionFactory.TotalLaborCost"/> is negative
+            or
+            <see cref="P:CivModel.IProductionFactory.TotalGoldCost"/> is negative
+            </exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            <see cref="P:CivModel.IProductionFactory.LaborCapacityPerTurn"/> is not in [0, <see cref="P:CivModel.Production.TotalLaborCost"/>]
+            or
+            <see cref="P:CivModel.IProductionFactory.GoldCapacityPerTurn"/> is not in [0, <see cref="P:CivModel.Production.TotalGoldCost"/>]
+            </exception>
+            <exception cref="T:System.ArgumentNullException">
+            <paramref name="factory"/> is <c>null</c>
+            or
+            <paramref name="owner"/> is <c>null</c>
+            </exception>
+        </member>
+        <member name="M:CivModel.TileBuildingProduction.CorePlace(CivModel.Terrain.Point)">
+            <summary>
+            Places the production result at the specified point.
+            </summary>
+            <param name="point">The point to place the production result.</param>
+            <exception cref="T:System.InvalidOperationException">production is not completed yet</exception>
+            <exception cref="T:System.ArgumentException">point is invalid</exception>
+            <returns>The production result.</returns>
         </member>
         <member name="T:CivModel.TileTag">
             <summary>
@@ -3215,11 +3488,38 @@
             <param name="tileTag">The <see cref="P:CivModel.TileObject.TileTag"/> of the object.</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="game"/> is <c>null</c>.</exception>
         </member>
+        <member name="M:CivModel.TileObject.OnAfterProduce(CivModel.Production)">
+            <summary>
+            Called when production is finished, that is, <see cref="M:CivModel.Production.Place(CivModel.Terrain.Point)" /> is succeeded.
+            </summary>
+            <param name="production">The <see cref="T:CivModel.Production" /> object that produced this object.</param>
+        </member>
         <member name="M:CivModel.TileObject.OnChangePlacedPoint(System.Nullable{CivModel.Terrain.Point})">
             <summary>
             Called after <see cref="P:CivModel.TileObject.PlacedPoint"/> is changed.
             </summary>
             <param name="oldPoint">The old value of <see cref="P:CivModel.TileObject.PlacedPoint"/>.</param>
+        </member>
+        <member name="T:CivModel.RemoveTerritoryResult">
+            <summary>
+            The result of <see cref="M:CivModel.Player.TryRemoveTerritory(CivModel.Terrain.Point)"/>
+            </summary>
+            <seealso cref="M:CivModel.Player.TryRemoveTerritory(CivModel.Terrain.Point)"/>
+        </member>
+        <member name="F:CivModel.RemoveTerritoryResult.Success">
+            <summary>
+            Indicates the owner of the tile was successfully removed.
+            </summary>
+        </member>
+        <member name="F:CivModel.RemoveTerritoryResult.NotOwner">
+            <summary>
+            Indicates the owner of the tile is not this player.
+            </summary>
+        </member>
+        <member name="F:CivModel.RemoveTerritoryResult.CannotRemove">
+            <summary>
+            Indicates The owner of the tile cannot be changed.
+            </summary>
         </member>
         <member name="T:CivModel.Player">
             <summary>
@@ -3456,9 +3756,68 @@
             The list of tiles which this player owns as territory.
             </summary>
         </member>
+        <member name="P:CivModel.Player.IsEliminated">
+            <summary>
+            Whether this player is eliminated.
+            </summary>
+        </member>
+        <member name="P:CivModel.Player.HasEnding">
+            <summary>
+            Whether this player has ending, that is, this player is either victoried or defeated or drawed.
+            </summary>
+            <seealso cref="P:CivModel.Player.IsVictoried"/>
+            <seealso cref="P:CivModel.Player.IsDefeated"/>
+            <seealso cref="P:CivModel.Player.IsDrawed"/>
+        </member>
+        <member name="P:CivModel.Player.IsVictoried">
+            <summary>
+            Whether this player is victoried.
+            </summary>
+            <seealso cref="P:CivModel.Player.VictoryCondition"/>
+        </member>
+        <member name="P:CivModel.Player.VictoryCondition">
+            <summary>
+            The victory condition this player has achieved. If this player is not victoried yet, <c>null</c>.
+            </summary>
+            <seealso cref="P:CivModel.Player.IsVictoried"/>
+        </member>
         <member name="P:CivModel.Player.IsDefeated">
             <summary>
             Whether this player is defeated.
+            </summary>
+            <seealso cref="P:CivModel.Player.DefeatCondition"/>
+        </member>
+        <member name="P:CivModel.Player.DefeatCondition">
+            <summary>
+            The defeat condition this player has achieved. If this player is not defeated yet, <c>null</c>.
+            </summary>
+            <seealso cref="P:CivModel.Player.IsDefeated"/>
+        </member>
+        <member name="P:CivModel.Player.IsDrawed">
+            <summary>
+            Whether this player is drawed.
+            </summary>
+            <seealso cref="P:CivModel.Player.DrawCondition"/>
+        </member>
+        <member name="P:CivModel.Player.DrawCondition">
+            <summary>
+            The draw condition this player has achieved. If this player is not drawed yet, <c>null</c>.
+            </summary>
+            <seealso cref="P:CivModel.Player.IsDrawed"/>
+        </member>
+        <member name="P:CivModel.Player.AvailableVictories">
+            <summary>
+            The list of available victories that this player can achieve.
+            </summary>
+        </member>
+        <member name="P:CivModel.Player.AvailableDefeats">
+            <summary>
+            The list of available defeats that this player can achieve.
+            </summary>
+        </member>
+        <member name="P:CivModel.Player.AvailableDraws">
+            <summary>
+            The list of available defeats that this player can achieve.
             </summary>
         </member>
         <member name="P:CivModel.Player.IsAIControlled">
@@ -3469,6 +3828,11 @@
         <member name="P:CivModel.Player.Game">
             <summary>
             The game which this player participates.
+            </summary>
+        </member>
+        <member name="P:CivModel.Player.PlayerNumber">
+            <summary>
+            The player number of this player.
             </summary>
         </member>
         <member name="P:CivModel.Player.Team">
@@ -3539,6 +3903,8 @@
             <c>false</c> if the owner of the tile is not this player and cannot be changed.
             </returns>
             <seealso cref="M:CivModel.Player.AddTerritory(CivModel.Terrain.Point)"/>
+            <seealso cref="M:CivModel.Player.TryRemoveTerritory(CivModel.Terrain.Point)"/>
+            <seealso cref="M:CivModel.Player.RemoveTerritory(CivModel.Terrain.Point)"/>
         </member>
         <member name="M:CivModel.Player.AddTerritory(CivModel.Terrain.Point)">
             <summary>
@@ -3547,6 +3913,19 @@
             <param name="pt">The tile to be in the territory.</param>
             <exception cref="T:System.InvalidOperationException">the owner of the tile is not this player and cannot be changed</exception>
             <seealso cref="M:CivModel.Player.TryAddTerritory(CivModel.Terrain.Point)"/>
+            <seealso cref="M:CivModel.Player.TryRemoveTerritory(CivModel.Terrain.Point)"/>
+            <seealso cref="M:CivModel.Player.RemoveTerritory(CivModel.Terrain.Point)"/>
+        </member>
+        <member name="M:CivModel.Player.TryRemoveTerritory(CivModel.Terrain.Point)">
+            <summary>
+            Removes the territory of this player if possible.
+            </summary>
+            <param name="pt">The tile to be out of the territory.</param>
+            <returns>The result of an operation. See <see cref="T:CivModel.RemoveTerritoryResult"/> for more information.</returns>
+            <seealso cref="T:CivModel.RemoveTerritoryResult"/>
+            <seealso cref="M:CivModel.Player.TryAddTerritory(CivModel.Terrain.Point)"/>
+            <seealso cref="M:CivModel.Player.AddTerritory(CivModel.Terrain.Point)"/>
+            <seealso cref="M:CivModel.Player.RemoveTerritory(CivModel.Terrain.Point)"/>
         </member>
         <member name="M:CivModel.Player.RemoveTerritory(CivModel.Terrain.Point)">
             <summary>
@@ -3555,6 +3934,118 @@
             <param name="pt">The tile to be out of the territory.</param>
             <exception cref="T:System.ArgumentException"><paramref name="pt"/> is not in the territoriy of this player</exception>
             <exception cref="T:System.InvalidOperationException">the tile where a <see cref="T:CivModel.TileBuilding"/> is cannot be removed from the territory</exception>
+            <seealso cref="M:CivModel.Player.TryAddTerritory(CivModel.Terrain.Point)"/>
+            <seealso cref="M:CivModel.Player.AddTerritory(CivModel.Terrain.Point)"/>
+            <seealso cref="M:CivModel.Player.TryRemoveTerritory(CivModel.Terrain.Point)"/>
+        </member>
+        <member name="M:CivModel.Player.AddVictoryCondition(CivModel.IVictoryCondition)">
+            <summary>
+            Adds an available victory condition to this player.
+            </summary>
+            <param name="victory">The victory condition to add.</param>
+            <exception cref="T:System.InvalidOperationException">the player already has ending</exception>
+            <exception cref="T:System.ArgumentException">specified <paramref name="victory"/> is already added</exception>
+        </member>
+        <member name="M:CivModel.Player.RemoveVictoryCondition(CivModel.IVictoryCondition)">
+            <summary>
+            Removes an available victory condition of this player.
+            </summary>
+            <param name="victory">The victory condition to remove.</param>
+            <exception cref="T:System.InvalidOperationException">the player already has ending</exception>
+            <exception cref="T:System.ArgumentException">specific <paramref name="victory"/> has not added</exception>
+        </member>
+        <member name="M:CivModel.Player.AddDefeatCondition(CivModel.IDefeatCondition)">
+            <summary>
+            Adds an available defeat condition to this player.
+            </summary>
+            <param name="defeat">The defeat condition to add.</param>
+            <exception cref="T:System.InvalidOperationException">the player already has ending</exception>
+            <exception cref="T:System.ArgumentException">specified <paramref name="defeat"/> is already added</exception>
+        </member>
+        <member name="M:CivModel.Player.RemoveDefeatCondition(CivModel.IDefeatCondition)">
+            <summary>
+            Removes an available defeat condition of this player.
+            </summary>
+            <param name="defeat">The defeat condition to remove.</param>
+            <exception cref="T:System.InvalidOperationException">the player already has ending</exception>
+            <exception cref="T:System.ArgumentException">specific <paramref name="defeat"/> has not added</exception>
+        </member>
+        <member name="M:CivModel.Player.AddDrawCondition(CivModel.IDrawCondition)">
+            <summary>
+            Adds an available draw condition to this player.
+            </summary>
+            <param name="draw">The draw condition to add.</param>
+            <exception cref="T:System.InvalidOperationException">the player already has ending</exception>
+            <exception cref="T:System.ArgumentException">specified <paramref name="draw"/> is already added</exception>
+        </member>
+        <member name="M:CivModel.Player.RemoveDrawCondition(CivModel.IDrawCondition)">
+            <summary>
+            Removes an available draw condition of this player.
+            </summary>
+            <param name="draw">The draw condition to remove.</param>
+            <exception cref="T:System.InvalidOperationException">the player already has ending</exception>
+            <exception cref="T:System.ArgumentException">specific <paramref name="draw"/> has not added</exception>
+        </member>
+        <member name="M:CivModel.Player.Victory(CivModel.IVictoryCondition)">
+            <summary>
+            Make this player achieve the specified victory.
+            </summary>
+            <param name="victory">The victory.</param>
+            <exception cref="T:System.InvalidOperationException">the player already has ending</exception>
+            <exception cref="T:System.ArgumentException">specified <paramref name="victory"/> is not available to the player</exception>
+            <seealso cref="P:CivModel.Player.IsVictoried"/>
+            <seealso cref="P:CivModel.Player.VictoryCondition"/>
+            <seealso cref="M:CivModel.Player.Defeat(CivModel.IDefeatCondition)"/>
+            <seealso cref="M:CivModel.Player.Draw(CivModel.IDrawCondition)"/>
+        </member>
+        <member name="M:CivModel.Player.Defeat(CivModel.IDefeatCondition)">
+            <summary>
+            Make this player achieve the specified defeat.
+            </summary>
+            <param name="defeat">The defeat.</param>
+            <exception cref="T:System.InvalidOperationException">the player already has ending</exception>
+            <exception cref="T:System.ArgumentException">specified <paramref name="defeat"/> is not available to the player</exception>
+            <seealso cref="P:CivModel.Player.IsDefeated"/>
+            <seealso cref="P:CivModel.Player.DefeatCondition"/>
+            <seealso cref="M:CivModel.Player.Victory(CivModel.IVictoryCondition)"/>
+            <seealso cref="M:CivModel.Player.Draw(CivModel.IDrawCondition)"/>
+        </member>
+        <member name="M:CivModel.Player.Draw(CivModel.IDrawCondition)">
+            <summary>
+            Make this player achieve the specified draw.
+            </summary>
+            <param name="draw">The draw.</param>
+            <exception cref="T:System.InvalidOperationException">the player already has ending</exception>
+            <exception cref="T:System.ArgumentException">specified <paramref name="draw"/> is not available to the player</exception>
+            <seealso cref="P:CivModel.Player.IsDrawed"/>
+            <seealso cref="P:CivModel.Player.DrawCondition"/>
+            <seealso cref="M:CivModel.Player.Victory(CivModel.IVictoryCondition)"/>
+            <seealso cref="M:CivModel.Player.Defeat(CivModel.IDefeatCondition)"/>
+        </member>
+        <member name="M:CivModel.Player.EndingCheck">
+            <summary>
+            Check whether player achieves the ending condition and process it if necessary.
+            If <see cref="P:CivModel.Player.HasEnding"/> is <c>true</c>, do nothing.
+            </summary>
+            <returns>Whether the ending process was done or not.</returns>
+        </member>
+        <member name="M:CivModel.Player.IsAlliedWith(CivModel.Player)">
+            <summary>
+            Whether the specified player is not null and is allied with this player.
+            Allied players includes the player itself. that is, <c>player.IsAlliedWith(player) == true</c>.
+            </summary>
+            <param name="player">The player to determine whether is allied or not.</param>
+            <returns><c>true</c> if the specified player is allied with; otherwise, <c>false</c>.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="player"/> is <c>null</c></exception>
+            <seealso cref="M:CivModel.Player.IsAlliedWithOrNull(CivModel.Player)"/>
+        </member>
+        <member name="M:CivModel.Player.IsAlliedWithOrNull(CivModel.Player)">
+            <summary>
+            Whether the specified player is null or allied with this player.
+            </summary>
+            <param name="player">The player to determine whether is allied or not.</param>
+            <returns><c>true</c> if the specified player is null or allied with this player; otherwise, <c>false</c>.</returns>
+            <seealso cref="M:CivModel.Player.IsAlliedWith(CivModel.Player)"/>
         </member>
         <member name="M:CivModel.Player.PreTurn">
             <summary>
@@ -3653,20 +4144,6 @@
             <param name="point">The tile where the object will be.</param>
             <returns>the created <see cref="T:CivModel.TileObject"/> result.</returns>
         </member>
-        <member name="T:CivModel.IActorProductionFactory">
-            <summary>
-            The factory interface of <see cref="T:CivModel.Production"/> which products <see cref="T:CivModel.Actor"/> objects.
-            This interface also provides <see cref="P:CivModel.IActorProductionFactory.ActorConstants"/> of production results.
-            </summary>
-            <seealso cref="T:CivModel.ActorConstants"/>
-            <seealso cref="T:CivModel.ITileObjectProductionFactory"/>
-        </member>
-        <member name="P:CivModel.IActorProductionFactory.ActorConstants">
-            <summary>
-            The constants of production result <see cref="T:CivModel.Actor"/>.
-            </summary>
-            <seealso cref="P:CivModel.IActorProductionFactory.ActorConstants"/>
-        </member>
         <member name="T:CivModel.TileObjectProduction">
             <summary>
             The <see cref="T:CivModel.Production"/> class for <see cref="T:CivModel.TileObject"/>
@@ -3695,7 +4172,7 @@
             <paramref name="owner"/> is <c>null</c>
             </exception>
         </member>
-        <member name="M:CivModel.TileObjectProduction.IsPlacable(CivModel.Terrain.Point)">
+        <member name="M:CivModel.TileObjectProduction.CoreIsPlacable(CivModel.Terrain.Point)">
             <summary>
             Determines whether the production result is placable at the specified point.
             </summary>
@@ -3704,13 +4181,93 @@
               <c>true</c> if the production is placable; otherwise, <c>false</c>.
             </returns>
         </member>
-        <member name="M:CivModel.TileObjectProduction.Place(CivModel.Terrain.Point)">
+        <member name="M:CivModel.TileObjectProduction.CorePlace(CivModel.Terrain.Point)">
             <summary>
             Places the production result at the specified point.
             </summary>
             <param name="point">The point to place the production result.</param>
             <exception cref="T:System.InvalidOperationException">production is not completed yet</exception>
             <exception cref="T:System.ArgumentException">point is invalid</exception>
+            <returns>The production result.</returns>
+        </member>
+        <member name="T:CivModel.IVictoryCondition">
+            <summary>
+            The interface represents a victory condition that <see cref="T:CivModel.Player"/> can achieve.
+            </summary>
+        </member>
+        <member name="M:CivModel.IVictoryCondition.CheckVictory(CivModel.Player)">
+            <summary>
+            Checks whether <see cref="T:CivModel.Player"/> has achieved this victory condition.
+            </summary>
+            <param name="player">The player.</param>
+            <returns>whether <see cref="T:CivModel.Player"/> has achieved this victory condition</returns>
+            <remarks>
+            Victory check is done after draw check, before defeat check.
+            </remarks>
+        </member>
+        <member name="M:CivModel.IVictoryCondition.DoVictory(CivModel.Player)">
+            <summary>
+            Called when <see cref="T:CivModel.Player"/> achieves this victory.
+            </summary>
+            <param name="player">The player.</param>
+        </member>
+        <member name="T:CivModel.IDefeatCondition">
+            <summary>
+            The interface represents a defeat condition that <see cref="T:CivModel.Player"/> can achieve.
+            </summary>
+        </member>
+        <member name="M:CivModel.IDefeatCondition.CheckDefeat(CivModel.Player)">
+            <summary>
+            Checks whether <see cref="T:CivModel.Player"/> has achieved this defeat condition.
+            </summary>
+            <param name="player">The player.</param>
+            <returns>whether <see cref="T:CivModel.Player"/> has achieved this defeat condition</returns>
+            <remarks>
+            Defeat check is done after draw check and victory check.
+            </remarks>
+        </member>
+        <member name="M:CivModel.IDefeatCondition.DoDefeat(CivModel.Player)">
+            <summary>
+            Called when <see cref="T:CivModel.Player"/> achieves this defeat.
+            </summary>
+            <param name="player">The player.</param>
+        </member>
+        <member name="T:CivModel.IDrawCondition">
+            <summary>
+            The interface represents a draw condition that <see cref="T:CivModel.Player"/> can achieve.
+            </summary>
+        </member>
+        <member name="M:CivModel.IDrawCondition.CheckDraw(CivModel.Player)">
+            <summary>
+            Checks whether <see cref="T:CivModel.Player"/> has achieved this draw condition.
+            </summary>
+            <param name="player">The player.</param>
+            <returns>whether <see cref="T:CivModel.Player"/> has achieved this draw condition</returns>
+            <remarks>
+            Draw check is done before victory check or defeat check.
+            If you want to check draw condition when player achieves both victory and defeat simultaneously,
+             implements <see cref="M:CivModel.IDrawCondition.OnBothVictoriedAndDefeated(CivModel.Player,CivModel.IVictoryCondition,CivModel.IDefeatCondition)"/>.
+            </remarks>
+        </member>
+        <member name="M:CivModel.IDrawCondition.OnBothVictoriedAndDefeated(CivModel.Player,CivModel.IVictoryCondition,CivModel.IDefeatCondition)">
+            <summary>
+            Checks whether <see cref="T:CivModel.Player"/> has achieved this draw condition
+             when <paramref name="player"/> achieves both victory and defeat.
+            </summary>
+            <param name="player">The player.</param>
+            <param name="victory">The victory that player achieves.</param>
+            <param name="defeat">The defeat that player achieves.</param>
+            <returns>whether <see cref="T:CivModel.Player"/> has achieved this draw condition</returns>
+            <remarks>
+            This method is called when player achieves both victory and defeat simultaneously.
+            If you want to check draw condition manually, implements <see cref="M:CivModel.IDrawCondition.CheckDraw(CivModel.Player)"/>.
+            </remarks>
+        </member>
+        <member name="M:CivModel.IDrawCondition.DoDraw(CivModel.Player)">
+            <summary>
+            Called when <see cref="T:CivModel.Player"/> achieves this draw.
+            </summary>
+            <param name="player">The player.</param>
         </member>
     </members>
 </doc>

@@ -11,7 +11,7 @@ public class GameStarter : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        GameInfo.SetPlayer(CivModel.Hwan.HwanPlayerConstant.HwanPlayer);
+        GameInfo.SetPlayer(CivModel.Hwan.HwanPlayerNumber.Number);
     }
 
     // Update is called once per frame
@@ -22,12 +22,12 @@ public class GameStarter : MonoBehaviour
 
     public void StartHwan()
     {
-        GameInfo.SetPlayer(CivModel.Hwan.HwanPlayerConstant.HwanPlayer);
+        GameInfo.SetPlayer(CivModel.Hwan.HwanPlayerNumber.Number);
         txt.text = "환국으로 게임 시작";
     }
     public void StartSuomen()
     {
-        GameInfo.SetPlayer(CivModel.Finno.FinnoPlayerConstant.FinnoPlayer);
+        GameInfo.SetPlayer(CivModel.Finno.FinnoPlayerNumber.Number);
         txt.text = "수오미로 게임 시작";
     }
     public void StartGame()

@@ -6,8 +6,9 @@ using UnityEngine.UI;
 using CivModel;
 using CivModel.Common;
 using System.Linq;
+using UnityEngine.EventSystems;
 
-public class ProductablePrefab : MonoBehaviour {
+public class ProductablePrefab : MonoBehaviour, IPointerClickHandler {
 
     private static ManagementController uicontroller;
     private Text[] textarguments;
@@ -140,5 +141,11 @@ public class ProductablePrefab : MonoBehaviour {
         }
         uicontroller.MakeProductionQ();
         uicontroller.MakeDeploymentQ();
+    }
+
+    public void OnPointerClick(PointerEventData clicked)
+    {
+        string clicked_unit_name = clicked.pointerPress.transform.GetChild(2).GetComponent<Text>().text;
+        clicked.pointerPress.transform.parent.parent.parent.GetChild(2).GetChild(0).GetComponent<Text>().text = clicked_unit_name;
     }
 }
