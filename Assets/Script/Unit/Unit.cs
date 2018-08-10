@@ -33,11 +33,6 @@ public class Unit : MonoBehaviour
     private CivModel.Terrain.Point?[] _parameterPoints;
     private List<CivModel.Terrain.Point> _skillParameterPoints = new List<CivModel.Terrain.Point>();
 
-    // Use this for initialization
-    void Start()
-    {
-    }
-
     // Change Unit position to given CivModel.Terrain.Point value
     // Default y position is 1.25f
     public void SetPoints(CivModel.Terrain.Point p1)
@@ -133,6 +128,7 @@ public class Unit : MonoBehaviour
                 // Flicker하고 있는 Tile을 선택했을 때
                 if (GameManager.Instance.selectedTile.isFlickering)
                 {
+                    UIManager.Instance.updateSelectedInfo(unitToMove);
                     if (unitToMove.MovingAttackAct != null && unitToMove.MovingAttackAct.IsActable(destPoint))
                     {
                         unitToMove.MovingAttackAct.Act(destPoint);
@@ -157,6 +153,7 @@ public class Unit : MonoBehaviour
                 // Flicker 하지 않는 타일 선택
                 else
                 {
+                    UIManager.Instance.updateSelectedInfo(unitToMove);
                     MoveStateExit();
                     break;
                 }
@@ -240,6 +237,7 @@ public class Unit : MonoBehaviour
                 // Flicker하고 있는 Tile을 선택했을 때
                 if (GameManager.Instance.selectedTile.isFlickering)
                 {
+                    UIManager.Instance.updateSelectedInfo(unitToMove);
                     if (unitToMove.HoldingAttackAct != null && unitToMove.HoldingAttackAct.IsActable(destPoint))
                     {
                         unitToMove.HoldingAttackAct.Act(destPoint);
@@ -251,6 +249,7 @@ public class Unit : MonoBehaviour
                 // Flicker 하지 않는 타일 선택
                 else
                 {
+                    UIManager.Instance.updateSelectedInfo(unitToMove);
                     MoveStateExit();
                     break;
                 }
@@ -325,6 +324,8 @@ public class Unit : MonoBehaviour
             if (_skillParameterPoints.Count != 0)
             {
                 IEnumerator _coroutine = SkillUnit(GameManager.Instance.selectedActor);
+                var _tile = GameManager.Instance.selectedTile;
+                var _gameObject = GameManager.Instance.selectedGameObject;
                 StartCoroutine(_coroutine);
             }
             else
@@ -346,6 +347,7 @@ public class Unit : MonoBehaviour
                 if (GameManager.Instance.selectedTile.isFlickering)
                 {
                     CivModel.Terrain.Point destPoint = GameManager.Instance.selectedPoint;
+                    UIManager.Instance.updateSelectedInfo(unitToSkill);
                     if (unitToSkill.SpecialActs[_currentSkill].IsActable(destPoint))
                     {
                         unitToSkill.SpecialActs[_currentSkill].Act(destPoint);
@@ -362,6 +364,7 @@ public class Unit : MonoBehaviour
                 // Flicker 하지 않는 타일 선택
                 else
                 {
+                    UIManager.Instance.updateSelectedInfo(unitToSkill);
                     SkillStateExit();
                     break;
                 }

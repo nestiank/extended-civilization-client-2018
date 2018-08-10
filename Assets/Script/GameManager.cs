@@ -71,6 +71,9 @@ public class GameManager : MonoBehaviour {
 
     public Camera minimap_camera;
 
+    static List<Quest> AlarmedQuests = new List<Quest>();
+    static List<Production> AlarmedProduction = new List<Production>();
+
 	void Awake() {
 		// Singleton
 		if (_manager != null) {
@@ -601,7 +604,7 @@ public class GameManager : MonoBehaviour {
     {
         while (true)
         {
-            if (!EventSystem.current.IsPointerOverGameObject() && Input.GetMouseButtonDown(0))
+            if (!EventSystem.current.IsPointerOverGameObject() && Input.GetMouseButtonUp(0))
             {
                 if (Instance.selectedTile == null)
                     yield return new WaitUntil(() => Instance.selectedTile != null);
@@ -655,7 +658,6 @@ public class GameManager : MonoBehaviour {
     // Check if there exist quest that have finished.
     public void CheckCompletedQuest()
     {
-        List<Quest> AlarmedQuests = new List<Quest>();
         foreach (Quest qst in GameManager.Instance.Game.PlayerInTurn.Quests)
         {
             switch (qst.Status)
@@ -683,7 +685,6 @@ public class GameManager : MonoBehaviour {
     // Check if there exist production that have finished.
     public void CheckCompletedProduction()
     {
-        List<Production> AlarmedProduction = new List<Production>();
 
         foreach (Production prod in GameManager.Instance.Game.PlayerInTurn.Deployment)
         {

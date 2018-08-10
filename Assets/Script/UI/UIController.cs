@@ -70,7 +70,7 @@ public class UIController : MonoBehaviour {
 		CQQlist.Clear();
 
 		questList = GameManager.Instance.Game.PlayerInTurn.Quests;
-		Debug.Log("Quest: " + questList.Count);
+		// Debug.Log("Quest: " + questList.Count);
 		foreach (Quest qst in questList) {
 			switch (qst.Status) {
 				case QuestStatus.Deployed:

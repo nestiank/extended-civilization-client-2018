@@ -252,6 +252,119 @@
             </summary>
             <returns>The copy of this object.</returns>
         </member>
+        <member name="T:CivModel.Effect">
+            <summary>
+            An abstract classs represents an effect.
+            This class is used internally cannot be directly inherited.
+            </summary>
+        </member>
+        <member name="P:CivModel.Effect.Target">
+            <summary>
+            The target of this effect. <c>null</c> if target was destroyed.
+            </summary>
+        </member>
+        <member name="P:CivModel.Effect.Duration">
+            <summary>
+            The duration turn of this effect.
+            </summary>
+            <see cref="P:CivModel.Effect.LeftTurn"/>
+        </member>
+        <member name="P:CivModel.Effect.LeftTurn">
+            <summary>
+            The left duration turn of this effect.
+            </summary>
+            <see cref="P:CivModel.Effect.Duration"/>
+        </member>
+        <member name="P:CivModel.Effect.Enabled">
+            <summary>
+            Whether this effect is enabled.
+            </summary>
+            <remarks>
+            The setter of this property is a wrapper of <see cref="M:CivModel.Effect.EffectOn"/> and <see cref="M:CivModel.Effect.EffectOff"/>.
+            </remarks>
+            <seealso cref="M:CivModel.Effect.EffectOn"/>
+            <seealso cref="M:CivModel.Effect.EffectOff"/>
+        </member>
+        <member name="M:CivModel.Effect.#ctor(CivModel.IEffectTarget,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CivModel.Effect"/> class.
+            </summary>
+            <param name="target">The target of the effect.</param>
+            <param name="duration">The duration of the effect. <c>-1</c> if forever.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="duration"/> is negative and not -1</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="target"/> is <c>null</c>.</exception>
+        </member>
+        <member name="M:CivModel.Effect.EffectOn">
+            <summary>
+            Turn on this effect on <see cref="P:CivModel.Effect.Target"/> and set <see cref="P:CivModel.Effect.Enabled"/> to <c>true</c>.
+            </summary>
+            <seealso cref="P:CivModel.Effect.Enabled"/>
+        </member>
+        <member name="M:CivModel.Effect.EffectOff">
+            <summary>
+            Turn off this effect on <see cref="P:CivModel.Effect.Target"/> and set <see cref="P:CivModel.Effect.Enabled"/> to <c>false</c>.
+            </summary>
+            <seealso cref="P:CivModel.Effect.Enabled"/>
+        </member>
+        <member name="M:CivModel.Effect.OnEffectOn">
+            <summary>
+            Called when <see cref="M:CivModel.Effect.EffectOn"/> is called. This method should turn on this effect.
+            </summary>
+        </member>
+        <member name="M:CivModel.Effect.OnEffectOff">
+            <summary>
+            Called when <see cref="M:CivModel.Effect.EffectOff"/> is called. This method should turn off this effect.
+            </summary>
+        </member>
+        <member name="M:CivModel.Effect.OnTargetDestroy">
+            <summary>
+            Called when <see cref="P:CivModel.Effect.Target"/> is destroyed.
+            </summary>
+        </member>
+        <member name="M:CivModel.Effect.FixedPreTurn">
+            <summary>
+            Called on fixed event [pre turn].
+            </summary>
+        </member>
+        <member name="M:CivModel.Effect.FixedAfterPreTurn">
+            <summary>
+            Called on fixed event [after pre turn].
+            </summary>
+        </member>
+        <member name="M:CivModel.Effect.FixedPostTurn">
+            <summary>
+            Called on fixed event [post turn].
+            </summary>
+        </member>
+        <member name="M:CivModel.Effect.FixedAfterPostTurn">
+            <summary>
+            Called on fixed event [after post turn].
+            </summary>
+        </member>
+        <member name="M:CivModel.Effect.FixedPreSubTurn(CivModel.Player)">
+            <summary>
+            Called on fixed event [pre subturn].
+            </summary>
+            <param name="playerInTurn">The player which the sub turn is dedicated to.</param>
+        </member>
+        <member name="M:CivModel.Effect.FixedAfterPreSubTurn(CivModel.Player)">
+            <summary>
+            Called on fixed event [after pre subturn].
+            </summary>
+            <param name="playerInTurn">The player which the sub turn is dedicated to.</param>
+        </member>
+        <member name="M:CivModel.Effect.FixedPostSubTurn(CivModel.Player)">
+            <summary>
+            Called on fixed event [post subturn].
+            </summary>
+            <param name="playerInTurn">The player which the sub turn is dedicated to.</param>
+        </member>
+        <member name="M:CivModel.Effect.FixedAfterPostSubTurn(CivModel.Player)">
+            <summary>
+            Called on fixed event [after post subturn]
+            </summary>
+            <param name="playerInTurn">The player which the sub turn is dedicated to.</param>
+        </member>
         <member name="T:CivModel.IActorProductionFactory">
             <summary>
             The factory interface of <see cref="T:CivModel.Production"/> which products <see cref="T:CivModel.Actor"/> objects.
@@ -438,135 +551,30 @@
             </summary>
             <param name="opposite">The opposite who caused the dying of this actor. If not exists, <c>null</c>.</param>
         </member>
-        <member name="M:CivModel.CityBase.PreTurn">
+        <member name="M:CivModel.CityBase.FixedPostTurn">
             <summary>
-            Called before a turn.
+            Called on fixed event [post turn].
             </summary>
         </member>
-        <member name="M:CivModel.CityBase.PostTurn">
-            <summary>
-            Called after a turn.
-            </summary>
-        </member>
-        <member name="M:CivModel.CityBase.PrePlayerSubTurn(CivModel.Player)">
-            <summary>
-            Called before a sub turn.
-            </summary>
-            <param name="playerInTurn">The player which the sub turn is dedicated to.</param>
-        </member>
-        <member name="M:CivModel.CityBase.PostPlayerSubTurn(CivModel.Player)">
-            <summary>
-            Called after a sub turn.
-            </summary>
-            <param name="playerInTurn">The player which the sub turn is dedicated to.</param>
-        </member>
-        <member name="T:CivModel.EffectTag">
-            <summary>
-            Tag of <see cref="T:CivModel.Effect"/>. Effects with the same tag cannot be applied together.
-            </summary>
-        </member>
-        <member name="F:CivModel.EffectTag.Ownership">
-            <summary>
-            Tag for ownership related effects.
-            </summary>
-        </member>
-        <member name="T:CivModel.Effect">
+        <member name="T:CivModel.ActorEffect">
             <summary>
             Represents an effect to <see cref="T:CivModel.Actor"/>.
             </summary>
         </member>
-        <member name="P:CivModel.Effect.Target">
+        <member name="P:CivModel.ActorEffect.Target">
             <summary>
             The target <see cref="T:CivModel.Actor"/> of this effect. <c>null</c> if target was destroyed.
             </summary>
             <seealso cref="M:CivModel.Actor.Destroy"/>
         </member>
-        <member name="P:CivModel.Effect.Tag">
+        <member name="M:CivModel.ActorEffect.#ctor(CivModel.Actor,System.Int32)">
             <summary>
-            <see cref="T:CivModel.EffectTag"/> of this effect.
-            </summary>
-        </member>
-        <member name="P:CivModel.Effect.Duration">
-            <summary>
-            The duration turn of this effect.
-            </summary>
-            <see cref="P:CivModel.Effect.LeftTurn"/>
-        </member>
-        <member name="P:CivModel.Effect.LeftTurn">
-            <summary>
-            The left duration turn of this effect.
-            </summary>
-            <see cref="P:CivModel.Effect.Duration"/>
-        </member>
-        <member name="P:CivModel.Effect.Enabled">
-            <summary>
-            Whether this effect is enabled.
-            </summary>
-            <remarks>
-            The setter of this property is a wrapper of <see cref="M:CivModel.Effect.EffectOn"/> and <see cref="M:CivModel.Effect.EffectOff"/>.
-            </remarks>
-            <seealso cref="M:CivModel.Effect.EffectOn"/>
-            <seealso cref="M:CivModel.Effect.EffectOff"/>
-        </member>
-        <member name="M:CivModel.Effect.#ctor(CivModel.Actor,System.Int32,CivModel.EffectTag)">
-            <summary>
-            Initializes a new instance of the <see cref="T:CivModel.Effect"/> class.
+            Initializes a new instance of the <see cref="T:CivModel.ActorEffect"/> class.
             </summary>
             <param name="target">The target of the effect.</param>
             <param name="duration">The duration of the effect. <c>-1</c> if forever.</param>
-            <param name="tag"><see cref="T:CivModel.EffectTag"/> of the effect.</param>
             <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="duration"/> is negative and not -1</exception>
             <exception cref="T:System.ArgumentNullException"><paramref name="target"/> is <c>null</c>.</exception>
-        </member>
-        <member name="M:CivModel.Effect.EffectOn">
-            <summary>
-            Turn on this effect on <see cref="P:CivModel.Effect.Target"/> and set <see cref="P:CivModel.Effect.Enabled"/> to <c>true</c>.
-            If other <see cref="T:CivModel.Effect"/> object with the same <see cref="P:CivModel.Effect.Tag"/> affects on <see cref="P:CivModel.Effect.Target"/>, Disable it before turning on this effect.
-            </summary>
-            <seealso cref="P:CivModel.Effect.Enabled"/>
-        </member>
-        <member name="M:CivModel.Effect.EffectOff">
-            <summary>
-            Turn off this effect on <see cref="P:CivModel.Effect.Target"/> and set <see cref="P:CivModel.Effect.Enabled"/> to <c>false</c>.
-            </summary>
-            <seealso cref="P:CivModel.Effect.Enabled"/>
-        </member>
-        <member name="M:CivModel.Effect.OnEffectOn">
-            <summary>
-            Called when <see cref="M:CivModel.Effect.EffectOn"/> is called. This method should turn on this effect.
-            </summary>
-        </member>
-        <member name="M:CivModel.Effect.OnEffectOff">
-            <summary>
-            Called when <see cref="M:CivModel.Effect.EffectOff"/> is called. This method should turn off this effect.
-            </summary>
-        </member>
-        <member name="M:CivModel.Effect.OnTargetDestroy">
-            <summary>
-            Called when <see cref="P:CivModel.Effect.Target"/> is destroyed.
-            </summary>
-        </member>
-        <member name="M:CivModel.Effect.PostTurn">
-            <summary>
-            Called after a turn.
-            </summary>
-        </member>
-        <member name="M:CivModel.Effect.PreTurn">
-            <summary>
-            Called before a turn.
-            </summary>
-        </member>
-        <member name="M:CivModel.Effect.PrePlayerSubTurn(CivModel.Player)">
-            <summary>
-            Called before a sub turn.
-            </summary>
-            <param name="playerInTurn">The player which the sub turn is dedicated to.</param>
-        </member>
-        <member name="M:CivModel.Effect.PostPlayerSubTurn(CivModel.Player)">
-            <summary>
-            Called after a sub turn.
-            </summary>
-            <param name="playerInTurn">The player which the sub turn is dedicated to.</param>
         </member>
         <member name="T:CivModel.Game">
             <summary>
@@ -764,32 +772,32 @@
         </member>
         <member name="P:CivModel.Game.TurnObservable">
             <summary>
-            An <see cref="T:CivModel.Observable`1"/> object which can be observed by <see cref="T:CivModel.ITurnObserver"/>.
+            An <see cref="T:CivObservable.IObservable`2"/> object which can be observed by <see cref="T:CivModel.ITurnObserver"/>.
             </summary>
         </member>
         <member name="P:CivModel.Game.ProductionObservable">
             <summary>
-            An <see cref="T:CivModel.Observable`1"/> object which can be observed by <see cref="T:CivModel.IProductionObserver"/>.
+            An <see cref="T:CivObservable.IObservable`2"/> object which can be observed by <see cref="T:CivModel.IProductionObserver"/>.
             </summary>
         </member>
         <member name="P:CivModel.Game.TileObjectObservable">
             <summary>
-            An <see cref="T:CivModel.Observable`1"/> object which can be observed by <see cref="T:CivModel.ITileObjectObserver"/>.
+            An <see cref="T:CivObservable.IObservable`2"/> object which can be observed by <see cref="T:CivModel.ITileObjectObserver"/>.
             </summary>
         </member>
         <member name="P:CivModel.Game.BattleObservable">
             <summary>
-            An <see cref="T:CivModel.Observable`1"/> object which can be observed by <see cref="T:CivModel.IBattleObserver"/>.
+            An <see cref="T:CivObservable.IObservable`2"/> object which can be observed by <see cref="T:CivModel.IBattleObserver"/>.
             </summary>
         </member>
         <member name="P:CivModel.Game.QuestObservable">
             <summary>
-            An <see cref="T:CivModel.Observable`1"/> object which can be observed by <see cref="T:CivModel.IQuestObserver"/>.
+            An <see cref="T:CivObservable.IObservable`2"/> object which can be observed by <see cref="T:CivModel.IQuestObserver"/>.
             </summary>
         </member>
         <member name="P:CivModel.Game.VictoryObservable">
             <summary>
-            An <see cref="T:CivModel.Observable`1"/> object which can be observed by <see cref="T:CivModel.IVictoryObserver"/>.
+            An <see cref="T:CivObservable.IObservable`2"/> object which can be observed by <see cref="T:CivModel.IVictoryObserver"/>.
             </summary>
         </member>
         <member name="T:CivModel.GameConstants">
@@ -1433,27 +1441,49 @@
             Called before [destroy], by <see cref="M:CivModel.InteriorBuilding.Destroy"/>
             </summary>
         </member>
-        <member name="M:CivModel.InteriorBuilding.PostPlayerSubTurn(CivModel.Player)">
+        <member name="M:CivModel.InteriorBuilding.FixedPreTurn">
             <summary>
-            Called after a sub turn.
+            Called on fixed event [pre turn].
+            </summary>
+        </member>
+        <member name="M:CivModel.InteriorBuilding.FixedAfterPreTurn">
+            <summary>
+            Called on fixed event [after pre turn].
+            </summary>
+        </member>
+        <member name="M:CivModel.InteriorBuilding.FixedPostTurn">
+            <summary>
+            Called on fixed event [post turn].
+            </summary>
+        </member>
+        <member name="M:CivModel.InteriorBuilding.FixedAfterPostTurn">
+            <summary>
+            Called on fixed event [after post turn].
+            </summary>
+        </member>
+        <member name="M:CivModel.InteriorBuilding.FixedPreSubTurn(CivModel.Player)">
+            <summary>
+            Called on fixed event [pre subturn].
             </summary>
             <param name="playerInTurn">The player which the sub turn is dedicated to.</param>
         </member>
-        <member name="M:CivModel.InteriorBuilding.PostTurn">
+        <member name="M:CivModel.InteriorBuilding.FixedAfterPreSubTurn(CivModel.Player)">
             <summary>
-            Called after a turn.
-            </summary>
-        </member>
-        <member name="M:CivModel.InteriorBuilding.PrePlayerSubTurn(CivModel.Player)">
-            <summary>
-            Called before a sub turn.
+            Called on fixed event [after pre subturn].
             </summary>
             <param name="playerInTurn">The player which the sub turn is dedicated to.</param>
         </member>
-        <member name="M:CivModel.InteriorBuilding.PreTurn">
+        <member name="M:CivModel.InteriorBuilding.FixedPostSubTurn(CivModel.Player)">
             <summary>
-            Called before a turn.
+            Called on fixed event [post subturn].
             </summary>
+            <param name="playerInTurn">The player which the sub turn is dedicated to.</param>
+        </member>
+        <member name="M:CivModel.InteriorBuilding.FixedAfterPostSubTurn(CivModel.Player)">
+            <summary>
+            Called on fixed event [post subturn].
+            </summary>
+            <param name="playerInTurn">The player which the sub turn is dedicated to.</param>
         </member>
         <member name="T:CivModel.IInteriorBuildingProductionFactory">
             <summary>
@@ -1566,7 +1596,7 @@
         </member>
         <member name="M:CivModel.ITileObjectObserver.TileObjectProduced(CivModel.TileObject)">
             <summary>
-            Called when <see cref="T:CivModel.TileObject"/> is created.
+            Called when <see cref="T:CivModel.TileObject"/> is produced.
             </summary>
             <param name="obj">The <see cref="T:CivModel.TileObject"/>.</param>
         </member>
@@ -1591,32 +1621,66 @@
             <param name="production">The <see cref="T:CivModel.Production"/> object.</param>
             <param name="result">The production result object</param>
         </member>
-        <member name="T:CivModel.Observable`1">
+        <member name="T:CivModel.PillageActorAction">
             <summary>
-            Represents an object observable by observer interface.
+            Represents an pillage action.
             </summary>
-            <typeparam name="T">The observer interface to receive</typeparam>
+            <seealso cref="T:CivModel.IActorAction" />
         </member>
-        <member name="M:CivModel.Observable`1.AddObserver(`0)">
+        <member name="P:CivModel.PillageActorAction.Owner">
             <summary>
-            Registers an observer object.
+            The <see cref="T:CivModel.Actor" /> object which has this action.
             </summary>
-            <param name="observer">The observer.</param>
-            <seealso cref="M:CivModel.Observable`1.RemoveObserver(`0)"/>
         </member>
-        <member name="M:CivModel.Observable`1.RemoveObserver(`0)">
+        <member name="P:CivModel.PillageActorAction.IsParametered">
             <summary>
-            Removes a registered observer object.
+            Whether the action has a target parameter or not.
             </summary>
-            <param name="observer">The observer.</param>
-            <exception cref="T:System.ArgumentException">observer is not registered</exception>
-            <seealso cref="M:CivModel.Observable`1.AddObserver(`0)"/>
         </member>
-        <member name="M:CivModel.Observable`1.IterateObserver(System.Action{`0})">
+        <member name="M:CivModel.PillageActorAction.#ctor(CivModel.Actor)">
             <summary>
-            Iterates through the registered observers.
+            Initializes a new instance of the <see cref="T:CivModel.PillageActorAction"/> class.
             </summary>
-            <param name="action">The action to do in iteration.</param>
+            <param name="owner">The <see cref="T:CivModel.Actor"/> who will own the action.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="owner"/> is <c>null</c>.</exception>
+        </member>
+        <member name="M:CivModel.PillageActorAction.GetRequiredAP(CivModel.Terrain.Point,System.Nullable{CivModel.Terrain.Point})">
+            <summary>
+            Test if the action with given parameter is valid and return required AP to act.
+            Returns <see cref="F:CivModel.ActionPoint.NonAvailable"/> if the action is invalid.
+            </summary>
+            <param name="origin">the point where <see cref="P:CivModel.PillageActorAction.Owner"/> would be while testing.</param>
+            <param name="target">the parameter with which action will be tested.</param>
+            <returns>
+            the required AP to act. If the action is invalid, <see cref="F:CivModel.ActionPoint.NonAvailable"/>.
+            </returns>
+        </member>
+        <member name="M:CivModel.PillageActorAction.Act(System.Nullable{CivModel.Terrain.Point})">
+            <summary>
+            Acts with the specified parameter.
+            </summary>
+            <param name="pt">The parameter.</param>
+            <exception cref="T:System.ArgumentException">AP is not enough</exception>
+            <exception cref="T:System.InvalidOperationException">Owner of this action is not placed yet</exception>
+        </member>
+        <member name="T:CivModel.PlayerEffect">
+            <summary>
+            Represents an effect to <see cref="T:CivModel.Player"/>.
+            </summary>
+        </member>
+        <member name="P:CivModel.PlayerEffect.Target">
+            <summary>
+            The target <see cref="T:CivModel.Player"/> of this effect.
+            </summary>
+        </member>
+        <member name="M:CivModel.PlayerEffect.#ctor(CivModel.Player,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CivModel.ActorEffect"/> class.
+            </summary>
+            <param name="target">The target of the effect.</param>
+            <param name="duration">The duration of the effect. <c>-1</c> if forever.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="duration"/> is negative and not -1</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="target"/> is <c>null</c>.</exception>
         </member>
         <member name="T:CivModel.QuestStatus">
             <summary>
@@ -1781,25 +1845,47 @@
             This method is called only if <see cref="P:CivModel.Quest.Status"/> is <see cref="F:CivModel.QuestStatus.Disabled"/>.
             </summary>
         </member>
-        <member name="M:CivModel.Quest.PreTurn">
+        <member name="M:CivModel.Quest.FixedPreTurn">
             <summary>
-            Called before a turn.
+            Called on fixed event [pre turn].
             </summary>
         </member>
-        <member name="M:CivModel.Quest.PostTurn">
+        <member name="M:CivModel.Quest.FixedAfterPreTurn">
             <summary>
-            Called after a turn.
+            Called on fixed event [after pre turn].
             </summary>
         </member>
-        <member name="M:CivModel.Quest.PrePlayerSubTurn(CivModel.Player)">
+        <member name="M:CivModel.Quest.FixedPostTurn">
             <summary>
-            Called before a sub turn.
+            Called on fixed event [post turn].
+            </summary>
+        </member>
+        <member name="M:CivModel.Quest.FixedAfterPostTurn">
+            <summary>
+            Called on fixed event [after post turn].
+            </summary>
+        </member>
+        <member name="M:CivModel.Quest.FixedPreSubTurn(CivModel.Player)">
+            <summary>
+            Called on fixed event [pre subturn].
             </summary>
             <param name="playerInTurn">The player which the sub turn is dedicated to.</param>
         </member>
-        <member name="M:CivModel.Quest.PostPlayerSubTurn(CivModel.Player)">
+        <member name="M:CivModel.Quest.FixedAfterPreSubTurn(CivModel.Player)">
             <summary>
-            Called after a sub turn.
+            Called on fixed event [after pre subturn].
+            </summary>
+            <param name="playerInTurn">The player which the sub turn is dedicated to.</param>
+        </member>
+        <member name="M:CivModel.Quest.FixedPostSubTurn(CivModel.Player)">
+            <summary>
+            Called on fixed event [post subturn].
+            </summary>
+            <param name="playerInTurn">The player which the sub turn is dedicated to.</param>
+        </member>
+        <member name="M:CivModel.Quest.FixedAfterPostSubTurn(CivModel.Player)">
+            <summary>
+            Called on fixed event [after post subturn]
             </summary>
             <param name="playerInTurn">The player which the sub turn is dedicated to.</param>
         </member>
@@ -1826,23 +1912,45 @@
         </member>
         <member name="M:CivModel.ITurnObserver.PreTurn">
             <summary>
-            Called before a turn.
+            Called on observable event [pre turn].
+            </summary>
+        </member>
+        <member name="M:CivModel.ITurnObserver.AfterPreTurn">
+            <summary>
+            Called on observable event [after pre turn].
             </summary>
         </member>
         <member name="M:CivModel.ITurnObserver.PostTurn">
             <summary>
-            Called after a turn.
+            Called on observable event [post turn].
             </summary>
         </member>
-        <member name="M:CivModel.ITurnObserver.PrePlayerSubTurn(CivModel.Player)">
+        <member name="M:CivModel.ITurnObserver.AfterPostTurn">
             <summary>
-            Called before a sub turn.
+            Called on observable event [after post turn].
+            </summary>
+        </member>
+        <member name="M:CivModel.ITurnObserver.PreSubTurn(CivModel.Player)">
+            <summary>
+            Called on observable event [pre subturn].
             </summary>
             <param name="playerInTurn">The player which the sub turn is dedicated to.</param>
         </member>
-        <member name="M:CivModel.ITurnObserver.PostPlayerSubTurn(CivModel.Player)">
+        <member name="M:CivModel.ITurnObserver.AfterPreSubTurn(CivModel.Player)">
             <summary>
-            Called after a sub turn.
+            Called on observable event [after pre subturn].
+            </summary>
+            <param name="playerInTurn">The player which the sub turn is dedicated to.</param>
+        </member>
+        <member name="M:CivModel.ITurnObserver.PostSubTurn(CivModel.Player)">
+            <summary>
+            Called on observable event [post subturn].
+            </summary>
+            <param name="playerInTurn">The player which the sub turn is dedicated to.</param>
+        </member>
+        <member name="M:CivModel.ITurnObserver.AfterPostSubTurn(CivModel.Player)">
+            <summary>
+            Called on observable event [after post subturn].
             </summary>
             <param name="playerInTurn">The player which the sub turn is dedicated to.</param>
         </member>
@@ -2334,115 +2442,6 @@
             <exception cref="T:System.ArgumentException">point is invalid</exception>
             <seealso cref="M:CivModel.Production.Place(CivModel.Terrain.Point)"/>
         </member>
-        <member name="T:CivModel.SafeIterationCollection`1">
-            <summary>
-            Represents a collection can be modified safely during <see langword="foreach"/> iteration.
-            </summary>
-            <remarks>
-            This class is not thread safe.
-            </remarks>
-            <typeparam name="T">The type of elements in the collection</typeparam>
-            <seealso cref="T:System.Collections.Generic.ICollection`1" />
-            <seealso cref="T:System.Collections.Generic.IReadOnlyCollection`1" />
-        </member>
-        <member name="P:CivModel.SafeIterationCollection`1.Count">
-            <summary>
-            <see cref="T:System.Collections.Generic.ICollection`1" />에 포함된 요소 수를 가져옵니다.
-            </summary>
-        </member>
-        <member name="P:CivModel.SafeIterationCollection`1.IsReadOnly">
-            <summary>
-            <see cref="T:System.Collections.Generic.ICollection`1" />가 읽기 전용인지 여부를 나타내는 값을 가져옵니다.
-            </summary>
-        </member>
-        <member name="P:CivModel.SafeIterationCollection`1.Locked">
-            <summary>
-            이 <see cref="T:CivModel.SafeIterationCollection`1"/> 개체에 대해 <see cref="M:CivModel.SafeIterationCollection`1.GetEnumerator"/>를 호출하지 못하게 잠기었는지 여부를 나타냅니다.
-            </summary>
-            <remarks>
-            이 값이 <c>true</c>이면 <see cref="P:CivModel.SafeIterationCollection`1.UnderlyingList"/>를 사용할 수 있지만, <see cref="M:CivModel.SafeIterationCollection`1.GetEnumerator"/>를 사용할 수 없게 되어
-             <see langword="foreach"/> 반복문을 수행할 수 없게 됩니다.
-            </remarks>
-            <exception cref="T:System.InvalidOperationException">Cannot lock collection while enumerators exist</exception>
-            <seealso cref="P:CivModel.SafeIterationCollection`1.UnderlyingList"/>
-            <seealso cref="M:CivModel.SafeIterationCollection`1.GetEnumerator"/>
-        </member>
-        <member name="P:CivModel.SafeIterationCollection`1.UnderlyingList">
-            <summary>
-            이 <see cref="T:CivModel.SafeIterationCollection`1"/> 개체의 요소를 갖고있는 <see cref="T:System.Collections.Generic.List`1"/> 개체를 가져옵니다.
-            </summary>
-            <remarks>
-            이 속성은 오직 <see cref="P:CivModel.SafeIterationCollection`1.Locked"/>가 <c>true</c>일 때만 사용될 수 있습니다.
-            </remarks>
-            <exception cref="T:System.InvalidOperationException">Cannot retrieve underlying list of unlocked collection</exception>
-            <seealso cref="P:CivModel.SafeIterationCollection`1.Locked"/>
-        </member>
-        <member name="P:CivModel.SafeIterationCollection`1.Item(System.Int32)">
-            <summary>
-            읽기 전용 목록에서 지정된 인덱스의 요소를 가져옵니다.
-            </summary>
-            <param name="index">가져올 요소의 0부터 시작하는 인덱스입니다.</param>
-            <returns>읽기 전용 목록에서 지정된 인덱스의 요소입니다.</returns>
-            <exception cref="T:System.ArgumentOutOfRangeException">
-            <paramref name="index"/> is less than 0
-            or
-            <paramref name="index"/> is equal to or greater than <see cref="P:CivModel.SafeIterationCollection`1.Count"/>.
-            </exception>
-        </member>
-        <member name="M:CivModel.SafeIterationCollection`1.Add(`0)">
-            <summary>
-            <see cref="T:System.Collections.Generic.ICollection`1" />에 항목을 추가합니다.
-            </summary>
-            <param name="item"><see cref="T:System.Collections.Generic.ICollection`1" />에 추가할 개체입니다.</param>
-        </member>
-        <member name="M:CivModel.SafeIterationCollection`1.Remove(`0)">
-            <summary>
-            <see cref="T:System.Collections.Generic.ICollection`1" />에서 맨 처음 발견되는 특정 개체를 제거합니다.
-            </summary>
-            <param name="item"><see cref="T:System.Collections.Generic.ICollection`1" />에서 제거할 개체입니다.</param>
-            <returns>
-            <see langword="true" />이 <paramref name="item" />에서 제거되면 <see cref="T:System.Collections.Generic.ICollection`1" />이고, 그렇지 않으면 <see langword="false" />입니다.
-            이 메서드는 <see langword="false" />이 원래 <paramref name="item" />에 없는 경우에도 <see cref="T:System.Collections.Generic.ICollection`1" />를 반환합니다.
-            </returns>
-        </member>
-        <member name="M:CivModel.SafeIterationCollection`1.Clear">
-            <summary>
-            <see cref="T:System.Collections.Generic.ICollection`1" />에서 항목을 모두 제거합니다.
-            </summary>
-        </member>
-        <member name="M:CivModel.SafeIterationCollection`1.Contains(`0)">
-            <summary>
-            <see cref="T:System.Collections.Generic.ICollection`1" />에 특정 값이 들어 있는지 여부를 확인합니다.
-            </summary>
-            <param name="item"><see cref="T:System.Collections.Generic.ICollection`1" />에서 찾을 개체입니다.</param>
-            <returns>
-            <see langword="true" />가 <paramref name="item" />에 있으면 <see cref="T:System.Collections.Generic.ICollection`1" />이고, 그렇지 않으면 <see langword="false" />입니다.
-            </returns>
-        </member>
-        <member name="M:CivModel.SafeIterationCollection`1.GetEnumerator">
-            <summary>
-            컬렉션을 반복하는 열거자를 반환합니다.
-            </summary>
-            <returns>
-            컬렉션을 반복하는 데 사용할 수 있는 열거자입니다.
-            </returns>
-            <remarks>
-            이 메서드는 오직 <see cref="P:CivModel.SafeIterationCollection`1.Locked"/>가 <c>true</c>일 때만 사용될 수 있습니다.
-            </remarks>
-            <exception cref="T:System.InvalidOperationException">collection is locked</exception>
-            <seealso cref="P:CivModel.SafeIterationCollection`1.Locked"/>
-        </member>
-        <member name="M:CivModel.SafeIterationCollection`1.CopyTo(`0[],System.Int32)">
-            <summary>
-            특정 <see cref="T:System.Collections.Generic.ICollection`1" /> 인덱스부터 시작하여 <see cref="T:System.Array" />의 요소를 <see cref="T:System.Array" />에 복사합니다.
-            </summary>
-            <param name="array"><see cref="T:System.Array" />에서 복사한 요소의 대상인 일차원 <see cref="T:System.Collections.Generic.ICollection`1" />입니다.
-            <see cref="T:System.Array" />에는 0부터 시작하는 인덱스가 있어야 합니다.</param>
-            <param name="arrayIndex"><paramref name="array" />에서 복사가 시작되는 0부터 시작하는 인덱스입니다.</param>
-            <exception cref="T:System.ArgumentNullException">array</exception>
-            <exception cref="T:System.ArgumentOutOfRangeException">arrayIndex - arrayIndex is less than 0</exception>
-            <exception cref="T:System.ArgumentException">The available space from arrayIndex to the end of the destination array is not enough</exception>
-        </member>
         <member name="T:CivModel.SchemeLoader">
             <summary>
             Provides <see cref="T:CivModel.IGameScheme"/> management.
@@ -2800,11 +2799,6 @@
             <seealso cref="T:CivModel.Actor" />
             <seealso cref="T:CivModel.InteriorBuilding"/>
         </member>
-        <member name="P:CivModel.TileBuilding.MoveAct">
-            <summary>
-            The action performing movement. <c>null</c> by default.
-            </summary>
-        </member>
         <member name="P:CivModel.TileBuilding.ProvidedGold">
             <summary>
             The amount of gold this building provides.
@@ -2852,6 +2846,19 @@
             <paramref name="constants"/> is <c>null</c>.
             </exception>
         </member>
+        <member name="M:CivModel.TileBuilding.BePillaged(CivModel.Actor)">
+            <summary>
+            Pillages this TileBuilding.
+            </summary>
+            <param name="pillager">The pillager.</param>
+        </member>
+        <member name="M:CivModel.TileBuilding.OnBeforePillaged(CivModel.Actor)">
+            <summary>
+            Called before pillaged.
+            </summary>
+            <param name="pillager">The pillager.</param>
+            <see cref="M:CivModel.TileBuilding.BePillaged(CivModel.Actor)"/>
+        </member>
         <member name="M:CivModel.TileBuilding.OnChangePlacedPoint(System.Nullable{CivModel.Terrain.Point})">
             <summary>
             Called after <see cref="P:CivModel.TileObject.PlacedPoint" /> is changed.
@@ -2869,6 +2876,12 @@
             Called after [change owner], by <see cref="M:CivModel.Actor.ChangeOwner(CivModel.Player)" />.
             </summary>
             <param name="prevOwner">The previous owner.</param>
+        </member>
+        <member name="M:CivModel.TileBuilding.StealAdjacentTerritory(CivModel.Player)">
+            <summary>
+            Steals the adjacent territory from other player.
+            </summary>
+            <param name="targetPlayer">The target player.</param>
         </member>
         <member name="M:CivModel.TileBuilding.OnBeforeDestroy">
             <summary>
@@ -2912,7 +2925,6 @@
             An absract class represents the <see cref="T:CivModel.TileObject"/> which can have actions and action point (AP).
             </summary>
             <seealso cref="T:CivModel.TileObject" />
-            <seealso cref="T:CivModel.ITurnObserver"/>
         </member>
         <member name="P:CivModel.Actor.Owner">
             <summary>
@@ -2942,7 +2954,7 @@
         <member name="P:CivModel.Actor.RemainAP">
             <summary>
             The remaining AP. It must be in [0, <see cref="P:CivModel.Actor.MaxAP"/>].
-            It is reset to <see cref="P:CivModel.Actor.MaxAP"/> when <see cref="M:CivModel.Actor.PreTurn"/> is called.
+            It is reset to <see cref="P:CivModel.Actor.MaxAP"/> when <see cref="M:CivModel.Actor.FixedPreTurn"/> is called.
             </summary>
             <remarks>
             When setting this property with the value close to <c>0</c> or <see cref="P:CivModel.Actor.MaxAP"/> within small error,
@@ -2972,7 +2984,7 @@
             <remarks>
             If this is lower than <see cref="P:CivModel.Actor.MaxHP"/>,
              this value is increased to min{<see cref="P:CivModel.Actor.MaxHP"/>, value + <see cref="P:CivModel.Actor.MaxHealPerTurn"/>}
-             when <see cref="M:CivModel.Actor.PreTurn"/> is called.
+             when <see cref="M:CivModel.Actor.FixedPreTurn"/> is called.
             </remarks>
             <exception cref="T:System.InvalidOperationException">actor is already destroyed</exception>
             <exception cref="T:System.ArgumentOutOfRangeException"><see cref="P:CivModel.Actor.RemainHP"/> is not in [0, <see cref="P:CivModel.Actor.MaxHP"/>]</exception>
@@ -3046,6 +3058,11 @@
             The action performing moving attack. <c>null</c> if this actor cannot do.
             </summary>
         </member>
+        <member name="P:CivModel.Actor.PillageAct">
+            <summary>
+            The action performing pillage. <c>null</c> if this actor cannot do.
+            </summary>
+        </member>
         <member name="P:CivModel.Actor.SpecialActs">
             <summary>
             The list of special actions. <c>null</c> if not exists.
@@ -3093,13 +3110,6 @@
             or
             <paramref name="constants"/> is <c>null</c>.
             </exception>
-        </member>
-        <member name="M:CivModel.Actor.GetEffectByTag(CivModel.EffectTag)">
-            <summary>
-            Gets the <see cref="T:CivModel.Effect"/> object on this actor by <see cref="T:CivModel.EffectTag"/>.
-            </summary>
-            <param name="tag">The tag.</param>
-            <returns>The <see cref="T:CivModel.Effect"/> object.</returns>
         </member>
         <member name="M:CivModel.Actor.ChangeOwner(CivModel.Player)">
             <summary>
@@ -3337,6 +3347,14 @@
             <param name="to">The <see cref="T:CivModel.Terrain.Point"/> to move to</param>
             <returns>the required AP.</returns>
         </member>
+        <member name="M:CivModel.Actor.GetRequiredAPForTile(CivModel.TerrainType)">
+            <summary>
+            Gets the required ap for a specific type of <see cref="T:CivModel.Terrain.Point"/>.
+            This method is used for a default implementation of <see cref="M:CivModel.Actor.GetRequiredAPToMoveNearBy(CivModel.Terrain.Point,CivModel.Terrain.Point)"/>.
+            </summary>
+            <param name="type">The type of tile.</param>
+            <returns>the required AP.</returns>
+        </member>
         <member name="M:CivModel.Actor.Die(CivModel.Player)">
             <summary>
             Make this actor die. This function calls <see cref="M:CivModel.Actor.OnDie(CivModel.Player)"/>.
@@ -3351,31 +3369,49 @@
             </summary>
             <param name="opposite">The opposite who caused the dying of this actor. If not exists, <c>null</c>.</param>
         </member>
-        <member name="M:CivModel.Actor.PreTurn">
+        <member name="M:CivModel.Actor.FixedPreTurn">
             <summary>
-            Called before a turn.
+            Called on fixed event [pre turn].
             </summary>
-            <exception cref="T:System.InvalidOperationException">actor is already destroyed</exception>
         </member>
-        <member name="M:CivModel.Actor.PostTurn">
+        <member name="M:CivModel.Actor.FixedAfterPreTurn">
             <summary>
-            Called after a turn.
+            Called on fixed event [after pre turn].
             </summary>
-            <exception cref="T:System.InvalidOperationException">actor is already destroyed</exception>
         </member>
-        <member name="M:CivModel.Actor.PrePlayerSubTurn(CivModel.Player)">
+        <member name="M:CivModel.Actor.FixedPostTurn">
             <summary>
-            Called before a sub turn.
+            Called on fixed event [post turn].
+            </summary>
+        </member>
+        <member name="M:CivModel.Actor.FixedAfterPostTurn">
+            <summary>
+            Called on fixed event [after post turn].
+            </summary>
+        </member>
+        <member name="M:CivModel.Actor.FixedPreSubTurn(CivModel.Player)">
+            <summary>
+            Called on fixed event [pre subturn].
             </summary>
             <param name="playerInTurn">The player which the sub turn is dedicated to.</param>
-            <exception cref="T:System.InvalidOperationException">actor is already destroyed</exception>
         </member>
-        <member name="M:CivModel.Actor.PostPlayerSubTurn(CivModel.Player)">
+        <member name="M:CivModel.Actor.FixedAfterPreSubTurn(CivModel.Player)">
             <summary>
-            Called after a sub turn.
+            Called on fixed event [after pre subturn].
             </summary>
             <param name="playerInTurn">The player which the sub turn is dedicated to.</param>
-            <exception cref="T:System.InvalidOperationException">actor is already destroyed</exception>
+        </member>
+        <member name="M:CivModel.Actor.FixedPostSubTurn(CivModel.Player)">
+            <summary>
+            Called on fixed event [post subturn].
+            </summary>
+            <param name="playerInTurn">The player which the sub turn is dedicated to.</param>
+        </member>
+        <member name="M:CivModel.Actor.FixedAfterPostSubTurn(CivModel.Player)">
+            <summary>
+            Called on fixed event [after post subturn]
+            </summary>
+            <param name="playerInTurn">The player which the sub turn is dedicated to.</param>
         </member>
         <member name="T:CivModel.ITileBuildingProductionFactory">
             <summary>
@@ -4047,28 +4083,6 @@
             <returns><c>true</c> if the specified player is null or allied with this player; otherwise, <c>false</c>.</returns>
             <seealso cref="M:CivModel.Player.IsAlliedWith(CivModel.Player)"/>
         </member>
-        <member name="M:CivModel.Player.PreTurn">
-            <summary>
-            Called before a turn.
-            </summary>
-        </member>
-        <member name="M:CivModel.Player.PostTurn">
-            <summary>
-            Called after a turn.
-            </summary>
-        </member>
-        <member name="M:CivModel.Player.PrePlayerSubTurn(CivModel.Player)">
-            <summary>
-            Called before a sub turn.
-            </summary>
-            <param name="playerInTurn">The player which the sub turn is dedicated to.</param>
-        </member>
-        <member name="M:CivModel.Player.PostPlayerSubTurn(CivModel.Player)">
-            <summary>
-            Called after a sub turn.
-            </summary>
-            <param name="playerInTurn">The player which the sub turn is dedicated to.</param>
-        </member>
         <member name="M:CivModel.Player.EstimateResourceInputs">
             <summary>
             Update <see cref="P:CivModel.Production.EstimatedLaborInputing"/>, <see cref="P:CivModel.Production.EstimatedGoldInputing"/>,
@@ -4085,6 +4099,11 @@
         <member name="P:CivModel.Unit.MoveAct">
             <summary>
             The action performing movement. A <see cref="T:CivModel.MoveActorAction"/> object by default.
+            </summary>
+        </member>
+        <member name="P:CivModel.Unit.PillageAct">
+            <summary>
+            The action performing pillage. A <see cref="T:CivModel.MoveActorAction"/> object by default.
             </summary>
         </member>
         <member name="M:CivModel.Unit.#ctor(CivModel.Player,CivModel.ActorConstants,CivModel.Terrain.Point)">
@@ -4268,6 +4287,21 @@
             Called when <see cref="T:CivModel.Player"/> achieves this draw.
             </summary>
             <param name="player">The player.</param>
+        </member>
+        <member name="T:CivModel.ObserverPriority">
+            <summary>
+            The enumeration represents priority of an observer to an observable event.
+            </summary>
+        </member>
+        <member name="F:CivModel.ObserverPriority.Model">
+            <summary>
+            The priority of an observer of model extension module.
+            </summary>
+        </member>
+        <member name="F:CivModel.ObserverPriority.View">
+            <summary>
+            The priority of an observer of view module.
+            </summary>
         </member>
     </members>
 </doc>

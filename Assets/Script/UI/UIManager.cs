@@ -5,7 +5,6 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using CivModel;
 using CivModel.Common;
-using System.Text.RegularExpressions;
 using System.Linq;
 
 public class UIManager : MonoBehaviour
@@ -94,13 +93,6 @@ public class UIManager : MonoBehaviour
                 GameManager.Instance.selectedTile = tile;
                 // Update selectedPoint using tile information
                 GameManager.Instance.selectedPoint = tile.point;
-
-                Match isAdditionalclicked = Regex.Match(selectedActor.name, "Additional");
-
-                if (isAdditionalclicked.Success)
-                    GameManager.Instance.isAdClicked = true;
-                else
-                    GameManager.Instance.isAdClicked = false;
                 
                 if (tile.point.Unit != null && tile.point.TileBuilding != null)
                 {
@@ -429,6 +421,7 @@ public class UIManager : MonoBehaviour
         // SkillButton
         if (GameManager.Instance.selectedActor is CivModel.Actor && GameManager.Instance.selectedActor.Owner == GameManager.Instance.Game.PlayerInTurn)
         {
+            skillSet.SetActive(false);
             if (GameManager.Instance.selectedActor.SpecialActs != null)
             {
                 skillBtn.GetComponent<Button>().interactable = true;
