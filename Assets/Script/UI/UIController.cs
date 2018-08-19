@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using CivModel;
 
+// Quest 관련 큐 만들어서 프리팹 생성하는 컨트롤러
+
 public class UIController : MonoBehaviour {
 
 	private static UIController uicontroller;
@@ -160,7 +162,7 @@ public class UIController : MonoBehaviour {
 			foreach (Text txt in questInfotexts) {
 				switch (txt.name) {
 					case "QuestNameText":
-						txt.text = qst.Name;
+                        txt.text = qst.TextName;
 						break;
 					case "OfferedTurnText":
 						txt.text = "게시된 턴: 턴 " + qst.PostingTurn; // qst에서 불러올 수 없음

@@ -180,6 +180,7 @@ public class Unit : MonoBehaviour
             }
         }
         _parameterPoints = null;
+        UIManager.Instance.ButtonInteractChange();
     }
 
     public void AttackStateEnter()
@@ -386,5 +387,6 @@ public class Unit : MonoBehaviour
             GameManager.Instance.AdditionalTiles[pos.X, pos.Y].GetComponent<HexTile>().StopFlickering();
         }
         _skillParameterPoints.Clear();
+        UIManager.Instance.ButtonInteractChange();
     }
 }

@@ -6,6 +6,8 @@ using CivModel;
 using CivModel.Common;
 using System.Linq;
 
+// 운영/내정 관련 큐 만들어서 프리팹 생성하는 컨트롤러
+
 public class ManagementController : MonoBehaviour {
 
     private static ManagementController managementcontroller;
@@ -93,24 +95,29 @@ public class ManagementController : MonoBehaviour {
         mDeployment = game.PlayerInTurn.Deployment;
     }
 
+    char[] sep = { '.' };
+
+
     //type: 0 = all, 1 = unit, 2 = city, 3 = NormalBuliding, 4 = citybuilding, 5 = BulidingAll (2~4 All)
     private void MakeSelectionQ()//선택 큐 프리팹 생성 함수
     {
         facList = GameManager.Instance.Game.PlayerInTurn.AvailableProduction.ToList(); //전체 선택 목록 받아오기
         //facList의 변경으로 Epic-High-intermediate-Low 변경 가능. 하지만 지금은 설정되지 않았음(Epic에 생성)
 
-        //Debug.Log("facList: " + facList.Count);
-        //Debug.Log("ALL SelectList Updated");
-
         DeleteAllSQ();
         game.PlayerInTurn.EstimateResourceInputs();
         foreach (IProductionFactory fac in facList)
         {
+            string facActorName = fac.ToString().Split(sep)[1];
+            if (string.Compare(facActorName, "Common", System.StringComparison.Ordinal) == 0 )
+                continue;
+            
             //여기서 분리 
             if (typeof(CivModel.Unit).IsAssignableFrom(fac.ResultType))
             {
                 var f = (IActorProductionFactory)fac;
-                switch (f.ActorConstants.BattleClassLevel)
+
+                switch (game.GetPrototype<ActorPrototype>(f.ResultType).BattleClassLevel)
                 {
                     case 4:
                         PartSelectionQ(EpicQlist, EpicQueue, fac);
@@ -248,30 +255,51 @@ public class ManagementController : MonoBehaviour {
         }
         SQlist.Clear();
     }
-    
+
     public void MakeProductionQ()
     {
         List<GameObject> tempList = new List<GameObject>();
-        //Debug.Log("ProductionList startMaking");
+
         foreach (GameObject pq in PQlist)
         {
             Destroy(pq);
         }
         PQlist.Clear();
         mProduction = GameManager.Instance.Game.PlayerInTurn.Production;
-        //Debug.Log("ProList : " + mProduction.Count);
-        //Debug.Log("ProductionList Updated");
+
+        Dictionary<Production, int> ProductionDic = new Dictionary<Production, int>();
+
         foreach (Production prod in mProduction)
+        {
+            bool isExist = false;
+
+            foreach (Production dicProd in ProductionDic.Keys)
+            {
+                if (ProductionFactoryTraits.GetFactoryName(prod.Factory) == ProductionFactoryTraits.GetFactoryName(dicProd.Factory))
+                {
+                    ProductionDic[dicProd]++;
+                    isExist = true;
+                    break;
+                }
+            }
+
+            if (isExist == false)
+            {
+                ProductionDic[prod] = 1;
+            }
+        }
+
+        foreach (Production prod in ProductionDic.Keys)
         {
             var PPrefab = Instantiate(proPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
             PPrefab.transform.SetParent(proQueue.transform);
             PPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
             PPrefab.transform.localPosition = new Vector3(0f, 0f, 0f);
-            tempList.Add(PPrefab.GetComponent<ProductionPrefab>().MakeItem(prod));
+            tempList.Add(PPrefab.GetComponent<ProductionPrefab>().MakeItem(prod, ProductionDic[prod]));
         }
+
         if (mProduction.Count == 0)
         {
-            //Debug.Log("ProductionList null");
             var PPrefab = Instantiate(proPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
             PPrefab.transform.SetParent(proQueue.transform);
             PPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
@@ -289,23 +317,46 @@ public class ManagementController : MonoBehaviour {
     public void MakeDeploymentQ()
     {
         List<GameObject> tempList = new List<GameObject>();
-        //Debug.Log("DeploymentList startMaking");
+
         foreach (GameObject dq in DQlist)
         {
             Destroy(dq);
         }
         DQlist.Clear();
         mDeployment = GameManager.Instance.Game.PlayerInTurn.Deployment;
-        //Debug.Log("DepList : " + mDeployment.Count);
-        //Debug.Log("DeploymentList Updated");
+
+
+        Dictionary<Production, int> DeploymentDic = new Dictionary<Production, int>();
+
         foreach (Production prod in mDeployment)
+        {
+            bool isExist = false;
+
+            foreach (Production dicProd in DeploymentDic.Keys)
+            {
+                if (ProductionFactoryTraits.GetFactoryName(prod.Factory) == ProductionFactoryTraits.GetFactoryName(dicProd.Factory))
+                {
+                    DeploymentDic[dicProd]++;
+                    isExist = true;
+                    break;
+                }
+            }
+
+            if (isExist == false)
+            {
+                DeploymentDic[prod] = 1;
+            }
+        }
+
+        foreach (Production prod in DeploymentDic.Keys)
         {
             var DPrefab = Instantiate(depPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
             DPrefab.transform.SetParent(depQueue.transform);
             DPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
             DPrefab.transform.localPosition = new Vector3(0f, 0f, 0f);
-            tempList.Add(DPrefab.GetComponent<DeployPrefab>().MakeItem(prod));
+            tempList.Add(DPrefab.GetComponent<DeployPrefab>().MakeItem(prod, DeploymentDic[prod]));
         }
+
         if (mDeployment.Count == 0)
         {
             //Debug.Log("DeploymentList null");
@@ -316,6 +367,7 @@ public class ManagementController : MonoBehaviour {
             tempList.Add(DPrefab.GetComponent<DeployPrefab>().MakeItem());
             tempList.Add(DPrefab);
         }
+
         DQlist = tempList;
         foreach (GameObject dq in DQlist)
         {

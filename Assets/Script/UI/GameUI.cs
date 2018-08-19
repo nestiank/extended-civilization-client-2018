@@ -151,9 +151,11 @@ public class GameUI : MonoBehaviour {
 
             managementcontroller.MakeProductionQ();
             managementcontroller.MakeDeploymentQ();
+
+            GameManager.Instance.CheckNewQuest();
+
         }
     }
-
 }
 
 // HWAN ONLY PLAY

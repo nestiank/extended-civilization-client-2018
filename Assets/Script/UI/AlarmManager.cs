@@ -19,6 +19,9 @@ public class AlarmManager : MonoBehaviour
     public GameObject alarmContent;
     private List<GameObject> alarmQueue;
 
+    public AudioClip alarmSound;
+    AudioSource alarmAudio;
+
     int rowCount = 0;
 
     void Awake()
@@ -31,6 +34,7 @@ public class AlarmManager : MonoBehaviour
     void Start ()
     {
         alarmQueue = new List<GameObject>();
+        alarmAudio = GetComponent<AudioSource>();
         ActiveAlarm();
     }
     
@@ -119,5 +123,11 @@ public class AlarmManager : MonoBehaviour
             alarmViewPort.GetComponent<RectTransform>().sizeDelta += new Vector2(0, 20);
         ActiveAlarm();
     }
+
+    public void PlayAlarmSound()
+    {
+        alarmAudio.PlayOneShot(alarmSound);
+    }
+
 
 }

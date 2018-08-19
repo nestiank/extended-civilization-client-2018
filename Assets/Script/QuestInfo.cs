@@ -16,7 +16,7 @@ public class QuestInfo : MonoBehaviour {
 	}
 
 	static public string GetRequesterCountry(Quest qst) {
-		switch (qst.Name) {
+        switch (qst.TextName) {
 			case "불가사의 - 오티즘 빔 반사 어레이":
 				return "어류 공화국";
 			case "첩보 - 크툴루 계획":
@@ -38,13 +38,14 @@ public class QuestInfo : MonoBehaviour {
 			case "불가사의 - 유전 연구학":
 				return "아틀란티스";
 			default:
+                //Debug.Log(qst.TextName);
 				return "Requester Unknown";
 		}
 	}
 
 	static public Sprite GetPortraitImage(Quest qst) {
 		string questPortraitName = "";
-		switch (qst.Name) {
+        switch (qst.TextName) {
 			case "불가사의 - 오티즘 빔 반사 어레이":
 				questPortraitName = "hwan_main1";
 				break;

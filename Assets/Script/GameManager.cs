@@ -6,6 +6,7 @@ using CivModel;
 using System.Threading.Tasks;
 using System.IO;
 using UnityEngine.EventSystems;
+using System.Linq;
 
 
 public class GameManager : MonoBehaviour {
@@ -71,8 +72,11 @@ public class GameManager : MonoBehaviour {
 
     public Camera minimap_camera;
 
-    static List<Quest> AlarmedQuests = new List<Quest>();
-    static List<Production> AlarmedProduction = new List<Production>();
+    static List<Quest> NewQuestQueue = new List<Quest>();
+    static List<Quest> CompletedQuestsQueue = new List<Quest>();
+    static List<String> AlarmedProduction = new List<String>();
+
+    private ManagementController managementcontroller;
 
 	void Awake() {
 		// Singleton
@@ -106,6 +110,7 @@ public class GameManager : MonoBehaviour {
 	void Start() {
         InitiateTurn();
         CheckToDo();
+        managementcontroller = ManagementController.GetManagementController();
 	}
     void Update()
     {
@@ -573,12 +578,11 @@ public class GameManager : MonoBehaviour {
     // Called When a Player about to Deploy Something
     // dep is a Production to deploy
     // deployprefab is a prefab of Production dep
-    public void DepStateEnter(Production dep, DeployPrefab deployprefab)
+    public void DepStateEnter(List<Production> depList)
     {
         // State change
-        if (dep == null || _inDepState) return;
+        if (depList.First() == null || _inDepState) return;
         _inDepState = true;
-        _deployment = dep;
 
         // Represent Tiles which are available to place Actor
         CivModel.Terrain terrain = Instance.Game.Terrain;
@@ -587,7 +591,7 @@ public class GameManager : MonoBehaviour {
             for (int j = 0; j < terrain.Height; j++)
             {
                 CivModel.Terrain.Point point = terrain.GetPoint(i, j);
-                if (dep.IsPlacable(point))
+                if (depList.First().IsPlacable(point))
                 {
                     Instance.Tiles[point.Position.X, point.Position.Y].GetComponent<HexTile>().FlickerBlue();
                     Instance.AdditionalTiles[point.Position.X, point.Position.Y].GetComponent<HexTile>().FlickerBlue();
@@ -596,11 +600,11 @@ public class GameManager : MonoBehaviour {
         }
 
         CivModel.Terrain.Point StartPoint = Instance.selectedPoint;
-        IEnumerator _coroutine = DeployUnit(StartPoint, dep, deployprefab);
+        IEnumerator _coroutine = DeployUnit(StartPoint, depList);
         StartCoroutine(_coroutine);
     }
 
-    IEnumerator DeployUnit(CivModel.Terrain.Point point, Production dep, DeployPrefab deployprefab)
+    IEnumerator DeployUnit(CivModel.Terrain.Point point, List<Production> depList)
     {
         while (true)
         {
@@ -614,22 +618,25 @@ public class GameManager : MonoBehaviour {
                 // Flicker하고 있는 Tile을 선택했을 때
                 if (Instance.selectedTile.isFlickering)
                 {
-                    if (dep.IsPlacable(destPoint))
+                    if (depList.First().IsPlacable(destPoint))
                     {
-                        Game.PlayerInTurn.Deployment.Remove(dep);
-                        dep.Place(destPoint);
-                        DepStateExit(deployprefab);
+                        foreach(Production dep in depList)
+                        {
+                            Game.PlayerInTurn.Deployment.Remove(dep);
+                            dep.Place(destPoint);
+                        }
+                        DepStateExit();
                         GameManager.Instance.UpdateUnit();
                         GameManager.Instance.UpdateMap();
                         break;
                     }
                     else
                     {
-                        DepStateExit(deployprefab);
+                        DepStateExit();
                         break;
                     }
                 }
-                DepStateExit(deployprefab);
+                DepStateExit();
                 break;
             }
             yield return null;
@@ -637,7 +644,7 @@ public class GameManager : MonoBehaviour {
     }
 
     // Exiting Deploy State
-    void DepStateExit(DeployPrefab deployprefab)
+    void DepStateExit()
     {
         _inDepState = false;
         _deployment = null;
@@ -651,11 +658,39 @@ public class GameManager : MonoBehaviour {
                 Instance.AdditionalTiles[point.Position.X, point.Position.Y].GetComponent<HexTile>().StopFlickering();
             }
         }
+
+        managementcontroller.MakeProductionQ();
+        managementcontroller.MakeDeploymentQ();
         GameManager.Instance.UpdateUnit();
         GameManager.Instance.UpdateMap();
     }
 
-    // Check if there exist quest that have finished.
+    // Check if there exists new quest to alarm
+    public void CheckNewQuest()
+    {
+        foreach (Quest qst in GameManager.Instance.Game.PlayerInTurn.Quests)
+        {
+            switch (qst.Status)
+            {
+                case QuestStatus.Deployed:
+                    if (!NewQuestQueue.Contains(qst))
+                    {
+                        Sprite questPortrait = QuestInfo.GetPortraitImage(qst);
+                        AlarmManager.Instance.AddAlarm(questPortrait,
+                                                       qst.TextName + " 시작가능",
+                                                       delegate {
+                                                           UIManager.Instance.mapUI.SetActive(false);
+                                                           UIManager.Instance.questUI.SetActive(true);
+                                                       },
+                                                       0);
+                        NewQuestQueue.Add(qst);
+                    }
+                    break;
+            }
+        }
+    }
+
+    // Check if there exist quests that have finished.
     public void CheckCompletedQuest()
     {
         foreach (Quest qst in GameManager.Instance.Game.PlayerInTurn.Quests)
@@ -663,17 +698,17 @@ public class GameManager : MonoBehaviour {
             switch (qst.Status)
             {
                 case QuestStatus.Completed:
-                    if (!AlarmedQuests.Contains(qst))
+                    if (!CompletedQuestsQueue.Contains(qst))
                     {
                         Sprite questPortrait = QuestInfo.GetPortraitImage(qst);
                         AlarmManager.Instance.AddAlarm(questPortrait,
-                                                       qst.Name + " 완료됨",
+                                                       qst.TextName + " 완료됨",
                                                        delegate {
                                                            UIManager.Instance.mapUI.SetActive(false);
                                                            UIManager.Instance.questUI.SetActive(true);
                                                        },
                                                        0);
-                        AlarmedQuests.Add(qst);
+                        CompletedQuestsQueue.Add(qst);
                     }
                     break;
             }
@@ -688,7 +723,7 @@ public class GameManager : MonoBehaviour {
 
         foreach (Production prod in GameManager.Instance.Game.PlayerInTurn.Deployment)
         {
-            if (!AlarmedProduction.Contains(prod))
+            if (!AlarmedProduction.Contains(ProductionFactoryTraits.GetFacPortName(prod.Factory)))
             {
                 Sprite prodPortrait = Resources.Load<Sprite>("Portraits/" + ProductionFactoryTraits.GetFacPortName(prod.Factory));
                 AlarmManager.Instance.AddAlarm(prodPortrait,
@@ -698,7 +733,7 @@ public class GameManager : MonoBehaviour {
                                                    UIManager.Instance.managementUI.SetActive(true);
                                                },
                                                0);
-                AlarmedProduction.Add(prod);
+                AlarmedProduction.Add(ProductionFactoryTraits.GetFacPortName(prod.Factory));
             }
         }
 

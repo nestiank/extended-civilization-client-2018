@@ -14,6 +14,8 @@ public class ProductionPrefab : MonoBehaviour {
     private Production production;
     private GameManager gameManager;
     private Game game;
+    private int numOfUnit;
+
     // Use this for initialization
     void Awake()
     {
@@ -90,6 +92,9 @@ public class ProductionPrefab : MonoBehaviour {
                         txt.text = "금 : 턴당 " + Convert.ToInt32(production.EstimatedGoldInputing) + " (" + Convert.ToInt32(production.GoldInputed) + "/" + Convert.ToInt32(production.TotalGoldCost).ToString() + ")"
                             + "\n노동력 : 턴당 " + Convert.ToInt32(production.EstimatedLaborInputing) + " (" + Convert.ToInt32(production.LaborInputed).ToString() + "/" + Convert.ToInt32(production.TotalLaborCost).ToString() + ")";
                         break;
+                    case "NumOfUnit":
+                        txt.text = "X" + this.numOfUnit;
+                        break;
                 }
             }
 
@@ -113,12 +118,12 @@ public class ProductionPrefab : MonoBehaviour {
         }
     }
 
-    public GameObject MakeItem(Production prod)
+    public GameObject MakeItem(Production prod, int numOfUnit)
     {
         //투입될 자원을 보기 위해 필요
         gameManager = GameManager.Instance;
         game = gameManager.Game;
-        
+        this.numOfUnit = numOfUnit;
 
         this.production = prod;
         string nameofProduction = ProductionFactoryTraits.GetFactoryName(prod.Factory);
@@ -144,6 +149,9 @@ public class ProductionPrefab : MonoBehaviour {
                     txt.text = "";
                     break;
                 case "Required Resource":
+                    txt.text = "";
+                    break;
+                case "NumOfUnit":
                     txt.text = "";
                     break;
             }
@@ -177,9 +185,22 @@ public class ProductionPrefab : MonoBehaviour {
                 {
                     case "Delete":
                         but.onClick.AddListener(delegate () {
-                            //Debug.Log(but.name);
-                            GameManager.Instance.Game.PlayerInTurn.Production.Remove(prod);
-                            ManagementController.GetManagementController().MakeProductionQ();
+
+                            LinkedListNode<Production> prodToDel = GameManager.Instance.Game.PlayerInTurn.Production.First;
+
+                            while (prodToDel != null)
+                            {
+                                if (ProductionFactoryTraits.GetFactoryName(prodToDel.Value.Factory) == ProductionFactoryTraits.GetFactoryName(prod.Value.Factory))
+                                {
+                                    GameManager.Instance.Game.PlayerInTurn.Production.Remove(prodToDel);
+                                    ManagementController.GetManagementController().MakeProductionQ();
+                                    break;
+                                }
+                                else
+                                {
+                                    prodToDel = prodToDel.Next;
+                                }
+                            }
                         });
                         break;
                     case "Top":

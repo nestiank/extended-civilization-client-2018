@@ -16,7 +16,7 @@ public class ResourceInfo : MonoBehaviour {
     }
 
     static public string GetResourceName(Quest qst) {
-        switch (qst.Name) {
+        switch (qst.TextName) {
             case "불가사의 - 오티즘 빔 반사 어레이":
                 return "[특수 자원 : 오티즘빔 반사 어레이]";
             case "첩보 - 크툴루 계획":
@@ -44,7 +44,7 @@ public class ResourceInfo : MonoBehaviour {
 
     static public Sprite GetResourceSprite(Quest qst) {
         string resourceSpriteName = "";
-        switch (qst.Name) {
+        switch (qst.TextName) {
             case "불가사의 - 오티즘 빔 반사 어레이":
                 resourceSpriteName = "hwan_autism_ray_reflection";
                 break;

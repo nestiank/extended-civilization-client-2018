@@ -185,7 +185,7 @@ public class UIManager : MonoBehaviour
                 // CityBase Portrait 및 CityBuilding 리스트 표시
                 if(GameManager.Instance.selectedActor is CivModel.CityBase)
                 {
-                    unitName.GetComponent<Text>().text = GameManager.Instance.selectedActor.Name;
+                    unitName.GetComponent<Text>().text = GameManager.Instance.selectedActor.TextName;
                     UnitPortrait.sprite = CityBuilding.GetPortraiteImage((CivModel.CityBase)GameManager.Instance.selectedActor);
                     cityBuildingInfo.SetActive(true);
                     cityBuildingInfo.GetComponentInChildren<Text>().text = CityBuilding.ListCityBuildings(((CityBase)GameManager.Instance.selectedActor).InteriorBuildings);
@@ -435,7 +435,7 @@ public class UIManager : MonoBehaviour
                 int skillIdx = 0;
                 foreach (var skill in GameManager.Instance.selectedActor.SpecialActs)
                 {
-                    skillsBtn[skillIdx].GetComponentInChildren<Text>().text = GameManager.Instance.selectedActor.SpecialActs[skillIdx].Owner.Name;
+                    skillsBtn[skillIdx].GetComponentInChildren<Text>().text = GameManager.Instance.selectedActor.SpecialActs[skillIdx].Owner.TextName;
                     skillIdx++;
                 }
                 foreach (var skill in skillsBtn.Skip(skillIdx))

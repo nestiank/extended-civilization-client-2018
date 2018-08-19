@@ -193,64 +193,71 @@
             A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
             </returns>
         </member>
-        <member name="T:CivModel.ActorConstants">
+        <member name="T:CivModel.ActorPrototype">
             <summary>
-            Represents a constants storage of <see cref="T:CivModel.Actor"/>.
+            Represents a prototype of <see cref="T:CivModel.Actor"/>.
             </summary>
+            <seealso cref="T:CivModel.ProductionResultPrototype"/>
             <seealso cref="T:CivModel.Actor"/>
         </member>
-        <member name="P:CivModel.ActorConstants.MaxAP">
+        <member name="P:CivModel.ActorPrototype.MaxAP">
             <summary>
             The maximum AP.
             </summary>
         </member>
-        <member name="P:CivModel.ActorConstants.MaxHP">
+        <member name="P:CivModel.ActorPrototype.MaxHP">
             <summary>
             The maximum HP. <c>0</c> if this actor is not a combattant.
             </summary>
         </member>
-        <member name="P:CivModel.ActorConstants.MaxHealPerTurn">
+        <member name="P:CivModel.ActorPrototype.MaxHealPerTurn">
             <summary>
             The maximum heal per turn.
             </summary>
-            <seealso cref="M:CivModel.Actor.HealByRepair(System.Double)" />
         </member>
-        <member name="P:CivModel.ActorConstants.AttackPower">
+        <member name="P:CivModel.ActorPrototype.AttackPower">
             <summary>
             The attack power.
             </summary>
         </member>
-        <member name="P:CivModel.ActorConstants.DefencePower">
+        <member name="P:CivModel.ActorPrototype.DefencePower">
             <summary>
             The defence power.
             </summary>
         </member>
-        <member name="P:CivModel.ActorConstants.GoldLogistics">
+        <member name="P:CivModel.ActorPrototype.GoldLogistics">
             <summary>
-            The amount of gold logistics of this actor.
+            The amount of gold logistics per turn of this actor.
+            Actor is starved if the owner cannot pay this logistics.
             </summary>
         </member>
-        <member name="P:CivModel.ActorConstants.LaborLogistics">
+        <member name="P:CivModel.ActorPrototype.LaborLogistics">
             <summary>
-            The amount of labor logistics of this actor.
+            The amount of labor logistics per turn of this actor.
+            Actor is starved if the owner cannot pay this logistics.
             </summary>
         </member>
-        <member name="P:CivModel.ActorConstants.FullLaborForRepair">
+        <member name="P:CivModel.ActorPrototype.FullLaborForRepair">
             <summary>
-            The amount of labor for this actor to get the full heal amount of <see cref="P:CivModel.Actor.MaxHealPerTurn"/>.
+            The amount of labor for this actor to get the full heal amount of <see cref="P:CivModel.ActorPrototype.MaxHealPerTurn"/>.
             </summary>
-            <seealso cref="M:CivModel.Actor.HealByRepair(System.Double)" />
         </member>
-        <member name="P:CivModel.ActorConstants.BattleClassLevel">
+        <member name="P:CivModel.ActorPrototype.BattleClassLevel">
             <summary>
             Battle class level of this actor. This value can affect the ATK/DEF power during battle.
             </summary>
         </member>
-        <member name="M:CivModel.ActorConstants.Clone">
+        <member name="T:CivModel.CityPrototype">
             <summary>
-            Create the copy of this object.
+            Represents a prototype of city.
             </summary>
-            <returns>The copy of this object.</returns>
+            <seealso cref="T:CivModel.TileBuildingPrototype"/>
+            <seealso cref="T:CivModel.CityBase"/>
+        </member>
+        <member name="P:CivModel.CityPrototype.InitialPopulation">
+            <summary>
+            The initial population of city.
+            </summary>
         </member>
         <member name="T:CivModel.Effect">
             <summary>
@@ -365,19 +372,46 @@
             </summary>
             <param name="playerInTurn">The player which the sub turn is dedicated to.</param>
         </member>
+        <member name="T:CivModel.GuidObjectPrototype">
+            <summary>
+            The base class represents a prototype.
+            </summary>
+        </member>
+        <member name="P:CivModel.GuidObjectPrototype.PackageAssembly">
+            <summary>
+            The assembly from which this prototype is.
+            </summary>
+        </member>
+        <member name="P:CivModel.GuidObjectPrototype.PackageAssemblyQualifiedName">
+            <summary>
+            The <see cref="P:System.Type.AssemblyQualifiedName"/> of <see cref="P:CivModel.GuidObjectPrototype.TargetType"/>.
+            </summary>
+        </member>
+        <member name="P:CivModel.GuidObjectPrototype.Name">
+            <summary>
+            The name of <see cref="P:CivModel.GuidObjectPrototype.TargetType"/>.
+            </summary>
+        </member>
+        <member name="P:CivModel.GuidObjectPrototype.Guid">
+            <summary>
+            The unique identifier of <see cref="P:CivModel.GuidObjectPrototype.TargetType"/>.
+            </summary>
+        </member>
+        <member name="P:CivModel.GuidObjectPrototype.TargetType">
+            <summary>
+            The type of an object of the kind of this prototype.
+            </summary>
+        </member>
+        <member name="P:CivModel.GuidObjectPrototype.TextName">
+            <summary>
+            The name of an object of the kind of this prototype.
+            </summary>
+        </member>
         <member name="T:CivModel.IActorProductionFactory">
             <summary>
             The factory interface of <see cref="T:CivModel.Production"/> which products <see cref="T:CivModel.Actor"/> objects.
-            This interface also provides <see cref="P:CivModel.IActorProductionFactory.ActorConstants"/> of production results.
             </summary>
-            <seealso cref="T:CivModel.ActorConstants"/>
             <seealso cref="T:CivModel.ITileObjectProductionFactory"/>
-        </member>
-        <member name="P:CivModel.IActorProductionFactory.ActorConstants">
-            <summary>
-            The constants of production result <see cref="T:CivModel.Actor"/>.
-            </summary>
-            <seealso cref="P:CivModel.IActorProductionFactory.ActorConstants"/>
         </member>
         <member name="T:CivModel.IAIController">
             <summary>
@@ -450,12 +484,12 @@
             </summary>
             <seealso cref="T:CivModel.TileBuilding" />
         </member>
-        <member name="P:CivModel.CityBase.Name">
+        <member name="P:CivModel.CityBase.CityName">
             <summary>
             The name of this city.
             </summary>
             <remarks>
-            <see cref="P:CivModel.CityBase.Name"/> cannot have newline characters and cannot be empty string.
+            <see cref="P:CivModel.CityBase.CityName"/> cannot have newline characters and cannot be empty string.
             See the list of newline characters at <see href="https://en.wikipedia.org/wiki/Newline#Unicode"/>.
             </remarks>
             <exception cref="T:System.ArgumentException">the name is invalid or already used.</exception>
@@ -503,36 +537,32 @@
             The list of <see cref="T:CivModel.InteriorBuilding"/> this city owns.
             </summary>
         </member>
-        <member name="M:CivModel.CityBase.#ctor(CivModel.Player,CivModel.ActorConstants,CivModel.Terrain.Point,CivModel.Player)">
+        <member name="M:CivModel.CityBase.#ctor(CivModel.Player,System.Type,CivModel.Terrain.Point,CivModel.Player)">
             <summary>
             Initializes a new instance of the <see cref="T:CivModel.CityBase"/> class.
             </summary>
             <param name="owner">The player who owns this city.</param>
-            <param name="constants">constants of this actor.</param>
+            <param name="type">The concrete type of this object.</param>
             <param name="point">The tile where the object will be.</param>
             <param name="donator">The player donated this TileBuilding. If this TileBuilding is not donated, <c>null</c>.</param>
-            <exception cref="T:System.ArgumentNullException">
-            <paramref name="owner"/> is <c>null</c>.
-            or
-            <paramref name="constants"/> is <c>null</c>.
-            </exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="owner"/> is <c>null</c>.</exception>
         </member>
         <member name="M:CivModel.CityBase.TrySetCityName(System.String)">
             <summary>
-            Sets <see cref="P:CivModel.CityBase.Name"/> of the city. A return value indicates whether the setting is succeeded.
+            Sets <see cref="P:CivModel.CityBase.CityName"/> of the city. A return value indicates whether the setting is succeeded.
             </summary>
             <param name="value">The value.</param>
             <returns><c>true</c> if succeded. otherwise, <c>false</c>.</returns>
-            <seealso cref="P:CivModel.CityBase.Name"/>
+            <seealso cref="P:CivModel.CityBase.CityName"/>
             <seealso cref="M:CivModel.CityBase.SetCityName(System.String)"/>
         </member>
         <member name="M:CivModel.CityBase.SetCityName(System.String)">
             <summary>
-            Sets <see cref="P:CivModel.CityBase.Name"/> of the city. The behavior of this method is equal to the setter of <see cref="P:CivModel.CityBase.Name"/>.
+            Sets <see cref="P:CivModel.CityBase.CityName"/> of the city. The behavior of this method is equal to the setter of <see cref="P:CivModel.CityBase.CityName"/>.
             </summary>
             <param name="value">The value to set.</param>
             <exception cref="T:System.ArgumentException">the name is invalid or already used.</exception>
-            <seealso cref="P:CivModel.CityBase.Name"/>
+            <seealso cref="P:CivModel.CityBase.CityName"/>
             <seealso cref="M:CivModel.CityBase.TrySetCityName(System.String)"/>
         </member>
         <member name="M:CivModel.CityBase.AddBuilding(CivModel.InteriorBuilding)">
@@ -623,12 +653,6 @@
             </remarks>
             <seealso cref="T:CivModel.GameConstants"/>
             <seealso cref="T:CivModel.IGameConstantScheme"/>
-        </member>
-        <member name="P:CivModel.Game.GuidManager">
-            <summary>
-            The manager object of <see cref="T:CivModel.IGuidTaggedObject"/>.
-            This property is used by model extension modules.
-            </summary>
         </member>
         <member name="P:CivModel.Game.Random">
             <summary>
@@ -755,6 +779,19 @@
             </remarks>
             <seealso cref="M:CivModel.Game.Load(System.IO.StreamReader,System.Collections.Generic.IEnumerable{CivModel.IGameSchemeFactory})"/>
         </member>
+        <member name="M:CivModel.Game.GetPrototype``1(System.Type)">
+            <summary>
+            Gets the prototype for specified type.
+            </summary>
+            <typeparam name="Proto">The type of the prototype.</typeparam>
+            <param name="type">The type targeted by the prototype.</param>
+            <returns>The prototype object.</returns>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">
+            the prototype of specified type is not found
+            or
+            the prototype of specified type cannot be cast into specified prototype
+            </exception>
+        </member>
         <member name="M:CivModel.Game.StartTurn">
             <summary>
             Starts the turn. If the game is loaded from a save file and not resumed, Resume the game.
@@ -806,11 +843,6 @@
             </summary>
             <seealso cref="T:CivModel.IGameConstantScheme"/>
             <seealso cref="F:CivModel.Game.Constants"/>
-        </member>
-        <member name="P:CivModel.GameConstants.CivModel#IGameScheme#Factory">
-            <summary>
-            This property is not used.
-            </summary>
         </member>
         <member name="P:CivModel.GameConstants.GoldCoefficient">
             <summary>
@@ -890,6 +922,24 @@
             If an <see cref="T:CivModel.Actor"/> engaged in battle die, its <see cref="P:CivModel.Actor.Owner"/> becomes <c>null</c>.
             In this case, <paramref name="atkOwner"/> and <paramref name="defOwner"/> parameters can be used to get their previous value.
             </remarks>
+        </member>
+        <member name="T:CivModel.IProductionFactory">
+            <summary>
+            The factory interface of <see cref="T:CivModel.Production"/>
+            </summary>
+            <seealso cref="P:CivModel.Player.AvailableProduction"/>
+        </member>
+        <member name="P:CivModel.IProductionFactory.ResultType">
+            <summary>
+            The type of production result object. <c>null</c> if the production result is not an object.
+            </summary>
+        </member>
+        <member name="M:CivModel.IProductionFactory.Create(CivModel.Player)">
+            <summary>
+            Creates the <see cref="T:CivModel.Production"/> object
+            </summary>
+            <param name="owner">The player who owns the <see cref="T:CivModel.Production"/> object.</param>
+            <returns>the created <see cref="T:CivModel.Production"/> object</returns>
         </member>
         <member name="T:CivModel.IProductionResult">
             <summary>
@@ -973,6 +1023,15 @@
             The factory object of this instance.
             </summary>
         </member>
+        <member name="M:CivModel.IGameScheme.GetPackageData">
+            <summary>
+            Gets the package data of this game scheme.
+            </summary>
+            <returns>
+            The <see cref="T:System.IO.TextReader"/> object on the package data of this game scheme.
+            If the package data does not exists, <c>null</c>.
+            </returns>
+        </member>
         <member name="M:CivModel.IGameScheme.OnAfterInitialized(CivModel.Game)">
             <summary>
             Called after the game is initialized.
@@ -1020,23 +1079,6 @@
             <param name="game">The game to initialize.</param>
             <param name="isNewGame"><c>true</c> if initializing a new game. <c>false</c> if initializing a game loaded from a save file.</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="game"/> is <c>null</c>.</exception>
-        </member>
-        <member name="T:CivModel.IGameAdditionScheme">
-            <summary>
-            The interface represents <see cref="T:CivModel.IGameScheme"/> for additional objects.
-            This type of scheme is overlappable, that is, can be applied multiple time per a game.
-            </summary>
-        </member>
-        <member name="P:CivModel.IGameAdditionScheme.AdditionalProductionFactory">
-            <summary>
-            An additional list of <see cref="T:CivModel.IProductionFactory"/>. This list will be added to <see cref="P:CivModel.Player.AvailableProduction"/>.
-            </summary>
-        </member>
-        <member name="M:CivModel.IGameAdditionScheme.RegisterGuid(CivModel.Game)">
-            <summary>
-            Registers <see cref="T:CivModel.IGuidTaggedObject"/> for this scheme.
-            </summary>
-            <param name="game">The <see cref="T:CivModel.Game"/> object.</param>
         </member>
         <member name="T:CivModel.IGameConstantScheme">
             <summary>
@@ -1163,60 +1205,6 @@
             </returns>
             <exception cref="T:System.ArgumentException">actor is already destroyed</exception>
         </member>
-        <member name="T:CivModel.IGuidTaggedObject">
-            <summary>
-            The interface represents an object which can be created and class-level distinguished from <see cref="T:System.Guid"/>.
-            </summary>
-            <remarks>
-            To enable object creation from Guid, <see cref="M:CivModel.GuidTaggedObjectManager.RegisterGuid(System.Guid,System.Func{CivModel.Player,CivModel.Terrain.Point,CivModel.IGuidTaggedObject})"/> must be called.
-            </remarks>
-            <seealso cref="T:CivModel.GuidTaggedObjectManager"/>
-        </member>
-        <member name="P:CivModel.IGuidTaggedObject.Guid">
-            <summary>
-            The unique identifier of this class.
-            </summary>
-        </member>
-        <member name="T:CivModel.GuidTaggedObjectManager">
-            <summary>
-            Provides object creation of <see cref="T:CivModel.IGuidTaggedObject"/> from Guid
-            </summary>
-            <seealso cref="T:CivModel.IGuidTaggedObject"/>
-        </member>
-        <member name="M:CivModel.GuidTaggedObjectManager.RegisterGuid(System.Guid,System.Func{CivModel.Player,CivModel.Terrain.Point,CivModel.IGuidTaggedObject})">
-            <summary>
-            Registers a Guid with <see cref="T:CivModel.IGuidTaggedObject"/> supplier, which requires <see cref="T:CivModel.Player"/> and <see cref="T:CivModel.Terrain.Point"/>.
-            </summary>
-            <remarks>
-            <paramref name="supplier"/> creates an object from arguments. If arguments are invalid, supplier can return <c>null</c>.
-            </remarks>
-            <param name="guid">The Guid.</param>
-            <param name="supplier">The supplier.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="supplier"/> is <c>null</c>.</exception>
-            <exception cref="T:System.ArgumentException">The same Guid is already registered.</exception>
-        </member>
-        <member name="M:CivModel.GuidTaggedObjectManager.RegisterGuid(System.Guid,System.Func{CivModel.CityBase,CivModel.IGuidTaggedObject})">
-            <summary>
-            Registers a Guid with <see cref="T:CivModel.IGuidTaggedObject"/> supplier, which requires <see cref="T:CivModel.CityBase"/>.
-            </summary>
-            <remarks>
-            <paramref name="supplier"/> creates an object from arguments. If arguments are invalid, supplier can return <c>null</c>.
-            </remarks>
-            <param name="guid">The Guid.</param>
-            <param name="supplier">The supplier.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="supplier"/> is <c>null</c>.</exception>
-            <exception cref="T:System.ArgumentException">The same Guid is already registered.</exception>
-        </member>
-        <member name="M:CivModel.GuidTaggedObjectManager.Create(System.Guid,CivModel.Player,CivModel.Terrain.Point)">
-            <summary>
-            Creates the <see cref="T:CivModel.IGuidTaggedObject"/> from a specified Guid. If arguments are invalid, returns <c>null</c>.
-            </summary>
-            <param name="guid">The Guid.</param>
-            <param name="owner">The <see cref="T:CivModel.Player"/> who will own the object.</param>
-            <param name="point">The tile where the object will be.</param>
-            <returns>the created <see cref="T:CivModel.IGuidTaggedObject"/> object. If arguments are invalid, <c>null</c>.</returns>
-            <exception cref="T:System.Collections.Generic.KeyNotFoundException">the value of <paramref name="guid"/> is not registered.</exception>
-        </member>
         <member name="T:CivModel.IMovePath">
             <summary>
             The interface represents the path of <see cref="P:CivModel.IMovePath.Actor"/> to move along.
@@ -1272,47 +1260,39 @@
             If the next point is <see cref="P:CivModel.IMovePath.EndPoint"/>, make <see cref="P:CivModel.IMovePath.Actor"/> act <see cref="P:CivModel.IMovePath.FinalAction"/> instead of moving.
             </summary>
             <returns>Whether <see cref="M:CivModel.IMovePath.RecalculateFirstWalk"/> is called before moving.</returns>
-            <exception cref="T:System.InvalidOperationException">
-            the path or the first walk of path is invalid
-            </exception>
-            <returns>Whether the walk is done or not. The walk is not done if AP is not enough.</returns>
+            <returns>Whether the walk is done or not. The walk is not done if AP is not enough or path is invalid.</returns>
         </member>
-        <member name="T:CivModel.InteriorBuildingConstants">
+        <member name="T:CivModel.InteriorBuildingPrototype">
             <summary>
-            Represents a constants storage of <see cref="T:CivModel.InteriorBuilding"/>.
+            Represents a prototype of <see cref="T:CivModel.InteriorBuilding"/>.
             </summary>
+            <seealso cref="T:CivModel.ProductionResultPrototype"/>
             <seealso cref="T:CivModel.InteriorBuilding"/>
         </member>
-        <member name="P:CivModel.InteriorBuildingConstants.GoldLogistics">
+        <member name="P:CivModel.InteriorBuildingPrototype.GoldLogistics">
             <summary>
             The amount of gold logistics of this actor.
             </summary>
         </member>
-        <member name="P:CivModel.InteriorBuildingConstants.ProvidedLabor">
+        <member name="P:CivModel.InteriorBuildingPrototype.ProvidedLabor">
+            <summary>
+            The amount of gold this building provides.
+            </summary>
+        </member>
+        <member name="P:CivModel.InteriorBuildingPrototype.ResearchCapacity">
+            <summary>
+            The amount of happiness this building provides.
+            </summary>
+        </member>
+        <member name="P:CivModel.InteriorBuildingPrototype.ResearchIncome">
             <summary>
             The amount of labor this building provides.
             </summary>
         </member>
-        <member name="P:CivModel.InteriorBuildingConstants.ResearchCapacity">
-            <summary>
-            The amount of research capacity this building provides.
-            </summary>
-        </member>
-        <member name="P:CivModel.InteriorBuildingConstants.ResearchIncome">
-            <summary>
-            The amount of research income per turn this building provides.
-            </summary>
-        </member>
-        <member name="P:CivModel.InteriorBuildingConstants.PopulationCoefficient">
+        <member name="P:CivModel.InteriorBuildingPrototype.PopulationCoefficient">
             <summary>
             The population coefficient for the city where this building is.
             </summary>
-        </member>
-        <member name="M:CivModel.InteriorBuildingConstants.Clone">
-            <summary>
-            Create the copy of this object.
-            </summary>
-            <returns>The copy of this object.</returns>
         </member>
         <member name="T:CivModel.InteriorBuilding">
             <summary>
@@ -1335,19 +1315,19 @@
             The <see cref="P:CivModel.InteriorBuilding.Game"/> object
             </summary>
         </member>
+        <member name="P:CivModel.InteriorBuilding.TextName">
+            <summary>
+            The name of this building.
+            </summary>
+        </member>
         <member name="P:CivModel.InteriorBuilding.City">
             <summary>
             The <see cref="T:CivModel.CityBase"/> where this building is.
             </summary>
         </member>
-        <member name="P:CivModel.InteriorBuilding.OriginalConstants">
-            <summary>
-            The original constants of this building. The actual values can be different from the values of this property.
-            </summary>
-        </member>
         <member name="P:CivModel.InteriorBuilding.GoldLogistics">
             <summary>
-            The amount of gold logistics of this actor.
+            The amount of gold logistics of this building.
             </summary>
             <exception cref="T:System.ArgumentOutOfRangeException">GoldLogistics is negative</exception>
         </member>
@@ -1409,17 +1389,13 @@
             </summary>
             <exception cref="T:System.ArgumentOutOfRangeException">PopulationCoefficient is negative</exception>
         </member>
-        <member name="M:CivModel.InteriorBuilding.#ctor(CivModel.CityBase,CivModel.InteriorBuildingConstants)">
+        <member name="M:CivModel.InteriorBuilding.#ctor(CivModel.CityBase,System.Type)">
             <summary>
             Initializes a new instance of the <see cref="T:CivModel.InteriorBuilding"/> class.
             </summary>
             <param name="city">The <see cref="T:CivModel.CityBase"/> who will own the building.</param>
-            <param name="constants">constants of this actor.</param>
-            <exception cref="T:System.ArgumentNullException">
-            <paramref name="constants"/> is <c>null</c>.
-            or
-            <paramref name="city"/> is <c>null</c>.
-            </exception>
+            <param name="type">The concrete type of this object.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="city"/> is <c>null</c>.</exception>
         </member>
         <member name="M:CivModel.InteriorBuilding.OnAfterProduce(CivModel.Production)">
             <summary>
@@ -1510,12 +1486,6 @@
             <param name="city">The <see cref="T:CivModel.CityBase"/> who will own the building.</param>
             <returns>the created <see cref="T:CivModel.InteriorBuilding"/> result.</returns>
         </member>
-        <member name="P:CivModel.IInteriorBuildingProductionFactory.Constants">
-            <summary>
-            The constants of production result <see cref="T:CivModel.InteriorBuilding"/>.
-            </summary>
-            <seealso cref="T:CivModel.InteriorBuildingConstants"/>
-        </member>
         <member name="T:CivModel.InteriorBuildingProduction">
             <summary>
             The <see cref="T:CivModel.Production"/> class for <see cref="T:CivModel.InteriorBuilding"/>
@@ -1529,14 +1499,14 @@
             <param name="factory">The factory object of this production kind.</param>
             <param name="owner">The <see cref="T:CivModel.Player"/> who will own the production.</param>
             <exception cref="T:System.ArgumentException">
-            <see cref="P:CivModel.IProductionFactory.TotalLaborCost"/> is negative
+            TotalLaborCost is negative
             or
-            <see cref="P:CivModel.IProductionFactory.TotalGoldCost"/> is negative
+            TotalGoldCost is negative
             </exception>
             <exception cref="T:System.ArgumentOutOfRangeException">
-            <see cref="P:CivModel.IProductionFactory.LaborCapacityPerTurn"/> is not in [0, <see cref="P:CivModel.Production.TotalLaborCost"/>]
+            LaborCapacityPerTurn is not in [0, TotalLaborCost]
             or
-            <see cref="P:CivModel.IProductionFactory.GoldCapacityPerTurn"/> is not in [0, <see cref="P:CivModel.Production.TotalGoldCost"/>]
+            GoldCapacityPerTurn is not in [0, TotalGoldCost]
             </exception>
             <exception cref="T:System.ArgumentNullException">
             <paramref name="factory"/> is <c>null</c>
@@ -1682,6 +1652,62 @@
             <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="duration"/> is negative and not -1</exception>
             <exception cref="T:System.ArgumentNullException"><paramref name="target"/> is <c>null</c>.</exception>
         </member>
+        <member name="T:CivModel.ProductionResultPrototype">
+            <summary>
+            Represents a prototype of <see cref="T:CivModel.IProductionResult"/>.
+            </summary>
+            <seealso cref="T:CivModel.GuidObjectPrototype"/>
+            <seealso cref="T:CivModel.IProductionResult"/>
+        </member>
+        <member name="P:CivModel.ProductionResultPrototype.TotalLaborCost">
+            <summary>
+            The total labor cost to finish this production.
+            </summary>
+        </member>
+        <member name="P:CivModel.ProductionResultPrototype.LaborCapacityPerTurn">
+            <summary>
+            The maximum labor which can put into this production per turn.
+            </summary>
+        </member>
+        <member name="P:CivModel.ProductionResultPrototype.TotalGoldCost">
+            <summary>
+            The total gold cost to finish this production.
+            </summary>
+        </member>
+        <member name="P:CivModel.ProductionResultPrototype.GoldCapacityPerTurn">
+            <summary>
+            The maximum gold which can put into this production per turn.
+            </summary>
+        </member>
+        <member name="T:CivModel.Properties.Resources">
+            <summary>
+              지역화된 문자열 등을 찾기 위한 강력한 형식의 리소스 클래스입니다.
+            </summary>
+        </member>
+        <member name="P:CivModel.Properties.Resources.ResourceManager">
+            <summary>
+              이 클래스에서 사용하는 캐시된 ResourceManager 인스턴스를 반환합니다.
+            </summary>
+        </member>
+        <member name="P:CivModel.Properties.Resources.Culture">
+            <summary>
+              이 강력한 형식의 리소스 클래스를 사용하여 모든 리소스 조회에 대한 현재 스레드의 CurrentUICulture
+              속성을 재정의합니다.
+            </summary>
+        </member>
+        <member name="P:CivModel.Properties.Resources.PrototypeSchema">
+             <summary>
+               &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+            &lt;xs:schema id=&quot;PrototypeSchema&quot;
+              targetNamespace=&quot;https://git.kucatdog.net/true-history-committee/civiii-model-proto/wikis/external/PrototypeSchema&quot;
+              elementFormDefault=&quot;qualified&quot;
+              xmlns=&quot;https://git.kucatdog.net/true-history-committee/civiii-model-proto/wikis/external/PrototypeSchema&quot;
+              xmlns:mstns=&quot;https://git.kucatdog.net/true-history-committee/civiii-model-proto/wikis/external/PrototypeSchema&quot;
+              xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema&quot;&gt;
+            
+              &lt;xs:simple[나머지 문자열은 잘림]&quot;;과(와) 유사한 지역화된 문자열을 찾습니다.
+             </summary>
+        </member>
         <member name="T:CivModel.QuestStatus">
             <summary>
             The status of <see cref="T:CivModel.Quest"/>.
@@ -1728,7 +1754,12 @@
             The <see cref="P:CivModel.Quest.Game"/> object.
             </summary>
         </member>
-        <member name="P:CivModel.Quest.Name">
+        <member name="P:CivModel.Quest.Guid">
+            <summary>
+            The unique identifier of this class.
+            </summary>
+        </member>
+        <member name="P:CivModel.Quest.TextName">
             <summary>
             [퀘스트 이름].
             </summary>
@@ -1793,12 +1824,13 @@
             cannot mark <see cref="F:CivModel.QuestStatus.Deployed"/> quest as <see cref="F:CivModel.QuestStatus.Completed"/>
             </exception>
         </member>
-        <member name="M:CivModel.Quest.#ctor(CivModel.Player,CivModel.Player)">
+        <member name="M:CivModel.Quest.#ctor(CivModel.Player,CivModel.Player,System.Type)">
             <summary>
             Initializes a new instance of the <see cref="T:CivModel.Quest"/> class.
             </summary>
             <param name="requester">The requester of this quest. <c>null</c> if not exists.</param>
             <param name="requestee">The requestee of this quest.</param>
+            <param name="type">The concrete type of this object.</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="requestee"/> is <c>null</c>.</exception>
             <exception cref="T:System.ArgumentException"><paramref name="requester"/> and <paramref name="requestee"/> do not involve in the same game</exception>
         </member>
@@ -2211,44 +2243,6 @@
             A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
             </returns>
         </member>
-        <member name="T:CivModel.IProductionFactory">
-            <summary>
-            The factory interface of <see cref="T:CivModel.Production"/>
-            </summary>
-            <seealso cref="P:CivModel.Player.AvailableProduction"/>
-        </member>
-        <member name="P:CivModel.IProductionFactory.ResultType">
-            <summary>
-            The type of production result object. <c>null</c> if the production result is not an object.
-            </summary>
-        </member>
-        <member name="P:CivModel.IProductionFactory.TotalLaborCost">
-            <summary>
-            The total labor cost to finish this production.
-            </summary>
-        </member>
-        <member name="P:CivModel.IProductionFactory.LaborCapacityPerTurn">
-            <summary>
-            The maximum labor which can put into this production per turn.
-            </summary>
-        </member>
-        <member name="P:CivModel.IProductionFactory.TotalGoldCost">
-            <summary>
-            The total gold cost to finish this production.
-            </summary>
-        </member>
-        <member name="P:CivModel.IProductionFactory.GoldCapacityPerTurn">
-            <summary>
-            The maximum gold which can put into this production per turn.
-            </summary>
-        </member>
-        <member name="M:CivModel.IProductionFactory.Create(CivModel.Player)">
-            <summary>
-            Creates the <see cref="T:CivModel.Production"/> object
-            </summary>
-            <param name="owner">The player who owns the <see cref="T:CivModel.Production"/> object.</param>
-            <returns>the created <see cref="T:CivModel.Production"/> object</returns>
-        </member>
         <member name="T:CivModel.Production">
             <summary>
             An abstract class represents a production.
@@ -2337,14 +2331,14 @@
             <param name="factory">The factory object of this production kind.</param>
             <param name="owner">The <see cref="T:CivModel.Player"/> who will own the production.</param>
             <exception cref="T:System.ArgumentException">
-            <see cref="P:CivModel.IProductionFactory.TotalLaborCost"/> is negative
+            TotalLaborCost is negative
             or
-            <see cref="P:CivModel.IProductionFactory.TotalGoldCost"/> is negative
+            TotalGoldCost is negative
             </exception>
             <exception cref="T:System.ArgumentOutOfRangeException">
-            <see cref="P:CivModel.IProductionFactory.LaborCapacityPerTurn"/> is not in [0, <see cref="P:CivModel.Production.TotalLaborCost"/>]
+            LaborCapacityPerTurn is not in [0, TotalLaborCost]
             or
-            <see cref="P:CivModel.IProductionFactory.GoldCapacityPerTurn"/> is not in [0, <see cref="P:CivModel.Production.TotalGoldCost"/>]
+            GoldCapacityPerTurn is not in [0, TotalGoldCost]
             </exception>
             <exception cref="T:System.ArgumentNullException">
             <paramref name="factory"/> is <c>null</c>
@@ -2442,6 +2436,38 @@
             <exception cref="T:System.ArgumentException">point is invalid</exception>
             <seealso cref="M:CivModel.Production.Place(CivModel.Terrain.Point)"/>
         </member>
+        <member name="T:CivModel.QuestPrototype">
+            <summary>
+            Represents a prototype of <see cref="T:CivModel.Quest"/>.
+            </summary>
+            <seealso cref="T:CivModel.GuidObjectPrototype"/>
+            <seealso cref="T:CivModel.Quest"/>
+        </member>
+        <member name="P:CivModel.QuestPrototype.PostingTurn">
+            <summary>
+            [퀘스트 게시 기간]. <c>-1</c> if forever.
+            </summary>
+        </member>
+        <member name="P:CivModel.QuestPrototype.LimitTurn">
+            <summary>
+            [퀘스트 제한 기간]. <c>-1</c> if forever.
+            </summary>
+        </member>
+        <member name="P:CivModel.QuestPrototype.GoalNotice">
+            <summary>
+            [퀘스트 조건].
+            </summary>
+        </member>
+        <member name="P:CivModel.QuestPrototype.RewardNotice">
+            <summary>
+            [퀘스트 보상].
+            </summary>
+        </member>
+        <member name="P:CivModel.QuestPrototype.CompleteNotice">
+            <summary>
+            [교육용 알림].
+            </summary>
+        </member>
         <member name="T:CivModel.SchemeLoader">
             <summary>
             Provides <see cref="T:CivModel.IGameScheme"/> management.
@@ -2535,6 +2561,13 @@
             <summary>
             The <see cref="T:CivModel.Position"/> where this tile is.
             </summary>
+        </member>
+        <member name="P:CivModel.Terrain.Point.Index">
+            <summary>
+            The index of this tile,
+            which is equal to <c><see cref="P:CivModel.Position.Y"/> * <see cref="P:CivModel.Terrain.Width"/> + <see cref="P:CivModel.Position.X"/></c>.
+            </summary>
+            <seealso cref="M:CivModel.Terrain.GetPoint(System.Int32)"/>
         </member>
         <member name="P:CivModel.Terrain.Point.Type">
             <summary>
@@ -2693,6 +2726,16 @@
             <paramref name="height"/> is not positive
             </exception>
         </member>
+        <member name="M:CivModel.Terrain.GetPoint(System.Int32)">
+            <summary>
+            Gets the <see cref="T:CivModel.Terrain.Point"/> from point index.
+            Point index is equal to <c>y * <see cref="P:CivModel.Terrain.Width"/> + x</c>.
+            </summary>
+            <param name="index">The index of point.</param>
+            <returns>The <see cref="T:CivModel.Terrain.Point"/> object</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">index is invalid</exception>
+            <seealso cref="P:CivModel.Terrain.Point.Index"/>
+        </member>
         <member name="M:CivModel.Terrain.GetPoint(System.Int32,System.Int32)">
             <summary>
             Gets the <see cref="T:CivModel.Terrain.Point"/> from physical coordinates.
@@ -2832,19 +2875,15 @@
             </summary>
             <seealso cref="P:CivModel.TileBuilding.IsDonated"/>
         </member>
-        <member name="M:CivModel.TileBuilding.#ctor(CivModel.Player,CivModel.ActorConstants,CivModel.Terrain.Point,CivModel.Player)">
+        <member name="M:CivModel.TileBuilding.#ctor(CivModel.Player,System.Type,CivModel.Terrain.Point,CivModel.Player)">
             <summary>
             Initializes a new instance of the <see cref="T:CivModel.TileBuilding"/> class.
             </summary>
             <param name="owner">The player who owns this TileBuilding.</param>
-            <param name="constants">constants of this actor.</param>
+            <param name="type">The concrete type of this object.</param>
             <param name="point">The tile where the object will be.</param>
             <param name="donator">The player donated this TileBuilding. If this TileBuilding is not donated, <c>null</c>.</param>
-            <exception cref="T:System.ArgumentNullException">
-            <paramref name="owner"/> is <c>null</c>.
-            or
-            <paramref name="constants"/> is <c>null</c>.
-            </exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="owner"/> is <c>null</c>.</exception>
         </member>
         <member name="M:CivModel.TileBuilding.BePillaged(CivModel.Actor)">
             <summary>
@@ -2935,14 +2974,14 @@
             </remarks>
             <seealso cref="M:CivModel.Actor.ChangeOwner(CivModel.Player)"/>
         </member>
-        <member name="P:CivModel.Actor.Name">
+        <member name="P:CivModel.Actor.Guid">
             <summary>
-            The name of this actor.
+            The unique identifier of this class.
             </summary>
         </member>
-        <member name="P:CivModel.Actor.OriginalConstants">
+        <member name="P:CivModel.Actor.TextName">
             <summary>
-            The original constants of this actor. The actual values can be different from the values of this property.
+            The name of this actor.
             </summary>
         </member>
         <member name="P:CivModel.Actor.MaxAP">
@@ -3001,15 +3040,19 @@
         </member>
         <member name="P:CivModel.Actor.GoldLogistics">
             <summary>
-            The amount of gold logistics of this actor.
+            The amount of gold logistics per turn of this actor.
+            Actor is starved if the owner cannot pay this logistics.
             </summary>
             <exception cref="T:System.ArgumentOutOfRangeException">GoldLogistics is negative</exception>
+            <seealso cref="P:CivModel.Actor.IsStarved"/>
         </member>
         <member name="P:CivModel.Actor.LaborLogistics">
             <summary>
-            The amount of labor logistics of this actor.
+            The amount of labor logistics per turn of this actor.
+            Actor is starved if the owner cannot pay this logistics.
             </summary>
             <exception cref="T:System.ArgumentOutOfRangeException">LaborLogistics is negative</exception>
+            <seealso cref="P:CivModel.Actor.IsStarved"/>
         </member>
         <member name="P:CivModel.Actor.IsStarved">
             <summary>
@@ -3097,19 +3140,15 @@
             Whether this actor is cloacking.
             </summary>
         </member>
-        <member name="M:CivModel.Actor.#ctor(CivModel.Player,CivModel.ActorConstants,CivModel.Terrain.Point,CivModel.TileTag)">
+        <member name="M:CivModel.Actor.#ctor(CivModel.Player,System.Type,CivModel.Terrain.Point,CivModel.TileTag)">
             <summary>
             Initializes a new instance of the <see cref="T:CivModel.Actor"/> class.
             </summary>
             <param name="owner">The player who owns this actor.</param>
-            <param name="constants">constants of this actor.</param>
+            <param name="type">The concrete type of this object.</param>
             <param name="point">The tile where the object will be.</param>
             <param name="tag">The <seealso cref="T:CivModel.TileTag"/> of this actor.</param>
-            <exception cref="T:System.ArgumentNullException">
-            <paramref name="owner"/> is <c>null</c>.
-            or
-            <paramref name="constants"/> is <c>null</c>.
-            </exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="owner"/> is <c>null</c>.</exception>
         </member>
         <member name="M:CivModel.Actor.ChangeOwner(CivModel.Player)">
             <summary>
@@ -3451,14 +3490,14 @@
             <param name="factory">The factory object of this production kind.</param>
             <param name="owner">The <see cref="T:CivModel.Player"/> who will own the production.</param>
             <exception cref="T:System.ArgumentException">
-            <see cref="P:CivModel.IProductionFactory.TotalLaborCost"/> is negative
+            TotalLaborCost is negative
             or
-            <see cref="P:CivModel.IProductionFactory.TotalGoldCost"/> is negative
+            TotalGoldCost is negative
             </exception>
             <exception cref="T:System.ArgumentOutOfRangeException">
-            <see cref="P:CivModel.IProductionFactory.LaborCapacityPerTurn"/> is not in [0, <see cref="P:CivModel.Production.TotalLaborCost"/>]
+            LaborCapacityPerTurn is not in [0, TotalLaborCost]
             or
-            <see cref="P:CivModel.IProductionFactory.GoldCapacityPerTurn"/> is not in [0, <see cref="P:CivModel.Production.TotalGoldCost"/>]
+            GoldCapacityPerTurn is not in [0, TotalGoldCost]
             </exception>
             <exception cref="T:System.ArgumentNullException">
             <paramref name="factory"/> is <c>null</c>
@@ -3474,6 +3513,28 @@
             <exception cref="T:System.InvalidOperationException">production is not completed yet</exception>
             <exception cref="T:System.ArgumentException">point is invalid</exception>
             <returns>The production result.</returns>
+        </member>
+        <member name="T:CivModel.TileBuildingPrototype">
+            <summary>
+            Represents a prototype of <see cref="T:CivModel.TileBuilding"/>.
+            </summary>
+            <seealso cref="T:CivModel.ActorPrototype"/>
+            <seealso cref="T:CivModel.TileBuilding"/>
+        </member>
+        <member name="P:CivModel.TileBuildingPrototype.ProvidedGold">
+            <summary>
+            The amount of gold this building provides.
+            </summary>
+        </member>
+        <member name="P:CivModel.TileBuildingPrototype.ProvidedHappiness">
+            <summary>
+            The amount of happiness this building provides.
+            </summary>
+        </member>
+        <member name="P:CivModel.TileBuildingPrototype.ProvidedLabor">
+            <summary>
+            The labor which this tile building offers.
+            </summary>
         </member>
         <member name="T:CivModel.TileTag">
             <summary>
@@ -3493,11 +3554,6 @@
         <member name="T:CivModel.TileObject">
             <summary>
             Represents an object which can be placed on <see cref="T:CivModel.Terrain.Point"/>.
-            </summary>
-        </member>
-        <member name="P:CivModel.TileObject.Guid">
-            <summary>
-            The unique identifier of this class.
             </summary>
         </member>
         <member name="P:CivModel.TileObject.Game">
@@ -4106,18 +4162,14 @@
             The action performing pillage. A <see cref="T:CivModel.MoveActorAction"/> object by default.
             </summary>
         </member>
-        <member name="M:CivModel.Unit.#ctor(CivModel.Player,CivModel.ActorConstants,CivModel.Terrain.Point)">
+        <member name="M:CivModel.Unit.#ctor(CivModel.Player,System.Type,CivModel.Terrain.Point)">
             <summary>
             Initializes a new instance of the <see cref="T:CivModel.Unit"/> class.
             </summary>
             <param name="owner">The <see cref="T:CivModel.Player"/> who owns this unit.</param>
-            <param name="constants">constants of this actor.</param>
+            <param name="type">The concrete type of this object.</param>
             <param name="point">The tile where the object will be.</param>
-            <exception cref="T:System.ArgumentNullException">
-            <paramref name="owner"/> is <c>null</c>.
-            or
-            <paramref name="constants"/> is <c>null</c>.
-            </exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="owner"/> is <c>null</c>.</exception>
         </member>
         <member name="M:CivModel.Unit.OnBeforeChangeOwner(CivModel.Player)">
             <summary>
@@ -4176,14 +4228,14 @@
             <param name="factory">The factory object of this production kind.</param>
             <param name="owner">The <see cref="T:CivModel.Player"/> who will own the production.</param>
             <exception cref="T:System.ArgumentException">
-            <see cref="P:CivModel.IProductionFactory.TotalLaborCost"/> is negative
+            TotalLaborCost is negative
             or
-            <see cref="P:CivModel.IProductionFactory.TotalGoldCost"/> is negative
+            TotalGoldCost is negative
             </exception>
             <exception cref="T:System.ArgumentOutOfRangeException">
-            <see cref="P:CivModel.IProductionFactory.LaborCapacityPerTurn"/> is not in [0, <see cref="P:CivModel.Production.TotalLaborCost"/>]
+            LaborCapacityPerTurn is not in [0, TotalLaborCost]
             or
-            <see cref="P:CivModel.IProductionFactory.GoldCapacityPerTurn"/> is not in [0, <see cref="P:CivModel.Production.TotalGoldCost"/>]
+            GoldCapacityPerTurn is not in [0, TotalGoldCost]
             </exception>
             <exception cref="T:System.ArgumentNullException">
             <paramref name="factory"/> is <c>null</c>
@@ -4287,6 +4339,13 @@
             Called when <see cref="T:CivModel.Player"/> achieves this draw.
             </summary>
             <param name="player">The player.</param>
+        </member>
+        <member name="T:CivModel.UnitPrototype">
+            <summary>
+            Represents a prototype of <see cref="T:CivModel.Unit"/>.
+            </summary>
+            <seealso cref="T:CivModel.ActorPrototype"/>
+            <seealso cref="T:CivModel.Unit"/>
         </member>
         <member name="T:CivModel.ObserverPriority">
             <summary>

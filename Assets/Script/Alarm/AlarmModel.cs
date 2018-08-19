@@ -48,8 +48,9 @@ public class AlarmModel : MonoBehaviour, IPointerClickHandler {
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (eventData.button == PointerEventData.InputButton.Right)
-            AlarmManager.Instance.DeleteAlarm(this.gameObject);
+        AlarmManager.Instance.DeleteAlarm(this.gameObject);
+        //if (eventData.button == PointerEventData.InputButton.Right)
+            //AlarmManager.Instance.DeleteAlarm(this.gameObject);
     }
 
 }

@@ -151,6 +151,12 @@
             <exception cref="T:System.ArgumentException">observer is not registered</exception>
             <seealso cref="M:CivObservable.IObservable`2.AddObserver(`0,`1)"/>
         </member>
+        <member name="T:CivObservable.NamespaceDoc">
+            <summary>
+            The <see cref="N:CivObservable"/> namespace of CivObservable.dll module
+             provides the feature about fixed/observable event
+            </summary>
+        </member>
         <member name="T:CivObservable.Observable`1">
             <summary>
             Represents an object observable by observer interface.

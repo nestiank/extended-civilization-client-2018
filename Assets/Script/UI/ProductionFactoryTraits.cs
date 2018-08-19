@@ -5,16 +5,19 @@ using UnityEngine;
 using static CivModel.Finno.FinnoPlayerNumber;
 using static CivModel.Hwan.HwanPlayerNumber;
 
-public class ProductionFactoryTraits : MonoBehaviour {
+public class ProductionFactoryTraits : MonoBehaviour
+{
 
     // Use this for initialization
-    void Start () {
-        
+    void Start()
+    {
+
     }
-    
+
     // Update is called once per frame
-    void Update () {
-        
+    void Update()
+    {
+
     }
 
     public static string GetFactoryName(CivModel.IProductionFactory Factory)
@@ -165,6 +168,32 @@ public class ProductionFactoryTraits : MonoBehaviour {
         }
         return result;
     }
+
+    public static bool isCityBuilding(CivModel.IProductionFactory factory)
+    {
+        char[] sep = { '.' };
+        string name = factory.ToString().Split(sep)[2];
+        bool result = false;
+
+        switch (name)
+        {
+            // 1. City Buildings
+
+            case "HwanEmpireCityCentralLabProductionFactory": // 환제국도시연구소
+            case "HwanEmpireFIRFactoryProductionFactory": // 5차산업혁명공장
+            case "AncientFinnoLabortoryProductionFactory": // 피노 연구소
+            case "AncientFinnoFIRFactoryProductionFactory": // 5차산업혁명공장
+            case "HwanEmpireSungsimdangProductionFactory": // 성심당
+            case "AncientFinnoXylitolProductionRegionProductionFactory": // 자일리톨
+            case "HwanEmpireVigilantProductionFactory": // 환 자경단
+            case "AncientFinnoVigilantProductionFactory": //피노 자경단
+                result = true;
+                break;
+        }
+
+        return result;
+    }
+
     public static string GetFacPortName(CivModel.IProductionFactory Factory)
     {
         char[] sep = { '.' };

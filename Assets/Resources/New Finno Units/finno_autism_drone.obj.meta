@@ -1,0 +1,407 @@
+fileFormatVersion: 2
+guid: 39eae2ad7e10d4dde8fc2dbd48cd6aa4
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: C_psula
+    100002: C_psula_2
+    100004: Cilindro
+    100006: Cilindro_1
+    100008: Cilindro_2
+    100010: Cilindro_3
+    100012: Cilindro_4
+    100014: Cilindro_5
+    100016: Clip
+    100018: Cubo
+    100020: Cubo_1
+    100022: Cubo_1_2
+    100024: Cubo_1_4
+    100026: Cubo_1_5
+    100028: Cubo_1_6
+    100030: Cubo_1_8
+    100032: Cubo_2
+    100034: Cubo_2_2
+    100036: Cubo_2_3
+    100038: Cubo_3
+    100040: Cubo_3_2
+    100042: Cubo_3_3
+    100044: Cubo_4
+    100046: Cubo_5
+    100048: Cubo_6
+    100050: Cubo_7
+    100052: Cubo_8
+    100054: //RootNode
+    100056: laser_beam
+    100058: toonGun_Main
+    400000: C_psula
+    400002: C_psula_2
+    400004: Cilindro
+    400006: Cilindro_1
+    400008: Cilindro_2
+    400010: Cilindro_3
+    400012: Cilindro_4
+    400014: Cilindro_5
+    400016: Clip
+    400018: Cubo
+    400020: Cubo_1
+    400022: Cubo_1_2
+    400024: Cubo_1_4
+    400026: Cubo_1_5
+    400028: Cubo_1_6
+    400030: Cubo_1_8
+    400032: Cubo_2
+    400034: Cubo_2_2
+    400036: Cubo_2_3
+    400038: Cubo_3
+    400040: Cubo_3_2
+    400042: Cubo_3_3
+    400044: Cubo_4
+    400046: Cubo_5
+    400048: Cubo_6
+    400050: Cubo_7
+    400052: Cubo_8
+    400054: //RootNode
+    400056: laser_beam
+    400058: toonGun_Main
+    2100000: Material__56
+    2100002: Material__78
+    2100004: Material__61
+    2100006: Material__67
+    2100008: Material__72
+    2100010: Material__77
+    2100012: tGun2
+    2100014: Material__53
+    2100016: Material__55
+    2100018: Material__60
+    2100020: Material__64
+    2100022: Material__66
+    2100024: Material__71
+    2100026: Material__75
+    2100028: Material__54
+    2100030: Material__63
+    2100032: Material__74
+    2100034: Material__57
+    2100036: Material__62
+    2100038: Material__73
+    2100040: Material__59
+    2100042: Material__65
+    2100044: Material__68
+    2100046: Material__70
+    2100048: Material__76
+    2100050: Material__58
+    2100052: Material__69
+    2100054: site
+    2100056: tGun_map
+    2300000: C_psula
+    2300002: C_psula_2
+    2300004: Cilindro
+    2300006: Cilindro_1
+    2300008: Cilindro_2
+    2300010: Cilindro_3
+    2300012: Cilindro_4
+    2300014: Cilindro_5
+    2300016: Clip
+    2300018: Cubo
+    2300020: Cubo_1
+    2300022: Cubo_1_2
+    2300024: Cubo_1_4
+    2300026: Cubo_1_5
+    2300028: Cubo_1_6
+    2300030: Cubo_1_8
+    2300032: Cubo_2
+    2300034: Cubo_2_2
+    2300036: Cubo_2_3
+    2300038: Cubo_3
+    2300040: Cubo_3_2
+    2300042: Cubo_3_3
+    2300044: Cubo_4
+    2300046: Cubo_5
+    2300048: Cubo_6
+    2300050: Cubo_7
+    2300052: Cubo_8
+    2300054: laser_beam
+    2300056: toonGun_Main
+    3300000: C_psula
+    3300002: C_psula_2
+    3300004: Cilindro
+    3300006: Cilindro_1
+    3300008: Cilindro_2
+    3300010: Cilindro_3
+    3300012: Cilindro_4
+    3300014: Cilindro_5
+    3300016: Clip
+    3300018: Cubo
+    3300020: Cubo_1
+    3300022: Cubo_1_2
+    3300024: Cubo_1_4
+    3300026: Cubo_1_5
+    3300028: Cubo_1_6
+    3300030: Cubo_1_8
+    3300032: Cubo_2
+    3300034: Cubo_2_2
+    3300036: Cubo_2_3
+    3300038: Cubo_3
+    3300040: Cubo_3_2
+    3300042: Cubo_3_3
+    3300044: Cubo_4
+    3300046: Cubo_5
+    3300048: Cubo_6
+    3300050: Cubo_7
+    3300052: Cubo_8
+    3300054: laser_beam
+    3300056: toonGun_Main
+    4300000: Cilindro
+    4300002: Cilindro_1
+    4300004: Cilindro_2
+    4300006: Cilindro_3
+    4300008: Cilindro_4
+    4300010: Cilindro_5
+    4300012: Clip
+    4300014: Cubo
+    4300016: Cubo_1
+    4300018: Cubo_1_2
+    4300020: Cubo_1_4
+    4300022: Cubo_1_5
+    4300024: Cubo_1_6
+    4300026: Cubo_1_8
+    4300028: Cubo_2
+    4300030: Cubo_2_2
+    4300032: Cubo_2_3
+    4300034: Cubo_3
+    4300036: Cubo_3_2
+    4300038: Cubo_3_3
+    4300040: Cubo_4
+    4300042: Cubo_5
+    4300044: Cubo_6
+    4300046: Cubo_7
+    4300048: Cubo_8
+    4300050: C_psula
+    4300052: C_psula_2
+    4300054: laser_beam
+    4300056: toonGun_Main
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material__53
+    second: {fileID: 2100000, guid: 838e8ea8bda41448aabc40b0b25df77f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material__54
+    second: {fileID: 2100000, guid: 45eef0fc4c5de481da688b1f28b05dde, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material__55
+    second: {fileID: 2100000, guid: 1fe4f65b5c47949299d1aa9ad94710fa, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material__56
+    second: {fileID: 2100000, guid: 6537a24cd082e404db1b7fda272275bc, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material__57
+    second: {fileID: 2100000, guid: 5c153177a3266497f9fd9d6a8a689fdc, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material__58
+    second: {fileID: 2100000, guid: 5b3edef45408a444ea0ef670785f1dcd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material__59
+    second: {fileID: 2100000, guid: fabd240f7817f4a729ddc3dc25b5335d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material__60
+    second: {fileID: 2100000, guid: 41cba171dba3f4cbabd3ba830544455e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material__61
+    second: {fileID: 2100000, guid: 8e24fbc1d8726430b98809d4e78532ae, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material__62
+    second: {fileID: 2100000, guid: 7f9de787f3d9642edba59c0eddcb3c33, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material__63
+    second: {fileID: 2100000, guid: dc5f590eb43e34bb6a1469bdd63ccb43, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material__64
+    second: {fileID: 2100000, guid: f9763b95ace084e49ae0022d238594b4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material__65
+    second: {fileID: 2100000, guid: 1b4721078e7074efd991863ed91366ac, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material__66
+    second: {fileID: 2100000, guid: a64d4cd23a73c44daa041c1ba9f9c009, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material__67
+    second: {fileID: 2100000, guid: a7ec22fc8dd754ce68ab083734c27e4a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material__68
+    second: {fileID: 2100000, guid: f5e85fc88c9734715845d19a0e3e5f5e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material__69
+    second: {fileID: 2100000, guid: 236630bf3847f403b9272ab51779bdba, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material__70
+    second: {fileID: 2100000, guid: 64c132ece76954a7ea458e2e08efd448, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material__71
+    second: {fileID: 2100000, guid: 0a3432305931a48099fde525bc8a9a36, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material__72
+    second: {fileID: 2100000, guid: 84533fb328c8c45f7b43c219961b2531, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material__73
+    second: {fileID: 2100000, guid: 7ea29fec8c5d744e8974ab2b259d4b0b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material__74
+    second: {fileID: 2100000, guid: d21a0441581a341cb8f38995a701319b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material__75
+    second: {fileID: 2100000, guid: b0d93dfa7e0eb4d2581af476dc7617b5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material__76
+    second: {fileID: 2100000, guid: d206bded857004c59b5f1cc0a905a119, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material__77
+    second: {fileID: 2100000, guid: 991251955e51b499abc8642282320626, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material__78
+    second: {fileID: 2100000, guid: d7e1ef09b68604b249d203713463edec, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: site
+    second: {fileID: 2100000, guid: a3610c4747ae64b36a95d42ecc95896c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: tGun2
+    second: {fileID: 2100000, guid: 48e129320490c48d68463d43fb4429c3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: tGun_map
+    second: {fileID: 2100000, guid: ae80be2288e0140faba05b2c2d2ddb48, type: 2}
+  materials:
+    importMaterials: 1
+    materialName: 2
+    materialSearch: 1
+    materialLocation: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -9,8 +9,6 @@ using CivModel.Common;
 public class DeployPrefab : MonoBehaviour
 {
 
-    public static GameObject DeployingObject;
-
     private Text[] textarguments;
     private Image unitPrt;
     private Button[] buttons;
@@ -24,6 +22,8 @@ public class DeployPrefab : MonoBehaviour
 
     private Production _deployment;
     public Production Deployment { get { return _deployment; } }
+
+    private int numOfUnit;
 
     void Awake()
     {
@@ -45,10 +45,11 @@ public class DeployPrefab : MonoBehaviour
         game = gameManager.Game;
     }
 
-    public GameObject MakeItem(Production prod)
+    public GameObject MakeItem(Production prod, int numOfUnit)
     {
         string nameofProduction = ProductionFactoryTraits.GetFactoryName(prod.Factory);
         unitPrt.sprite = Resources.Load(("Portraits/" + (ProductionFactoryTraits.GetFacPortName(prod.Factory)).ToLower()), typeof(Sprite)) as Sprite;
+        this.numOfUnit = numOfUnit;
         foreach (Text txt in textarguments)
         {
             switch (txt.name)
@@ -57,7 +58,7 @@ public class DeployPrefab : MonoBehaviour
                     txt.text = nameofProduction;
                     break;
                 case "NumberOfUnits":
-                    txt.text = "X 1";
+                    txt.text = "X" + numOfUnit;
                     break;
             }
         }
@@ -113,27 +114,61 @@ public class DeployPrefab : MonoBehaviour
                 switch (but.name)
                 {
                     case "Deploy":
-                        but.onClick.AddListener(delegate () { DeployItem(dep.Value); DeployingObject = this.gameObject; });
+                        if (dep != null)
+                        {
+                            if (ProductionFactoryTraits.isCityBuilding(dep.Value.Factory))
+                            {
+                                but.onClick.AddListener(delegate ()
+                                {
+                                    List<Production> prodToDepList = new List<Production>();
 
+                                    LinkedListNode<Production> nodeToDep = GameManager.Instance.Game.PlayerInTurn.Deployment.First;
+
+                                    while (nodeToDep != null)
+                                    {
+                                        if (ProductionFactoryTraits.GetFactoryName(nodeToDep.Value.Factory) == ProductionFactoryTraits.GetFactoryName(dep.Value.Factory))
+                                        {
+                                            prodToDepList.Add(nodeToDep.Value);
+                                        }
+                                        nodeToDep = nodeToDep.Next;
+                                    }
+
+                                    DeployItem(prodToDepList);
+
+                                });
+                            }
+                            else
+                            {
+                                but.interactable = false;
+                            }
+                        }
+                        break;
+
+                    case "IndividualDeploy":
+                        but.onClick.AddListener(delegate () {
+                            List<Production> prodToDepList = new List<Production>();
+                            prodToDepList.Add(dep.Value);
+                            DeployItem(prodToDepList);
+                        });
                         break;
                 }
             }
         }
     }
 
-    public void DeployItem(Production dep)
+    public void DeployItem(List<Production> depList)
     {
-        if (dep.IsCompleted)
+        foreach (Production dep in depList)
         {
-            gameManager.DepStateEnter(dep, this);
-            UIManager.Instance.mapUI.SetActive(true);
-            UIManager.Instance.managementUI.SetActive(false);
-            UIManager.Instance.questUI.SetActive(false);
+            if (!dep.IsCompleted)
+            {
+                //Debug.Log("Error : not finished product");
+                throw new AccessViolationException();
+            }
         }
-        else
-        {
-            //Debug.Log("Error : not finished product");
-            throw new AccessViolationException();
-        }
+        gameManager.DepStateEnter(depList);
+        UIManager.Instance.mapUI.SetActive(true);
+        UIManager.Instance.managementUI.SetActive(false);
+        UIManager.Instance.questUI.SetActive(false);
     }
 }

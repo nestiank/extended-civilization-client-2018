@@ -146,6 +146,6 @@ public class ProductablePrefab : MonoBehaviour, IPointerClickHandler {
     public void OnPointerClick(PointerEventData clicked)
     {
         string clicked_unit_name = clicked.pointerPress.transform.GetChild(2).GetComponent<Text>().text;
-        clicked.pointerPress.transform.parent.parent.parent.GetChild(2).GetChild(0).GetComponent<Text>().text = clicked_unit_name;
+        clicked.pointerPress.transform.parent.parent.parent.parent.parent.GetChild(4).GetChild(0).GetChild(0).GetComponent<Text>().text = clicked_unit_name;
     }
 }
