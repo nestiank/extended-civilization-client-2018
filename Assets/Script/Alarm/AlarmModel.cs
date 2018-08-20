@@ -19,6 +19,7 @@ public class AlarmModel : MonoBehaviour, IPointerClickHandler {
 
     public Image imageAlarm;
     public Text textAlarm;
+    public Image isDiedImage;
 
     public void SetProperties(Sprite image, String text, Action action, int turn)
     {
@@ -40,10 +41,16 @@ public class AlarmModel : MonoBehaviour, IPointerClickHandler {
 
     public void DispAlarmData()
     {
+        DispAlarmData(false);
+    }
+
+    public void DispAlarmData(bool isDied)
+    {
+        isDiedImage.gameObject.SetActive(isDied);
         imageAlarm.sprite = alarmImage;
         textAlarm.text = alarmText;
-        if(alarmAction != null)
-            GetComponent<Button>().onClick.AddListener( () => alarmAction() );
+        if (alarmAction != null)
+            GetComponent<Button>().onClick.AddListener(() => alarmAction());
     }
 
     public void OnPointerClick(PointerEventData eventData)

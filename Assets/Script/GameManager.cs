@@ -101,6 +101,9 @@ public class GameManager : MonoBehaviour {
         string path = Path.Combine(pathStr);
 		_game = new CivModel.Game(path, factories);
 		_game.StartTurn();
+
+        InitiateTurn();
+
         InitiateMiniMap();
         InitiateMap();
         InitiateUnit();
@@ -108,7 +111,6 @@ public class GameManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start() {
-        InitiateTurn();
         CheckToDo();
         managementcontroller = ManagementController.GetManagementController();
 	}
@@ -145,6 +147,7 @@ public class GameManager : MonoBehaviour {
                 tile.SetPoints(point);
                 tile.SetTerrain();
                 tile.SetBuilding();
+                tile.UpdateColor();
                 // The earth is round.
                 HexTile additional_tile = _additional_tiles[i, j].GetComponent<HexTile>();
                 Vector3 pos = ModelPntToUnityPnt(point, -0.05f);
@@ -156,6 +159,7 @@ public class GameManager : MonoBehaviour {
                 additional_tile.SetPoints(point, ad_pos);
                 additional_tile.SetTerrain();
                 additional_tile.SetBuilding();
+                additional_tile.UpdateColor();
             }
             // Check if there exists quest that has completed.
             CheckCompletedQuest();
@@ -176,7 +180,7 @@ public class GameManager : MonoBehaviour {
 				if (unitModel.PlacedPoint.HasValue) {
 					var pt = unitModel.PlacedPoint.Value;
 					unitGameObject.GetComponent<Unit>().SetPoints(pt);
-                    Vector3 pos = ModelPntToUnityPnt(pt, 1.25f);
+                    Vector3 pos = ModelPntToUnityPnt(pt, 0);
                     Vector3 ad_pos;
                     if (pt.Position.X < _game.Terrain.Width / 2)
                         ad_pos = new Vector3(pos.x + Mathf.Sqrt(3) * _game.Terrain.Width, pos.y, pos.z);
@@ -186,7 +190,25 @@ public class GameManager : MonoBehaviour {
                 }
 			}
 		}
+        
+        foreach (GameObject unit in unitToDelete)
+        {
+            Debug.Log("unit to delete :" + unit.ToString());
+            
+        }
         foreach(GameObject unit in unitToDelete) {
+
+            CivModel.Actor unitModel = unit.GetComponent<Unit>().unitModel;
+            if (unitModel.Owner == _game.PlayerInTurn)
+            {
+            AlarmManager.Instance.AddAlarm(
+                    Resources.Load(("Portraits/" + (ProductionFactoryTraits.GetPortName(unitModel)).ToLower()), typeof(Sprite)) as Sprite,
+                    ProductionFactoryTraits.GetName(unitModel) + " 파괴됨",
+                    null,
+                    0,
+                    true);
+            }
+
             _units.Remove(unit);
             Destroy(unit);
             GameObject additionalUnitToDelete = _additional_units.Find(x => x.name.Equals("Additional" + unit.name));
@@ -211,8 +233,13 @@ public class GameManager : MonoBehaviour {
                 if (isExist == false) {
                     if (unt?.PlacedPoint != null) {
                         var pt = unt.PlacedPoint.Value;
-                        Vector3 pos = ModelPntToUnityPnt(pt, 1.25f);
+                        Vector3 pos = ModelPntToUnityPnt(pt, 0);
+
+                        UnitPrefab = UnitEnum.GetUnitGameObject(unt);
+
                         GameObject unit = Instantiate(UnitPrefab, pos, Quaternion.identity);
+                        unit.AddComponent<Unit>();
+
                         unit.name = String.Format("Unit({0},{1})", plyrIdx, untIdx);
                         unit.GetComponent<Unit>().SetPoints(pt, pos);
                         unit.GetComponent<Unit>().unitModel = unt;
@@ -226,6 +253,7 @@ public class GameManager : MonoBehaviour {
                         else
                             ad_pos = new Vector3(pos.x - Mathf.Sqrt(3) * _game.Terrain.Width, pos.y, pos.z);
                         GameObject ad_unit = Instantiate(UnitPrefab, ad_pos, Quaternion.identity);
+                        ad_unit.AddComponent<Unit>();
                         ad_unit.name = String.Format("AdditionalUnit({0},{1})", plyrIdx, untIdx);
                         ad_unit.GetComponent<Unit>().SetPoints(pt, ad_pos);
                         ad_unit.GetComponent<Unit>().unitModel = unt;
@@ -243,11 +271,16 @@ public class GameManager : MonoBehaviour {
             if ((unitGameObject.GetComponent<Unit>().unitModel is CivModel.Hwan.Spy) || (unitGameObject.GetComponent<Unit>().unitModel is CivModel.Finno.Spy)) {
                 if (unitGameObject.GetComponent<Unit>().unitModel.Owner != Game.PlayerInTurn) {
                     if (!IsSpyNear(unitGameObject.GetComponent<Unit>().unitModel.PlacedPoint.Value.Position)) {
-                        unitGameObject.GetComponent<Renderer>().enabled = false;
+                        foreach (Renderer r in unitGameObject.GetComponentsInChildren<Renderer>(true))
+                            r.enabled = false;
+
+                       // unitGameObject.GetComponent<Renderer>().enabled = false;
                     }
                 }
                 else {
-                    unitGameObject.GetComponent<Renderer>().enabled = true;
+                    foreach (Renderer r in unitGameObject.GetComponentsInChildren<Renderer>(true))
+                        r.enabled = true;
+                    //unitGameObject.GetComponent<Renderer>().enabled = true;
                 }
             }
         }
@@ -450,16 +483,22 @@ public class GameManager : MonoBehaviour {
 			foreach (CivModel.Unit unt in plyr.Units) {
 				if(unt?.PlacedPoint != null) {
 					var pt = unt.PlacedPoint.Value;
-					Vector3 pos = ModelPntToUnityPnt(pt, 1.25f);
+					Vector3 pos = ModelPntToUnityPnt(pt, 0);
                     
                     Vector3 ad_pos;
                     if (pt.Position.X < _game.Terrain.Width / 2)
                         ad_pos = new Vector3(pos.x + Mathf.Sqrt(3) * _game.Terrain.Width, pos.y, pos.z);
                     else
                         ad_pos = new Vector3(pos.x - Mathf.Sqrt(3) * _game.Terrain.Width, pos.y, pos.z);
-                    
+
+                    UnitPrefab = UnitEnum.GetUnitGameObject(unt);
+
 					GameObject unit = Instantiate(UnitPrefab, pos, Quaternion.identity);
                     GameObject additional_unit = Instantiate(UnitPrefab, ad_pos, Quaternion.identity);
+
+                    unit.AddComponent<Unit>();
+                    additional_unit.AddComponent<Unit>();
+
 					unit.name = String.Format("Unit({0},{1})", plyrIdx, untIdx);
                     additional_unit.name = String.Format("AdditionalUnit({0},{1})", plyrIdx, untIdx);
 					unit.GetComponent<Unit>().SetPoints(pt, pos);
@@ -478,6 +517,8 @@ public class GameManager : MonoBehaviour {
     // Initialize Turn Attributes of Model
     // Default: Player[0] is User and the others are AI
     private void InitiateTurn() {
+
+        // 8번 플레이어 부터 시작하기 때문에 한번 해줌
         _game.EndTurn();
         _game.StartTurn();
 
@@ -485,10 +526,16 @@ public class GameManager : MonoBehaviour {
         {
             plyr.IsAIControlled = true;
         }
-        _game.Players[0].IsAIControlled = false;
+        _game.Players[GameInfo.UserPlayer].IsAIControlled = false;
 
-        // Finno 플레이시 주석 해제 (GameUI.cs 도 같이 수정 요망)
-        _game.Players[1].IsAIControlled = false;
+        // Proceeds AI's Turns
+        while (GameManager.Instance.Game.PlayerInTurn.IsAIControlled)
+        {
+            // Debug.Log(GameManager.Instance.Game.PlayerNumberInTurn);
+            GameManager.Instance.Game.PlayerInTurn.DoAITurnAction().GetAwaiter().GetResult();
+            GameManager.Instance.Game.EndTurn();
+            GameManager.Instance.Game.StartTurn();
+        }
 
     }
 
@@ -540,7 +587,7 @@ public class GameManager : MonoBehaviour {
 	}
 
     // Focus Main Camera to given CivModel.Actor
-    static void Focus(CivModel.Actor actor)
+    public static void Focus(CivModel.Actor actor)
     {
         if (actor.PlacedPoint == null)
         {
@@ -550,7 +597,7 @@ public class GameManager : MonoBehaviour {
     }
 
     // Focus Main Camera to given CivModel.Terrain.Point
-    static void Focus(CivModel.Terrain.Point point)
+    public static void Focus(CivModel.Terrain.Point point)
     {
         Vector3 tilePos = GameManager.Instance.Tiles[point.Position.X, point.Position.Y].transform.position;
         float x = tilePos.x;
@@ -701,6 +748,8 @@ public class GameManager : MonoBehaviour {
                     if (!CompletedQuestsQueue.Contains(qst))
                     {
                         Sprite questPortrait = QuestInfo.GetPortraitImage(qst);
+                        UIManager.Instance.SetQuestComplete(qst);
+                        UIManager.Instance.QuestComplete.SetActive(true);
                         AlarmManager.Instance.AddAlarm(questPortrait,
                                                        qst.TextName + " 완료됨",
                                                        delegate {

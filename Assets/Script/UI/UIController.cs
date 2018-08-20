@@ -21,6 +21,9 @@ public class UIController : MonoBehaviour {
 	public GameObject AQQueue;
 	public GameObject CQQueue;
 	public GameObject QstInfo;
+    public GameObject QstExplain;
+    public GameObject QstExplainBtn;
+
 	private Text[] questInfotexts;
 
 	void Awake() {
@@ -40,6 +43,8 @@ public class UIController : MonoBehaviour {
 			AQQlist = new List<GameObject>();
 			CQQlist = new List<GameObject>();
 			questInfotexts = QstInfo.GetComponentsInChildren<Text>();
+            QstExplain.SetActive(false);
+            QstExplainBtn.SetActive(false);
 		}
 		else {
 			Destroy(this);
@@ -205,4 +210,24 @@ public class UIController : MonoBehaviour {
 		}
 		return uicontroller;
 	}
+
+    public void onClickExplain()
+    {
+        QstExplain.SetActive(true);
+    }
+
+    public void onClickExplainExit()
+    {
+        QstExplain.SetActive(false);
+    }
+
+    public void SetQstExplain(Quest qst)
+    {
+        if (QstExplainBtn.activeSelf == false)
+            QstExplainBtn.SetActive(true);
+        Image Qstimage = QstExplain.GetComponent<Image>();
+        Text text = QstExplain.GetComponentInChildren<Text>();
+        //Qstimage.sprite = QuestInfo.GetExplainImage(qst);
+        text.text = qst.QuestDescription;
+    }
 }

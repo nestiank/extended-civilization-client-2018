@@ -247,6 +247,16 @@
             Battle class level of this actor. This value can affect the ATK/DEF power during battle.
             </summary>
         </member>
+        <member name="P:CivModel.ActorPrototype.PassiveSkills">
+            <summary>
+            The information about passive skills.
+            </summary>
+        </member>
+        <member name="P:CivModel.ActorPrototype.ActiveSkills">
+            <summary>
+            The information about active skills.
+            </summary>
+        </member>
         <member name="T:CivModel.CityPrototype">
             <summary>
             Represents a prototype of city.
@@ -1294,6 +1304,11 @@
             The population coefficient for the city where this building is.
             </summary>
         </member>
+        <member name="P:CivModel.InteriorBuildingPrototype.PassiveSkills">
+            <summary>
+            The information about passive skills.
+            </summary>
+        </member>
         <member name="T:CivModel.InteriorBuilding">
             <summary>
             Represents a building which must be built in <see cref="T:CivModel.CityBase"/>.
@@ -1388,6 +1403,11 @@
             The population coefficient for the city where this building is.
             </summary>
             <exception cref="T:System.ArgumentOutOfRangeException">PopulationCoefficient is negative</exception>
+        </member>
+        <member name="P:CivModel.InteriorBuilding.PassiveSkills">
+            <summary>
+            The information about passive skills.
+            </summary>
         </member>
         <member name="M:CivModel.InteriorBuilding.#ctor(CivModel.CityBase,System.Type)">
             <summary>
@@ -1772,6 +1792,11 @@
         <member name="P:CivModel.Quest.LimitTurn">
             <summary>
             [퀘스트 제한 기간]. <c>-1</c> if forever.
+            </summary>
+        </member>
+        <member name="P:CivModel.Quest.QuestDescription">
+            <summary>
+            [퀘스트 설명].
             </summary>
         </member>
         <member name="P:CivModel.Quest.GoalNotice">
@@ -2453,6 +2478,11 @@
             [퀘스트 제한 기간]. <c>-1</c> if forever.
             </summary>
         </member>
+        <member name="P:CivModel.QuestPrototype.QuestDescription">
+            <summary>
+            [퀘스트 설명].
+            </summary>
+        </member>
         <member name="P:CivModel.QuestPrototype.GoalNotice">
             <summary>
             [퀘스트 조건].
@@ -2541,6 +2571,21 @@
             User-defined per-player storage object. <paramref name="player"/> object stores this value.
             This value can be <c>null</c>.
             </returns>
+        </member>
+        <member name="T:CivModel.SkillInfo">
+            <summary>
+            Represents the information about a skill of <see cref="T:CivModel.Actor"/>.
+            </summary>
+        </member>
+        <member name="F:CivModel.SkillInfo.SkillName">
+            <summary>
+            The skill name
+            </summary>
+        </member>
+        <member name="F:CivModel.SkillInfo.SkillDescription">
+            <summary>
+            The skill description
+            </summary>
         </member>
         <member name="T:CivModel.Terrain">
             <summary>
@@ -3084,6 +3129,16 @@
         <member name="P:CivModel.Actor.BattleClassLevel">
             <summary>
             Battle class level of this actor. This value can affect the ATK/DEF power during battle.
+            </summary>
+        </member>
+        <member name="P:CivModel.Actor.PassiveSkills">
+            <summary>
+            The information about passive skills.
+            </summary>
+        </member>
+        <member name="P:CivModel.Actor.ActiveSkills">
+            <summary>
+            The information about active skills.
             </summary>
         </member>
         <member name="P:CivModel.Actor.MoveAct">
@@ -3930,6 +3985,11 @@
         <member name="P:CivModel.Player.Team">
             <summary>
             The team of this player.
+            </summary>
+        </member>
+        <member name="P:CivModel.Player.PlayerName">
+            <summary>
+            The name of this player.
             </summary>
         </member>
         <member name="M:CivModel.Player.#ctor(CivModel.Game,System.Int32)">

@@ -73,6 +73,24 @@ public class AlarmManager : MonoBehaviour
         }
     }
 
+    // Add new AlarmModel in Alarm Queue.
+    public void AddAlarm(Sprite alarmImage, String alarmText, Action action, int leftTurn, bool isDied)
+    {
+        GameObject alarm = (GameObject)Instantiate(alarmContent);
+        alarm.AddComponent<AlarmModel>();
+
+        alarm.GetComponent<AlarmModel>().SetProperties(alarmImage, alarmText, action, leftTurn);
+
+        if (alarm.GetComponent<AlarmModel>().leftTurn == 0)
+        {
+            ShowAlarm(alarm, isDied);
+        }
+        else
+        {
+            alarmQueue.Add(alarm);
+        }
+    }
+
     // Update leftTurn of alarms and Show alarms whose leftTurn is 0.
     // Called After a Turn Starts.
     public void updateAlarmQueue()
@@ -116,11 +134,16 @@ public class AlarmManager : MonoBehaviour
 
     void ShowAlarm(GameObject alarm)
     {
+        ShowAlarm(alarm, false);
+    }
+
+    void ShowAlarm(GameObject alarm, bool isDied)
+    {
         alarm.transform.SetParent(alarmViewPort.transform, false);
-        alarm.GetComponent<AlarmModel>().DispAlarmData();
+        alarm.GetComponent<AlarmModel>().DispAlarmData(isDied);
 
         alarmViewPort.GetComponent<GridLayoutGroup>().constraintCount = ++rowCount;
-            alarmViewPort.GetComponent<RectTransform>().sizeDelta += new Vector2(0, 20);
+        alarmViewPort.GetComponent<RectTransform>().sizeDelta += new Vector2(0, 20);
         ActiveAlarm();
     }
 

@@ -13,6 +13,7 @@ public class UIManager : MonoBehaviour
     // Get UI GameObjects from the Scene
     public GameObject mapUI;
     public GameObject managementUI;
+    public GameObject diplomacyUI;
     public GameObject questUI;
     public GameObject selectedActor;
     public GameObject SpecialSpec;
@@ -40,6 +41,8 @@ public class UIManager : MonoBehaviour
     public GameObject cityBuildingInfo;
 
     public Image UnitPortrait;
+
+    public GameObject QuestComplete;
 
     // RayCast For Selection
     public Ray ray;
@@ -69,11 +72,13 @@ public class UIManager : MonoBehaviour
 
         Actions.SetActive(false);
         managementUI.SetActive(false);
+        diplomacyUI.SetActive(false);
         questUI.SetActive(false);
         SpecialSpec.SetActive(false);
         skillSet.SetActive(false);
         cityBuildingInfo.SetActive(false);
         mapUI.transform.GetChild(1).gameObject.SetActive(false);
+        QuestComplete.SetActive(false);
         
     }
 
@@ -151,6 +156,7 @@ public class UIManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             managementUI.SetActive(false);
+            diplomacyUI.SetActive(false);
             questUI.SetActive(false);
             mapUI.SetActive(true);
         }
@@ -158,7 +164,7 @@ public class UIManager : MonoBehaviour
     // Set Unit Information
     public void UpdateUnitInfo()
     {
-        if (questUI.activeSelf == false && managementUI.activeSelf == false)
+        if (questUI.activeSelf == false && managementUI.activeSelf == false && diplomacyUI.activeSelf == false)
         {
             if (GameManager.Instance.selectedActor != null)
             {
@@ -244,13 +250,16 @@ public class UIManager : MonoBehaviour
             go.SetActive(true);
             if (go != mapUI) mapUI.SetActive(false);
             if (go != managementUI) managementUI.SetActive(false);
+            if (go != diplomacyUI) diplomacyUI.SetActive(false);
             if (go != questUI) questUI.SetActive(false);
         }
         else
+            if (go != mapUI)
         {
             go.SetActive(false);
-            if (go != mapUI) mapUI.SetActive(true);
+            mapUI.SetActive(true);
         }
+        
     }
 
     // On Click Move Button
@@ -432,12 +441,16 @@ public class UIManager : MonoBehaviour
                     skill.gameObject.SetActive(true);
                     skill.interactable = true;
                 }
-                int skillIdx = 0;
-                foreach (var skill in GameManager.Instance.selectedActor.SpecialActs)
+                int skillIdx;
+                for (skillIdx = 0; skillIdx < GameManager.Instance.selectedActor.SpecialActs.Count; ++skillIdx)
                 {
-                    skillsBtn[skillIdx].GetComponentInChildren<Text>().text = GameManager.Instance.selectedActor.SpecialActs[skillIdx].Owner.TextName;
-                    skillIdx++;
+                    SkillInfo si;
+                    if (skillIdx < GameManager.Instance.selectedActor.ActiveSkills.Count)
+                        si = GameManager.Instance.selectedActor.ActiveSkills[skillIdx];
+                    else si = new SkillInfo { SkillName = "null", SkillDescription = "" };
+                    skillsBtn[skillIdx].GetComponentInChildren<Text>().text = si.SkillName;
                 }
+
                 foreach (var skill in skillsBtn.Skip(skillIdx))
                 {
                     skill.gameObject.SetActive(false);
@@ -481,6 +494,20 @@ public class UIManager : MonoBehaviour
         Instance.Actions.SetActive(true);
         UpdateUnitInfo();
         ButtonInteractChange();
+    }
+
+    //set what to show on QuestComplete Scene
+    public void SetQuestComplete(Quest qst)
+    {
+        Image Qstimage = QuestComplete.GetComponentInChildren<Image>();
+        Text text = QuestComplete.GetComponentInChildren<Text>();
+        Qstimage.sprite = QuestInfo.GetPortraitImage(qst);
+        text.text = qst.CompleteNotice;
+    }
+
+    public void QuestCompleteExit()
+    {
+        QuestComplete.SetActive(false);
     }
 
 }

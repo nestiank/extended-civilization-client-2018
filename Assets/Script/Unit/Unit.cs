@@ -38,9 +38,9 @@ public class Unit : MonoBehaviour
     public void SetPoints(CivModel.Terrain.Point p1)
     {
         this.point = p1;
-        this.unityPoint = GameManager.ModelPntToUnityPnt(p1, 1.25f);
+        this.unityPoint = GameManager.ModelPntToUnityPnt(p1, 0);
         this.transform.position = this.unityPoint;
-        SetMaterial();
+        // SetMaterial();
     }
     // Change Unit position to given CivModel.Terrain.Point value
     public void SetPoints(CivModel.Terrain.Point p1, Vector3 p2)
@@ -48,7 +48,7 @@ public class Unit : MonoBehaviour
         this.point = p1;
         this.unityPoint = new Vector3(p2.x, p2.y, p2.z);
         this.transform.position = this.unityPoint;
-        SetMaterial();
+        // SetMaterial();
     }
     // Set Material of the Unit
     // Materials are stored in the GameManager Class of the Unity Editor
@@ -137,9 +137,11 @@ public class Unit : MonoBehaviour
                         break;
                     }
                     else if (unitToMove.MoveAct != null && unitToMove.MoveAct.IsActable(destPoint))
-                    {
+                    { 
                         unitToMove.MoveAct.Act(destPoint);
                         MoveStateExit();
+                        // Update selected Point to destination point
+                        GameManager.Instance.selectedPoint = destPoint;
                         GameManager.Instance.UpdateUnit();
                         break;
                     }
@@ -160,6 +162,11 @@ public class Unit : MonoBehaviour
             }
             yield return null;
         }
+    }
+
+    IEnumerator MoveAnimation()
+    {
+        yield return null;
     }
 
     public void MoveStateExit()
@@ -227,21 +234,22 @@ public class Unit : MonoBehaviour
         }
     }
 
-    IEnumerator AttackUnit(CivModel.Actor unitToMove)
+    IEnumerator AttackUnit(CivModel.Actor unitToAttack)
     {
         while (true)
         {
             CivModel.Terrain.Point destPoint = GameManager.Instance.selectedPoint;
             // 새로운 Point 을 선택했을 때
-            if (unitToMove.PlacedPoint.Value != destPoint)
+            if (unitToAttack.PlacedPoint.Value != destPoint)
             {
                 // Flicker하고 있는 Tile을 선택했을 때
                 if (GameManager.Instance.selectedTile.isFlickering)
                 {
-                    UIManager.Instance.updateSelectedInfo(unitToMove);
-                    if (unitToMove.HoldingAttackAct != null && unitToMove.HoldingAttackAct.IsActable(destPoint))
+                    UIManager.Instance.updateSelectedInfo(unitToAttack);
+                    if (unitToAttack.HoldingAttackAct != null && unitToAttack.HoldingAttackAct.IsActable(destPoint))
                     {
-                        unitToMove.HoldingAttackAct.Act(destPoint);
+                        yield return AttackAnimation(unitToAttack, destPoint, 1f);
+                        unitToAttack.HoldingAttackAct.Act(destPoint);
                         MoveStateExit();
                         GameManager.Instance.UpdateUnit();
                         break;
@@ -250,13 +258,49 @@ public class Unit : MonoBehaviour
                 // Flicker 하지 않는 타일 선택
                 else
                 {
-                    UIManager.Instance.updateSelectedInfo(unitToMove);
+                    UIManager.Instance.updateSelectedInfo(unitToAttack);
                     MoveStateExit();
                     break;
                 }
             }
             yield return null;
         }
+    }
+
+    IEnumerator AttackAnimation(CivModel.Actor unitToAttack, CivModel.Terrain.Point unitTarget, float animationTime)
+    {
+        float timer = 0;
+        Vector3 attackUnitPos = transform.position;
+        Vector3 targetUnitPos = GameManager.ModelPntToUnityPnt(unitTarget, 0);
+        // move up
+        while (timer < animationTime / 4)
+        {
+            transform.position = Vector3.MoveTowards(attackUnitPos, attackUnitPos + new Vector3(0, 2, 0), 8 / animationTime);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        // hit
+        while (timer < animationTime /2)
+        {
+            transform.position = Vector3.MoveTowards(attackUnitPos + new Vector3(0, 2, 0), targetUnitPos, 8 / animationTime);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        // hit back
+        while (timer < animationTime * 3 / 4)
+        {
+            transform.position = Vector3.MoveTowards(targetUnitPos, attackUnitPos + new Vector3(0, 2, 0), 8 / animationTime);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        // move down
+        while (timer < animationTime)
+        {
+            transform.position = Vector3.MoveTowards(attackUnitPos + new Vector3(0, 2, 0), attackUnitPos, 8 / animationTime);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        yield return null;
     }
 
     public void SkillStateEnter(int index)
@@ -332,6 +376,7 @@ public class Unit : MonoBehaviour
             else
             {
                 Debug.Log("아직 사용할 수 없습니다");
+                AlarmManager.Instance.AddAlarm(UIManager.Instance.UnitPortrait.sprite, "스킬을 사용할 수 없습니다", () => GameManager.Focus(point), 0);
                 SkillStateExit();
             }
         }
@@ -351,9 +396,17 @@ public class Unit : MonoBehaviour
                     UIManager.Instance.updateSelectedInfo(unitToSkill);
                     if (unitToSkill.SpecialActs[_currentSkill].IsActable(destPoint))
                     {
-                        unitToSkill.SpecialActs[_currentSkill].Act(destPoint);
-                        SkillStateExit();
-                        GameManager.Instance.UpdateUnit();
+                        try
+                        {
+                            unitToSkill.SpecialActs[_currentSkill].Act(destPoint);
+
+                        }
+                        catch (System.Exception e) { }
+                        finally
+                        {
+                            SkillStateExit();
+                            GameManager.Instance.UpdateUnit();
+                        }
                         break;
                     }
                     else

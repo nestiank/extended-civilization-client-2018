@@ -27,13 +27,7 @@ public class GameUI : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (GameManager.Instance.Game.PlayerInTurn.IsAIControlled)
-        {
-            EndTurn.GetComponentInChildren<Button>().enabled = false;
-            EndTurn.GetComponentInChildren<Text>().text = "다른 플레이어가 턴 진행 중입니다.\n잠시만 기다려 주십시오.";
-            EndTurn.GetComponentInChildren<Text>().fontSize = 20;
-        }
-        else
+        if (!GameManager.Instance.Game.PlayerInTurn.IsAIControlled)
         {
             EndTurn.GetComponentInChildren<Button>().enabled = true;
 
@@ -58,18 +52,18 @@ public class GameUI : MonoBehaviour {
 
         double gold = GameManager.Instance.Game.PlayerInTurn.Gold;
         double goldTurn = GameManager.Instance.Game.PlayerInTurn.GoldNetIncome;
-        goldText.text = Math.Round(gold, 1) + "\n(+ " + Math.Round(goldTurn, 1) + ")";
+        goldText.text = Math.Round(gold, 1) + "(+" + Math.Round(goldTurn, 1) + ")";
 
         double population = GameManager.Instance.Game.PlayerInTurn.Population;
         populationText.text = Math.Round(population, 1).ToString();
 
         double happiness = GameManager.Instance.Game.PlayerInTurn.Happiness;
         double happinessTurn = GameManager.Instance.Game.PlayerInTurn.HappinessIncome;
-        happinessText.text = Math.Round(happiness, 1) + "\n(+ " + Math.Round(happinessTurn, 1) + ")";
+        happinessText.text = Math.Round(happiness, 1) + "(+" + Math.Round(happinessTurn, 1) + ")";
 
         double research = GameManager.Instance.Game.PlayerInTurn.Research;
         double researchTurn = GameManager.Instance.Game.PlayerInTurn.ResearchIncome;
-        researchText.text = Math.Round(research, 1) + "\n(+ " + Math.Round(researchTurn, 1) + ")";
+        researchText.text = Math.Round(research, 1) + "(+" + Math.Round(researchTurn, 1) + ")";
 
         double labor = GameManager.Instance.Game.PlayerInTurn.Labor;
         laborText.text = Math.Round(labor, 1).ToString();
@@ -118,22 +112,20 @@ public class GameUI : MonoBehaviour {
         }
         else
         {
-            // Pressed Next Turn when the player is WHAN
-            if (GameManager.Instance.Game.PlayerInTurn == GameManager.Instance.Game.Players[0])
+            if (GameManager.Instance.Game.PlayerInTurn == GameManager.Instance.Game.Players[GameInfo.UserPlayer])
             {
+                EndTurn.GetComponentInChildren<Text>().text = "다른 플레이어가 턴 진행 중입니다.";
+                EndTurn.GetComponentInChildren<Text>().fontSize = 30;
+                EndTurn.GetComponentInChildren<Button>().enabled = false;
+
                 GameManager.Instance.Game.EndTurn();
                 GameManager.Instance.Game.StartTurn();
-            }
-            // Pressed Next Turn when the player is FINNO
-            else if (GameManager.Instance.Game.PlayerInTurn == GameManager.Instance.Game.Players[1])
-            {
-                GameManager.Instance.Game.EndTurn();
-                GameManager.Instance.Game.StartTurn();
+
+
 
                 // Proceeds AI's Turns
                 while (GameManager.Instance.Game.PlayerInTurn.IsAIControlled)
                 {
-                    // Debug.Log(Game.PlayerNumberInTurn);
                     GameManager.Instance.Game.PlayerInTurn.DoAITurnAction().GetAwaiter().GetResult();
                     GameManager.Instance.Game.EndTurn();
                     GameManager.Instance.Game.StartTurn();
@@ -151,6 +143,7 @@ public class GameUI : MonoBehaviour {
 
             managementcontroller.MakeProductionQ();
             managementcontroller.MakeDeploymentQ();
+            uicontroller.MakeQuestQueue();
 
             GameManager.Instance.CheckNewQuest();
 

@@ -23,12 +23,12 @@ public class GameStarter : MonoBehaviour
     public void StartHwan()
     {
         GameInfo.SetPlayer(CivModel.Hwan.HwanPlayerNumber.Number);
-        txt.text = "환국으로 게임 시작";
+        txt.text = "환국으로 시작하기";
     }
     public void StartSuomen()
     {
         GameInfo.SetPlayer(CivModel.Finno.FinnoPlayerNumber.Number);
-        txt.text = "수오미로 게임 시작";
+        txt.text = "수오미로 시작하기";
     }
     public void StartGame()
     {

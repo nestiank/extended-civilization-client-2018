@@ -98,9 +98,9 @@ public class CameraControl : MonoBehaviour {
                 if (Input.GetMouseButton(0))
                 {
                     Camera.main.transform.position = new Vector3(
-                        (0 + 220 * (Input.mousePosition.x - (705 * Screen.width / 1022)) / (315 * Screen.width / 1022)),
+                        (0 + 220 * (Input.mousePosition.x - (783.75f * Screen.width / 1022)) / (236.25f * Screen.width / 1022)), //705, 315
                         Camera.main.transform.position.y,
-                        (-120f + 99 * Input.mousePosition.y / (150 * Screen.height / 639) - adjust_by_zoom)
+                        (-120f + 99 * Input.mousePosition.y / (112.5f * Screen.height / 639) - adjust_by_zoom) //150
                         );
                 }
             }
@@ -109,7 +109,7 @@ public class CameraControl : MonoBehaviour {
         
     public bool is_mouse_on_minimap()
     {
-        if (Input.mousePosition.x > 705 * Screen.width / 1022 && Input.mousePosition.x < Screen.width && Input.mousePosition.y > 0 && Input.mousePosition.y < 170 * Screen.height / 639)
+        if (Input.mousePosition.x > 783.75f * Screen.width / 1022 && Input.mousePosition.x < Screen.width && Input.mousePosition.y > 0 && Input.mousePosition.y < 140 * Screen.height / 639)
             return true;
         else
             return false;

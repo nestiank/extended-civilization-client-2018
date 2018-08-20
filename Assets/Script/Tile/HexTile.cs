@@ -16,6 +16,7 @@ public class HexTile : MonoBehaviour
 	// Child GameObjects of the Tile
 	Transform terrains;
 	Transform buildings;
+    Color color;
 
     // Tile Building of the Tile
 	CivModel.TileBuilding building;
@@ -30,8 +31,42 @@ public class HexTile : MonoBehaviour
 	void Start() {
         SetTerrain();
 		SetBuilding();
-	}
+        SetColor();
+        terrains.GetChild((int)point.Type).GetComponent<Renderer>().material.color += color;
+    }
 
+    //Set tile's color depending on owner.
+    private void SetColor()
+    {
+        var owner = point.TileOwner;
+        if (owner == GameManager.Instance.Game.Players[0])
+            color = Color.red / 2;
+        else if (owner == GameManager.Instance.Game.Players[1])
+            color = Color.blue * 1.5f;
+        else if (owner == GameManager.Instance.Game.Players[2])
+            color = Color.yellow / 3;
+        else if (owner == GameManager.Instance.Game.Players[3])
+            color = Color.cyan / 3;
+        else if (owner == GameManager.Instance.Game.Players[4])
+            color = Color.gray;
+        else if (owner == GameManager.Instance.Game.Players[5])
+            color = Color.magenta;
+        else if (owner == GameManager.Instance.Game.Players[6])
+            color = Color.magenta * 2;
+        else if (owner == GameManager.Instance.Game.Players[7])
+            color = Color.yellow / 2;
+        else if (owner == GameManager.Instance.Game.Players[8])
+            color = Color.green / 2;
+        else
+            color = new Color(0, 0, 0, 0);
+    }
+
+    public void UpdateColor()
+    {
+        terrains.GetChild((int)point.Type).GetComponent<Renderer>().material.color -= color;
+        SetColor();
+        terrains.GetChild((int)point.Type).GetComponent<Renderer>().material.color += color;
+    }
     // Change Tile position to given CivModel.Terrain.Point value
     // Default y position is -.0.05f
     public void SetPoints(CivModel.Terrain.Point p1) {
@@ -154,6 +189,7 @@ public class HexTile : MonoBehaviour
         StopCoroutine(_coroutine);
         Material mat = terrains.GetChild((int)point.Type).GetComponent<Renderer>().material;
         mat.SetColor("_Color", Color.white);
+        terrains.GetChild((int)point.Type).GetComponent<Renderer>().material.color += color;
     }
 
     // Make tile flicker with color c.

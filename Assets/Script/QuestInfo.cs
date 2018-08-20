@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using CivModel;
+using CivModel.Quests;
 
 public class QuestInfo : MonoBehaviour {
 
@@ -16,72 +17,72 @@ public class QuestInfo : MonoBehaviour {
 	}
 
 	static public string GetRequesterCountry(Quest qst) {
-        switch (qst.TextName) {
-			case "불가사의 - 오티즘 빔 반사 어레이":
-				return "어류 공화국";
-			case "첩보 - 크툴루 계획":
-				return "아틀란티스";
-			case "불가사의- 이집트 캉덤":
-				return "이집트";
-			case "[전쟁 동맹] - 에뮤 연방":
-				return "에뮤 연방";
-			case "[불가사의] - 아틀란티스":
-				return "아틀란티스";
-			case "[불가사의] - R'̧l̨̜y͎͎̜̺̬e͕͇͇͚͓̹h̢̳͎̗͇͇̙":
-				return "R'̧l̨̜y͎͎̜̺̬e͕͇͇͚͓̹h̢̳͎̗͇͇̙";
-			case "군사 동맹 - 궤도 장악권":
-				return "쉬드 캉덤";
-			case "건물 기증 - 모아이 포스 필드":
-				return "이스터 왕국";
-			case "불가사의 - 성간 에너지":
-				return "에뮤 왕국";
-			case "불가사의 - 유전 연구학":
-				return "아틀란티스";
-			default:
-                //Debug.Log(qst.TextName);
-				return "Requester Unknown";
-		}
+        return qst.Requester.PlayerName;
 	}
 
+    static public string GetQuestName(Quest qst)
+    {
+        string questName = "";
+
+        if (qst is QuestAtlantis)
+        {
+            questName = "finno_main2";
+        }
+        else if (qst is QuestAutismBeamReflex)
+        {
+            questName = "hwan_main1";
+        }
+        else if (qst is QuestEgyptKingdom)
+        {
+            questName = "hwan_main3";
+        }
+        else if (qst is QuestPorjectCthulhu)
+        {
+            questName = "hwan_main2";
+        }
+        else if (qst is QuestRlyeh)
+        {
+            questName = "finno_main3";
+        }
+        else if (qst is QuestSubAirspaceDomination)
+        {
+            questName = "hwan_sub1";
+        }
+        else if (qst is QuestSubGeneticEngineering)
+        {
+            questName = "finno_sub2";
+        }
+        else if (qst is QuestSubInterstellarEnergy)
+        {
+            questName = "finno_sub1";
+        }
+        else if (qst is QuestSubMoaiForceField)
+        {
+            questName = "hwan_sub2";
+        }
+        else if (qst is QuestWarAliance)
+        {
+            questName = "finno_main1";
+        }
+        else
+        {
+            questName = "hwan_main1";
+            Debug.Log("Unknown Quest: " + qst.TextName);
+        }
+
+        return questName;
+    }
+
 	static public Sprite GetPortraitImage(Quest qst) {
-		string questPortraitName = "";
-        switch (qst.TextName) {
-			case "불가사의 - 오티즘 빔 반사 어레이":
-				questPortraitName = "hwan_main1";
-				break;
-			case "첩보 - 크툴루 계획":
-				questPortraitName = "hwan_main2";
-				break;
-			case "불가사의- 이집트 캉덤":
-				questPortraitName = "hwan_main3";
-				break;
-			case "[전쟁 동맹] - 에뮤 연방":
-				questPortraitName = "finno_main1";
-				break;
-			case "[불가사의] - 아틀란티스":
-				questPortraitName = "finno_main2";
-				break;
-			case "[불가사의] - R'̧l̨̜y͎͎̜̺̬e͕͇͇͚͓̹h̢̳͎̗͇͇̙":
-				questPortraitName = "finno_main3";
-				break;
-			case "군사 동맹 - 궤도 장악권":
-				questPortraitName = "hwan_sub1";
-				break;
-			case "건물 기증 - 모아이 포스 필드":
-				questPortraitName = "hwan_sub2";
-				break;
-			case "불가사의 - 성간 에너지":
-				questPortraitName = "finno_sub1";
-				break;
-			case "불가사의 - 유전 연구학":
-				questPortraitName = "finno_sub2";
-				break;
-			default:
-				questPortraitName = "hwan_sub1";
-				break;
-		}
-		return Resources.Load<Sprite>("Quests/" + questPortraitName);
+        string questName = GetQuestName(qst);
+		return Resources.Load<Sprite>("Quests/" + questName);
 	}
+
+    static public Sprite GetExplainImage(Quest qst)
+    {
+        string questName = GetQuestName(qst);
+        return Resources.Load<Sprite>("Quests/Description" + questName);
+    }
 
 	static public string GetResourceImage(Quest qst) {
 		return "";
