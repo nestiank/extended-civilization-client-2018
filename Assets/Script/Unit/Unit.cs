@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using CivModel;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class Unit : MonoBehaviour
 {
@@ -17,6 +18,8 @@ public class Unit : MonoBehaviour
     // CivModel.Unit Attributes of the Unit.
     // Associated With the Model, But as it's a pointer, Access is Required.
     public CivModel.Unit unitModel;
+
+    public int unitOwnerNumber;
 
     // Unit States. Move, Attack and Skill
     private bool _inMoveState = false;
@@ -40,6 +43,7 @@ public class Unit : MonoBehaviour
         this.point = p1;
         this.unityPoint = GameManager.ModelPntToUnityPnt(p1, 0);
         this.transform.position = this.unityPoint;
+        this.unitOwnerNumber = this.unitModel.Owner.PlayerNumber;
         // SetMaterial();
     }
     // Change Unit position to given CivModel.Terrain.Point value
@@ -322,6 +326,9 @@ public class Unit : MonoBehaviour
                 if (unitModel is CivModel.Hwan.Spy || unitModel is CivModel.Finno.Spy)
                 {
                     CivModel.Player SpiedPlayer = unitModel.PlacedPoint.Value.TileOwner;
+
+                    // 플레이어 이름
+                    string playerName = SpiedPlayer.PlayerName;
                     // 금 정보
                     double gold = SpiedPlayer.Gold;
                     double goldTurn = SpiedPlayer.GoldIncome;
@@ -336,13 +343,20 @@ public class Unit : MonoBehaviour
                     // 노동력 정보
                     double labor = SpiedPlayer.Labor;
 
-                    string text = "금: " + gold + "\n(턴당 " + goldTurn + ")\n" + "인구: " + population + "\n" + "행복: " + happiness + "\n(턴당 " + happinessTurn + ")\n" + "기술력: " + research + "\n(턴당 " + researchTurn + ")\n" + "노동력: " + labor;
+                    string text = "적국 이름: " + playerName + "\n\n금: " + gold + " (턴당 " + goldTurn + ")\n\n" + "인구: " + population + "\n\n" + "행복: " + happiness + " (턴당 " + happinessTurn + ")\n\n" + "기술력: " + research + "(턴당 " + researchTurn + ")\n\n" + "노동력: " + labor;
 
+                    UIManager.Instance.spyPanel.SetActive(true);
+                    UIManager.Instance.spyContent.GetComponent<Text>().text = text;
                 }
                 // 공통적인 부분
                 GameManager.Instance.selectedActor.SpecialActs[_currentSkill].Act(null);
                 GameManager.Instance.UpdateUnit();
                 // UIManager.Instance.UpdateUnitInfo(); Done in UpdateUnit
+            }
+            else
+            {
+                Debug.Log("아직 사용할 수 없습니다");
+                AlarmManager.Instance.AddAlarm(UIManager.Instance.UnitPortrait.sprite, "스킬을 사용할 수 없습니다", () => GameManager.Focus(point), 0);
             }
             _inSkillState = false;
             return;
@@ -401,7 +415,7 @@ public class Unit : MonoBehaviour
                             unitToSkill.SpecialActs[_currentSkill].Act(destPoint);
 
                         }
-                        catch (System.Exception e) { }
+                        catch (System.Exception e) { Debug.Log(e); }
                         finally
                         {
                             SkillStateExit();

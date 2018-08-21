@@ -18,6 +18,9 @@ public class UIManager : MonoBehaviour
     public GameObject selectedActor;
     public GameObject SpecialSpec;
 
+    public GameObject spyPanel;
+    public GameObject spyContent;
+
     public GameObject UnitSelTab;
     public GameObject BuildingSelTab;
     public GameObject EpicTab, HighTab, IntermediateTab, LowTab;    // Unit production
@@ -79,6 +82,7 @@ public class UIManager : MonoBehaviour
         cityBuildingInfo.SetActive(false);
         mapUI.transform.GetChild(1).gameObject.SetActive(false);
         QuestComplete.SetActive(false);
+        spyPanel.SetActive(false);
         
     }
 
@@ -509,5 +513,11 @@ public class UIManager : MonoBehaviour
     {
         QuestComplete.SetActive(false);
     }
+
+    public void OnClickBack()
+    {
+        spyPanel.SetActive(false);
+    }
+
 
 }

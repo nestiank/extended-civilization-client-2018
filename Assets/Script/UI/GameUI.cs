@@ -9,16 +9,30 @@ using UnityEngine.SceneManagement;
 
 public class GameUI : MonoBehaviour {
 
+    public static GameUI Instance = null;
+
     public GameObject mapUI;
     public GameObject EndTurn;
     public Text goldText, populationText, happinessText, researchText, laborText;
+    public GameObject endingScene;
 
     private UIController uicontroller;
     private ManagementController managementcontroller;
     private SpecialResourceView specialResourceView;
 
+    void Awake()
+    {
+        if (Instance == null)
+            Instance = this;
+        else if (Instance != this)
+            Destroy(gameObject);
+
+        DontDestroyOnLoad(gameObject);
+    }
+
     // Use this for initialization
     void Start () {
+        endingScene.SetActive(false);
         //mapUI = GameObject.Find("MapUI");
         uicontroller = UIController.GetUIController();
         managementcontroller = ManagementController.GetManagementController();
@@ -88,20 +102,38 @@ public class GameUI : MonoBehaviour {
         specialResourceView.begin();
     }
 
-    public static void CheckEnd()
+    public void CheckEnd()
     {
         if(GameManager.Instance.Game.PlayerInTurn.IsVictoried)
         {
-            SceneManager.LoadScene("Ending");
+            if (GameManager.Instance.Game.PlayerInTurn == GameManager.Instance.Game.Players[0])
+            {
+                endingScene.GetComponentInChildren<Image>().sprite = Resources.Load<Sprite>("Endings/Hwan_ending");
+            }
+            else
+            {
+                endingScene.GetComponentInChildren<Image>().sprite = Resources.Load<Sprite>("Endings/Finno_ending");
+            }
+            endingScene.SetActive(true);
         }
         else if (GameManager.Instance.Game.PlayerInTurn.IsDefeated)
         {
-            SceneManager.LoadScene("Ending");
+            if (GameManager.Instance.Game.PlayerInTurn == GameManager.Instance.Game.Players[0])
+            {
+                endingScene.GetComponentInChildren<Image>().sprite = Resources.Load<Sprite>("Endings/Finno_ending");
+            }
+            else
+            {
+                endingScene.GetComponentInChildren<Image>().sprite = Resources.Load<Sprite>("Endings/Hwan_ending");
+            }
+            endingScene.SetActive(true);
         }
         else if (GameManager.Instance.Game.PlayerInTurn.IsDrawed)
         {
-            SceneManager.LoadScene("Ending");
+            endingScene.GetComponentInChildren<Image>().sprite = Resources.Load<Sprite>("Endings/Draw_ending");
+            endingScene.SetActive(true);
         }
+
     }
 
     public void onClickNextTurn()
@@ -131,6 +163,7 @@ public class GameUI : MonoBehaviour {
                     GameManager.Instance.Game.StartTurn();
                 }
             }
+            AlarmManager.Instance.updateAlarmQueue();
 
             GameManager.Instance.UpdateMap();
             GameManager.Instance.UpdateUnit();
@@ -138,7 +171,6 @@ public class GameUI : MonoBehaviour {
             //UIManager.Instance.UpdateUnitInfo(); Done in UpdateUnit
             UIManager.Instance.ButtonInteractChange();
 
-            AlarmManager.Instance.updateAlarmQueue();
             GameManager.Instance.CheckCompletedProduction();
 
             managementcontroller.MakeProductionQ();

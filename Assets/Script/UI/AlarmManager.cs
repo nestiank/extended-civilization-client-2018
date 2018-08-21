@@ -58,19 +58,7 @@ public class AlarmManager : MonoBehaviour
     // Add new AlarmModel in Alarm Queue.
     public void AddAlarm(Sprite alarmImage, String alarmText, Action action, int leftTurn)
     {
-        GameObject alarm = (GameObject)Instantiate(alarmContent);
-        alarm.AddComponent<AlarmModel>();
-
-        alarm.GetComponent<AlarmModel>().SetProperties(alarmImage, alarmText, action, leftTurn);
-
-        if (alarm.GetComponent<AlarmModel>().leftTurn == 0)
-        {
-            ShowAlarm(alarm);
-        }
-        else
-        {
-            alarmQueue.Add(alarm);
-        }
+        AddAlarm(alarmImage, alarmText, action, leftTurn, false);
     }
 
     // Add new AlarmModel in Alarm Queue.

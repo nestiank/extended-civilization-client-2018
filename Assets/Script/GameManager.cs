@@ -190,18 +190,14 @@ public class GameManager : MonoBehaviour {
                 }
 			}
 		}
-        
-        foreach (GameObject unit in unitToDelete)
-        {
-            Debug.Log("unit to delete :" + unit.ToString());
-            
-        }
-        foreach(GameObject unit in unitToDelete) {
 
-            CivModel.Actor unitModel = unit.GetComponent<Unit>().unitModel;
-            if (unitModel.Owner == _game.PlayerInTurn)
+        foreach(GameObject unit in unitToDelete) {
+            int unitOwnerNumber = unit.GetComponent<Unit>().unitOwnerNumber;
+
+            if (unitOwnerNumber == _game.Players[GameInfo.UserPlayer].PlayerNumber)
             {
-            AlarmManager.Instance.AddAlarm(
+                CivModel.Unit unitModel = unit.GetComponent<Unit>().unitModel;
+                AlarmManager.Instance.AddAlarm(
                     Resources.Load(("Portraits/" + (ProductionFactoryTraits.GetPortName(unitModel)).ToLower()), typeof(Sprite)) as Sprite,
                     ProductionFactoryTraits.GetName(unitModel) + " 파괴됨",
                     null,
@@ -241,8 +237,9 @@ public class GameManager : MonoBehaviour {
                         unit.AddComponent<Unit>();
 
                         unit.name = String.Format("Unit({0},{1})", plyrIdx, untIdx);
-                        unit.GetComponent<Unit>().SetPoints(pt, pos);
                         unit.GetComponent<Unit>().unitModel = unt;
+                        unit.GetComponent<Unit>().SetPoints(pt, pos);
+                        unit.GetComponent<Unit>().unitOwnerNumber = unt.Owner.PlayerNumber;
                         _units.Add(unit);
                         unit.GetComponent<Unit>().unitModel.SkipFlag = true;
 
@@ -255,8 +252,9 @@ public class GameManager : MonoBehaviour {
                         GameObject ad_unit = Instantiate(UnitPrefab, ad_pos, Quaternion.identity);
                         ad_unit.AddComponent<Unit>();
                         ad_unit.name = String.Format("AdditionalUnit({0},{1})", plyrIdx, untIdx);
-                        ad_unit.GetComponent<Unit>().SetPoints(pt, ad_pos);
                         ad_unit.GetComponent<Unit>().unitModel = unt;
+                        ad_unit.GetComponent<Unit>().SetPoints(pt, ad_pos);
+                        ad_unit.GetComponent<Unit>().unitOwnerNumber = unt.Owner.PlayerNumber;
                         _additional_units.Add(ad_unit);
                         ad_unit.GetComponent<Unit>().unitModel.SkipFlag = true;
                     }
@@ -303,6 +301,8 @@ public class GameManager : MonoBehaviour {
         CheckCompletedQuest();
         // Update Unit Info
         UIManager.Instance.UpdateUnitInfo();
+        // Update Quest Queue
+        UIController.GetUIController().MakeQuestQueue();
     }
 
     bool IsSpyNear(CivModel.Position pt) {
@@ -501,10 +501,12 @@ public class GameManager : MonoBehaviour {
 
 					unit.name = String.Format("Unit({0},{1})", plyrIdx, untIdx);
                     additional_unit.name = String.Format("AdditionalUnit({0},{1})", plyrIdx, untIdx);
-					unit.GetComponent<Unit>().SetPoints(pt, pos);
-                    additional_unit.GetComponent<Unit>().SetPoints(pt, ad_pos);
                     unit.GetComponent<Unit>().unitModel = unt;
                     additional_unit.GetComponent<Unit>().unitModel = unt;
+					unit.GetComponent<Unit>().SetPoints(pt, pos);
+                    additional_unit.GetComponent<Unit>().SetPoints(pt, ad_pos);
+                    unit.GetComponent<Unit>().unitOwnerNumber = unt.Owner.PlayerNumber;
+                    additional_unit.GetComponent<Unit>().unitOwnerNumber = unt.Owner.PlayerNumber;
 					_units.Add(unit);
                     _additional_units.Add(additional_unit);
 				}
@@ -763,7 +765,7 @@ public class GameManager : MonoBehaviour {
             }
         }
 
-        GameUI.CheckEnd();
+        GameUI.Instance.CheckEnd();
     }
 
     // Check if there exist production that have finished.

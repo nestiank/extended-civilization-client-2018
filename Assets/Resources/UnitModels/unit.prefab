@@ -21,7 +21,6 @@ GameObject:
   - component: {fileID: 4164349117385164}
   - component: {fileID: 33675704233413142}
   - component: {fileID: 23430415915558628}
-  - component: {fileID: 95116768080365986}
   - component: {fileID: 114555728656525668}
   m_Layer: 0
   m_Name: unit
@@ -49,7 +48,7 @@ MeshRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1994173042382988}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -85,24 +84,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1994173042382988}
   m_Mesh: {fileID: 4300000, guid: b30586820caa1de47b0e0ed1aa73c608, type: 3}
---- !u!95 &95116768080365986
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1994173042382988}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: b30586820caa1de47b0e0ed1aa73c608, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &114555728656525668
 MonoBehaviour:
   m_ObjectHideFlags: 1
