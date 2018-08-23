@@ -227,7 +227,7 @@ public class UIController : MonoBehaviour {
             QstExplainBtn.SetActive(true);
         Image Qstimage = QstExplain.GetComponent<Image>();
         Text text = QstExplain.GetComponentInChildren<Text>();
-        //Qstimage.sprite = QuestInfo.GetExplainImage(qst);
+        Qstimage.sprite = QuestInfo.GetExplainImage(qst);
         text.text = qst.QuestDescription;
     }
 }

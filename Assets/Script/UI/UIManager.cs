@@ -33,7 +33,6 @@ public class UIManager : MonoBehaviour
     public GameObject moveBtn;
     public GameObject attackBtn;
     public GameObject skipBtn;
-    public GameObject skillBtn;
 
     public GameObject unitName;
     public GameObject unitAttack;
@@ -54,6 +53,7 @@ public class UIManager : MonoBehaviour
     // UIManager Class Instance Singleton
     private static UIManager _manager = null;
     public static UIManager Instance { get { return _manager; } }
+    private float skillSet_x;
 
     private void Awake()
     {
@@ -78,12 +78,12 @@ public class UIManager : MonoBehaviour
         diplomacyUI.SetActive(false);
         questUI.SetActive(false);
         SpecialSpec.SetActive(false);
-        skillSet.SetActive(false);
+        //skillSet.SetActive(false);
         cityBuildingInfo.SetActive(false);
         mapUI.transform.GetChild(1).gameObject.SetActive(false);
         QuestComplete.SetActive(false);
         spyPanel.SetActive(false);
-        
+        skillSet_x = skillSet.GetComponent<RectTransform>().sizeDelta.x;
     }
 
     // Update is called once per frame
@@ -118,18 +118,21 @@ public class UIManager : MonoBehaviour
                         tile.isFirstClick = true;
                         GameManager.Instance.selectedGameObject = selectedActor;
                     }
+                    GameManager.Focus(tile.point);
                 }
                 else if (tile.point.TileBuilding != null)
                 {
                     GameManager.Instance.selectedActor = tile.point.TileBuilding;
                     tile.isFirstClick = true;
                     GameManager.Instance.selectedGameObject = selectedActor;
+                    GameManager.Focus(tile.point);
                 }
                 else if (tile.point.Unit != null)
                 {
                     GameManager.Instance.selectedActor = tile.point.Unit;
                     tile.isFirstClick = false;
                     GameManager.Instance.selectedGameObject = GameManager.GetUnitGameObject(tile.point);
+                    GameManager.Focus(tile.point);
                 }
                 // If neither Unit nor TileBuilding exists on the selected tile
                 else
@@ -137,10 +140,13 @@ public class UIManager : MonoBehaviour
                     GameManager.Instance.selectedActor = null;
                 }
 
-                //if (GameManager.Instance.selectedActor != null)
-                    //Debug.Log(GameManager.Instance.selectedActor.ToString());
+                if (GameManager.Instance.selectedActor is CivModel.Unit)
+                    GameManager.Instance.selectedActor.SkipFlag = false;
 
-                // Set Unit Information
+                //if (GameManager.Instance.selectedActor != null)
+                //Debug.Log(GameManager.Instance.selectedActor.ToString());
+
+                    // Set Unit Information
                 UpdateUnitInfo();
 
                 // Change Button Interaction correponds to the selected Actor
@@ -177,7 +183,7 @@ public class UIManager : MonoBehaviour
                 if (GameManager.Instance.selectedActor is CivModel.Actor)
                 {
                     UnitPortrait.sprite = Resources.Load(("Portraits/" + (ProductionFactoryTraits.GetPortName(GameManager.Instance.selectedActor)).ToLower()), typeof(Sprite)) as Sprite;
-                    unitName.GetComponent<Text>().text = ProductionFactoryTraits.GetName(GameManager.Instance.selectedActor);
+                    unitName.GetComponent<Text>().text = GameManager.Instance.selectedActor.TextName; //ProductionFactoryTraits.GetName(GameManager.Instance.selectedActor);
                 }
 
                 unitAttack.GetComponent<Text>().text = GameManager.Instance.selectedActor.AttackPower.ToString();
@@ -195,7 +201,7 @@ public class UIManager : MonoBehaviour
                 // CityBase Portrait 및 CityBuilding 리스트 표시
                 if(GameManager.Instance.selectedActor is CivModel.CityBase)
                 {
-                    unitName.GetComponent<Text>().text = GameManager.Instance.selectedActor.TextName;
+                    unitName.GetComponent<Text>().text = ((CityBase)GameManager.Instance.selectedActor).CityName;
                     UnitPortrait.sprite = CityBuilding.GetPortraiteImage((CivModel.CityBase)GameManager.Instance.selectedActor);
                     cityBuildingInfo.SetActive(true);
                     cityBuildingInfo.GetComponentInChildren<Text>().text = CityBuilding.ListCityBuildings(((CityBase)GameManager.Instance.selectedActor).InteriorBuildings);
@@ -310,11 +316,11 @@ public class UIManager : MonoBehaviour
     {
         if (GameManager.Instance.selectedActor is CivModel.Unit && GameManager.Instance.selectedActor.Owner == GameManager.Instance.Game.PlayerInTurn)
         {
-            GameManager.Instance.selectedActor.SkipFlag = true;
+            GameManager.Instance.selectedActor.SleepFlag = true;
         }
         ButtonInteractChange();
         GameManager.Instance.CheckToDo();
-        GameManager.Instance.FocusOnActableUnit();
+        GameManager.Instance.FocusOnNextActableUnit();
     }
 
     public void SpecialMouseOver()
@@ -420,12 +426,9 @@ public class UIManager : MonoBehaviour
         if (GameManager.Instance.selectedActor is CivModel.Unit && GameManager.Instance.selectedActor.Owner == GameManager.Instance.Game.PlayerInTurn)
         {
             if (GameManager.Instance.selectedActor.SkipFlag == false)
-            {
                 skipBtn.GetComponent<Button>().interactable = true;
-            } else
-            {
+            else
                 skipBtn.GetComponent<Button>().interactable = false;
-            }
         } else
         {
             skipBtn.GetComponent<Button>().interactable = false;
@@ -434,11 +437,12 @@ public class UIManager : MonoBehaviour
         // SkillButton
         if (GameManager.Instance.selectedActor is CivModel.Actor && GameManager.Instance.selectedActor.Owner == GameManager.Instance.Game.PlayerInTurn)
         {
-            skillSet.SetActive(false);
-            if (GameManager.Instance.selectedActor.SpecialActs != null)
+            if (GameManager.Instance.selectedActor.SpecialActs == null)
+                skillSet.SetActive(false);
+            else
             {
-                skillBtn.GetComponent<Button>().interactable = true;
-
+                skillSet.GetComponent<RectTransform>().sizeDelta = new Vector2(skillSet_x * GameManager.Instance.selectedActor.SpecialActs.Count / 3
+                    , skillSet.GetComponent<RectTransform>().sizeDelta.y);
                 Button[] skillsBtn = skillSet.GetComponentsInChildren<Button>();
                 foreach (var skill in skillsBtn)
                 {
@@ -469,14 +473,6 @@ public class UIManager : MonoBehaviour
                     }
                 }
             }
-            else
-            {
-                skillBtn.GetComponent<Button>().interactable = false;
-            }
-        }
-        else
-        {
-            skillBtn.GetComponent<Button>().interactable = false;
         }
     }
 

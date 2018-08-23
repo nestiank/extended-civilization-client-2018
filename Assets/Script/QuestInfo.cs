@@ -81,7 +81,7 @@ public class QuestInfo : MonoBehaviour {
     static public Sprite GetExplainImage(Quest qst)
     {
         string questName = GetQuestName(qst);
-        return Resources.Load<Sprite>("Quests/Description" + questName);
+        return Resources.Load<Sprite>("Quests/Description/" + questName);
     }
 
 	static public string GetResourceImage(Quest qst) {

@@ -1272,6 +1272,11 @@
             <returns>Whether <see cref="M:CivModel.IMovePath.RecalculateFirstWalk"/> is called before moving.</returns>
             <returns>Whether the walk is done or not. The walk is not done if AP is not enough or path is invalid.</returns>
         </member>
+        <member name="M:CivModel.IMovePath.ActFullWalkForRemainAP">
+            <summary>
+            Call <see cref="M:CivModel.IMovePath.ActFirstWalk"/> until <see cref="P:CivModel.IMovePath.Actor"/> has not enough AP or path becomes invalid.
+            </summary>
+        </member>
         <member name="T:CivModel.InteriorBuildingPrototype">
             <summary>
             Represents a prototype of <see cref="T:CivModel.InteriorBuilding"/>.

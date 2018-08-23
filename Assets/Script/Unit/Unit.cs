@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 using CivModel;
 using UnityEngine.EventSystems;
@@ -7,7 +9,6 @@ using UnityEngine.UI;
 
 public class Unit : MonoBehaviour
 {
-
     // CivModel.Terrain.Point Attributes of the Unit.
     // Associated With the Model, But as it's a pointer, Access is Required.
     public CivModel.Terrain.Point point;
@@ -94,26 +95,29 @@ public class Unit : MonoBehaviour
 
         else if (GameManager.Instance.selectedActor is CivModel.Unit)
         {
-            // Select movable adjacent tiles
-            _parameterPoints = GameManager.Instance.selectedActor.PlacedPoint.Value.Adjacents();
+            var player = GameManager.Instance.Game.Players[GameInfo.UserPlayer];
+
+            // Select movable tiles
+            _parameterPoints = CivModel.Path.ActorMovePath.GetReachablePoint(GameManager.Instance.selectedActor, true)
+                .Where(x => x != GameManager.Instance.selectedActor.PlacedPoint)
+                .Select(x => (CivModel.Terrain.Point?)x).ToArray();
             for (int i = 0; i < _parameterPoints.Length; i++)
             {
-                if (GameManager.Instance.selectedActor.MovingAttackAct != null && GameManager.Instance.selectedActor.MovingAttackAct.IsActable(_parameterPoints[i]))
-                {
-                    CivModel.Position pos = _parameterPoints[i].Value.Position;
-                    GameManager.Instance.Tiles[pos.X, pos.Y].GetComponent<HexTile>().FlickerRed();
-                    GameManager.Instance.AdditionalTiles[pos.X, pos.Y].GetComponent<HexTile>().FlickerRed();
-                }
-                else if (GameManager.Instance.selectedActor.MoveAct != null && GameManager.Instance.selectedActor.MoveAct.IsActable(_parameterPoints[i]))
+                if (_parameterPoints[i].Value.Unit == null && _parameterPoints[i].Value.TileBuilding == null)
                 {
                     CivModel.Position pos = _parameterPoints[i].Value.Position;
                     GameManager.Instance.Tiles[pos.X, pos.Y].GetComponent<HexTile>().FlickerBlue();
                     GameManager.Instance.AdditionalTiles[pos.X, pos.Y].GetComponent<HexTile>().FlickerBlue();
                 }
+                //if the tile has an enemy unit or an enemy tilebuilding.
                 else
                 {
-                    CivModel.Position pos = _parameterPoints[i].Value.Position;
-                    //Debug.Log("Cannot Move to (" + pos.X + ", " + pos.Y + ")"); 
+                    if (IsEnemyActor(player, _parameterPoints[i].Value))
+                    {
+                        CivModel.Position pos = _parameterPoints[i].Value.Position;
+                        GameManager.Instance.Tiles[pos.X, pos.Y].GetComponent<HexTile>().FlickerRed();
+                        GameManager.Instance.AdditionalTiles[pos.X, pos.Y].GetComponent<HexTile>().FlickerRed();
+                    }
                 }
             }
             IEnumerator _coroutine = MoveUnit(GameManager.Instance.selectedActor);
@@ -121,31 +125,57 @@ public class Unit : MonoBehaviour
         }
     }
 
+    private bool IsEnemyActor(Player player, CivModel.Terrain.Point point)
+    {
+        return (point.Unit != null && !point.Unit.Owner.IsAlliedWith(player))
+            || (point.TileBuilding != null && !point.TileBuilding.Owner.IsAlliedWith(player));
+    }
+
     IEnumerator MoveUnit(CivModel.Actor unitToMove)
     {
         while (true)
         {
             CivModel.Terrain.Point destPoint = GameManager.Instance.selectedPoint;
+            var player = GameManager.Instance.Game.Players[GameInfo.UserPlayer];
+
             // 새로운 Point 을 선택했을 때
             if (unitToMove.PlacedPoint.Value != destPoint)
             {
                 // Flicker하고 있는 Tile을 선택했을 때
                 if (GameManager.Instance.selectedTile.isFlickering)
                 {
+                    IMovePath MovePath;
                     UIManager.Instance.updateSelectedInfo(unitToMove);
-                    if (unitToMove.MovingAttackAct != null && unitToMove.MovingAttackAct.IsActable(destPoint))
+                    //적 Actor일때
+                    if (unitToMove.MovingAttackAct != null && IsEnemyActor(player,destPoint))
                     {
-                        unitToMove.MovingAttackAct.Act(destPoint);
+                        MovePath = MoveOrMoveAttack(unitToMove, destPoint, unitToMove.MovingAttackAct);
+                        //unitToMove.MovingAttackAct.Act(destPoint);
                         MoveStateExit();
+                        if (MovePath != null && !MovePath.IsInvalid)
+                        {
+                            yield return MoveorMovingAttackAnimation(MovePath, 0.2f, unitToMove.MovingAttackAct);
+                            yield return AttackAnimation(unitToMove, destPoint);
+                            unitToMove.MovePath = MovePath;
+                            MovePath.ActFullWalkForRemainAP();
+                        }
+                        UIManager.Instance.ButtonInteractChange();
                         GameManager.Instance.UpdateUnit();
                         break;
                     }
-                    else if (unitToMove.MoveAct != null && unitToMove.MoveAct.IsActable(destPoint))
-                    { 
-                        unitToMove.MoveAct.Act(destPoint);
+                    else if (unitToMove.MoveAct != null)
+                    {
+                        MovePath = MoveOrMoveAttack(unitToMove, destPoint, unitToMove.MoveAct);
+                        //unitToMove.MoveAct.Act(destPoint);
                         MoveStateExit();
-                        // Update selected Point to destination point
+                        if (MovePath != null && !MovePath.IsInvalid)
+                        {
+                            yield return MoveorMovingAttackAnimation(MovePath, 0.2f, unitToMove.MoveAct);
+                            unitToMove.MovePath = MovePath;
+                            MovePath.ActFullWalkForRemainAP();
+                        }
                         GameManager.Instance.selectedPoint = destPoint;
+                        UIManager.Instance.ButtonInteractChange();
                         GameManager.Instance.UpdateUnit();
                         break;
                     }
@@ -168,9 +198,89 @@ public class Unit : MonoBehaviour
         }
     }
 
-    IEnumerator MoveAnimation()
+    private static IMovePath MoveOrMoveAttack(Actor unitToMove, CivModel.Terrain.Point destPoint, CivModel.IActorAction finalAction)
     {
-        yield return null;
+        IMovePath MovePath;
+        IMovePath path = new CivModel.Path.ActorMovePath(
+                  unitToMove, destPoint, finalAction);
+        if (!path.IsInvalid)
+        {
+            MovePath = path;
+        }
+        else
+        {
+            MovePath = null;
+        }
+        /*
+        if (MovePath != null && !MovePath.IsInvalid)
+        {
+            unitToMove.MovePath = MovePath;
+            MovePath.ActFullWalkForRemainAP();
+        }*/
+        return MovePath;
+    }
+
+    IEnumerator MoveorMovingAttackAnimation(IMovePath path, float secondsPerMove, CivModel.IActorAction finalAction)
+    {
+        float timer = 0;
+        for (int i = 1; i < path.Path.Count() - 1; i++)
+        {
+            Vector3 destPointsPos = GameManager.ModelPntToUnityPnt(path.Path.ElementAt(i), 0);
+            float distance = (transform.position - destPointsPos).magnitude;
+            Quaternion lookDir = Quaternion.LookRotation(destPointsPos - transform.position, transform.up);
+            /*
+            // hard coding for not-uniform-basis models
+            if(path.Actor is CivModel.Unit && (CivModel.Unit)path.Actor is CivModel.Hwan.LEOSpaceArmada)
+            {
+                lookDir = lookDir * Quaternion.Euler(0, -43, 0);
+            }*/
+            Quaternion initDir = transform.rotation;
+            while(true)
+            {
+                transform.rotation = Quaternion.Lerp(initDir, lookDir, timer);
+                timer += Time.deltaTime * 3;
+                if(timer > 1) break;
+                yield return null;
+            }
+            timer = 0;
+            while (timer < secondsPerMove)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, destPointsPos, distance * Time.deltaTime / secondsPerMove);
+                timer += Time.deltaTime;
+                yield return null;
+            }
+            timer = 0;
+        }
+        if(finalAction == finalAction.Owner.MovingAttackAct)
+            yield return null;
+        else
+        {
+            Vector3 destPointsPos = GameManager.ModelPntToUnityPnt(path.Path.ElementAt(path.Path.Count()-1), 0);
+            float distance = (transform.position - destPointsPos).magnitude;
+            Quaternion lookDir = Quaternion.LookRotation(destPointsPos - transform.position, transform.up);
+            /*
+            // hard coding for not-uniform-basis models
+            if (path.Actor is CivModel.Unit && (CivModel.Unit)path.Actor is CivModel.Hwan.LEOSpaceArmada)
+            {
+                lookDir = lookDir * Quaternion.Euler(0, -43, 0);
+            }*/
+            Quaternion initDir = transform.rotation;
+            while (true)
+            {
+                transform.rotation = Quaternion.Lerp(initDir, lookDir, timer);
+                timer += Time.deltaTime * 3;
+                if (timer > 1) break;
+                yield return null;
+            }
+            timer = 0;
+            while (timer < secondsPerMove)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, destPointsPos, distance * Time.deltaTime / secondsPerMove);
+                timer += Time.deltaTime;
+                yield return null;
+            }
+            timer = 0;
+        }
     }
 
     public void MoveStateExit()
@@ -220,6 +330,7 @@ public class Unit : MonoBehaviour
             _parameterPoints = GameManager.Instance.selectedActor.PlacedPoint.Value.Adjacents();
             for (int i = 0; i < _parameterPoints.Length; i++)
             {
+                
                 if (GameManager.Instance.selectedActor.HoldingAttackAct.IsActable(_parameterPoints[i]))
                 {
                     CivModel.Position pos = _parameterPoints[i].Value.Position;
@@ -252,7 +363,7 @@ public class Unit : MonoBehaviour
                     UIManager.Instance.updateSelectedInfo(unitToAttack);
                     if (unitToAttack.HoldingAttackAct != null && unitToAttack.HoldingAttackAct.IsActable(destPoint))
                     {
-                        yield return AttackAnimation(unitToAttack, destPoint, 1f);
+                        yield return AttackAnimation(unitToAttack, destPoint);
                         unitToAttack.HoldingAttackAct.Act(destPoint);
                         MoveStateExit();
                         GameManager.Instance.UpdateUnit();
@@ -271,39 +382,41 @@ public class Unit : MonoBehaviour
         }
     }
 
-    IEnumerator AttackAnimation(CivModel.Actor unitToAttack, CivModel.Terrain.Point unitTarget, float animationTime)
+    IEnumerator AttackAnimation(CivModel.Actor unitToAttack, CivModel.Terrain.Point unitTarget)
     {
         float timer = 0;
         Vector3 attackUnitPos = transform.position;
         Vector3 targetUnitPos = GameManager.ModelPntToUnityPnt(unitTarget, 0);
+        float distance = (attackUnitPos + new Vector3(0, 2, 0) - targetUnitPos).magnitude;
+        /*
         // move up
-        while (timer < animationTime / 4)
+        while (timer < 0.4f)
         {
-            transform.position = Vector3.MoveTowards(attackUnitPos, attackUnitPos + new Vector3(0, 2, 0), 8 / animationTime);
+            transform.position = Vector3.MoveTowards(transform.position, attackUnitPos + new Vector3(0, 2, 0), 2 * Time.deltaTime / 0.4f);
             timer += Time.deltaTime;
             yield return null;
         }
         // hit
-        while (timer < animationTime /2)
+        while (timer < 0.5f)
         {
-            transform.position = Vector3.MoveTowards(attackUnitPos + new Vector3(0, 2, 0), targetUnitPos, 8 / animationTime);
+            transform.position = Vector3.MoveTowards(transform.position, targetUnitPos, distance * Time.deltaTime / 0.1f);
             timer += Time.deltaTime;
             yield return null;
         }
         // hit back
-        while (timer < animationTime * 3 / 4)
+        while (timer < 0.7f)
         {
-            transform.position = Vector3.MoveTowards(targetUnitPos, attackUnitPos + new Vector3(0, 2, 0), 8 / animationTime);
+            transform.position = Vector3.MoveTowards(transform.position, attackUnitPos + new Vector3(0, 2, 0), distance * Time.deltaTime / 0.2f);
             timer += Time.deltaTime;
             yield return null;
         }
         // move down
-        while (timer < animationTime)
+        while (timer < 1.1f)
         {
-            transform.position = Vector3.MoveTowards(attackUnitPos + new Vector3(0, 2, 0), attackUnitPos, 8 / animationTime);
+            transform.position = Vector3.MoveTowards(transform.position, attackUnitPos, distance * Time.deltaTime / 0.4f);
             timer += Time.deltaTime;
             yield return null;
-        }
+        }*/
         yield return null;
     }
 

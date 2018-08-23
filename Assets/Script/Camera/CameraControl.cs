@@ -12,7 +12,7 @@ public class CameraControl : MonoBehaviour {
 	private int screen_width = Screen.width;
 
     public int MaxHeight = 100; //최대 높이
-    public int MinHeight = 15; //최소 높이
+    public int MinHeight = 16; //최소 높이
 
     private Vector3 mouse_position;
 
@@ -36,24 +36,16 @@ public class CameraControl : MonoBehaviour {
 
         if (!QuestUI.activeSelf && !ManagementUI.activeSelf)
         {
-            if (Input.GetAxis("Mouse ScrollWheel") < 0 && Camera.main.transform.position.y < MaxHeight)
+            if (Input.GetAxis("Mouse ScrollWheel") < 0 && ViewFieldSquareControl.ViewInstance.zoom_counter < 2)
             {
                 if (!EventSystem.current.IsPointerOverGameObject())
                     Camera.main.transform.Translate(0, 0, -10);
             }
-            else if (Camera.main.transform.position.y > MaxHeight)
-            {
-                Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, MaxHeight, Camera.main.transform.position.z);
-            }
 
-            if (Input.GetAxis("Mouse ScrollWheel") > 0 && Camera.main.transform.position.y > MinHeight)
+            if (Input.GetAxis("Mouse ScrollWheel") > 0 && ViewFieldSquareControl.ViewInstance.zoom_counter > 0)
             {
                 if (!EventSystem.current.IsPointerOverGameObject())
                     Camera.main.transform.Translate(0, 0, 10);
-            }
-            else if (Camera.main.transform.position.y < MinHeight)
-            {
-                Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, MinHeight, Camera.main.transform.position.z);
             }
 
 
@@ -69,7 +61,7 @@ public class CameraControl : MonoBehaviour {
             if (Input.mousePosition.y > screen_height - boundary && !Input.GetMouseButton(0))
             {
                 if (Camera.main.transform.position.z < -10 - (Camera.main.transform.position.y - 10) / Mathf.Sqrt(3))
-                    Camera.main.transform.Translate(0, 3 * speed * Time.deltaTime * Mathf.Sqrt(3), 3 * speed * Time.deltaTime);
+                    Camera.main.transform.Translate(0, 3 * speed * Time.deltaTime * Mathf.Sqrt(2), 3 * speed * Time.deltaTime * Mathf.Sqrt(2));
             }
             else if (Camera.main.transform.position.z > -10 - (Camera.main.transform.position.y - 10) / Mathf.Sqrt(3))
                 Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, -10 - (Camera.main.transform.position.y - 10) / Mathf.Sqrt(3));
@@ -78,13 +70,13 @@ public class CameraControl : MonoBehaviour {
 
             if (Input.mousePosition.y < 0 + boundary && !Input.GetMouseButton(0))
             {
-                if (Camera.main.transform.position.z > -120)
-                    Camera.main.transform.Translate(0, -3 * speed * Time.deltaTime * Mathf.Sqrt(3), -3 * speed * Time.deltaTime);
+                if (Camera.main.transform.position.z > -130)
+                    Camera.main.transform.Translate(0, -3 * speed * Time.deltaTime * Mathf.Sqrt(2), -3 * speed * Time.deltaTime * Mathf.Sqrt(2));
             }
-            else if (Camera.main.transform.position.z < -120)
-                Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, -120);
+            else if (Camera.main.transform.position.z < -130)
+                Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, -130);
 
-            if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
+            if (Input.GetMouseButton(1) && !EventSystem.current.IsPointerOverGameObject())
             {
                 mouse_position = new Vector3(Input.GetAxis("Mouse X"), 0, Input.GetAxis("Mouse Y"));
                 Camera.main.transform.position -= mouse_position;
@@ -98,9 +90,9 @@ public class CameraControl : MonoBehaviour {
                 if (Input.GetMouseButton(0))
                 {
                     Camera.main.transform.position = new Vector3(
-                        (0 + 220 * (Input.mousePosition.x - (783.75f * Screen.width / 1022)) / (236.25f * Screen.width / 1022)), //705, 315
+                        ((0 + 220 * (Input.mousePosition.x - (783.75f * Screen.width / 1022)) / (236.25f * Screen.width / 1022)) * GameManager.Instance.Game.Terrain.Width / 128),
                         Camera.main.transform.position.y,
-                        (-120f + 99 * Input.mousePosition.y / (112.5f * Screen.height / 639) - adjust_by_zoom) //150
+                        ((-120f + 99 * Input.mousePosition.y / (112.5f * Screen.height / 639) - adjust_by_zoom) * GameManager.Instance.Game.Terrain.Height / 80)
                         );
                 }
             }

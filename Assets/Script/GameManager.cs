@@ -67,6 +67,9 @@ public class GameManager : MonoBehaviour {
 
     public bool isThereTodos = false;
 
+    private Actor[] _standbyActors = null;
+    private int _standbyActorIndex = -1;
+
     // Indicates whether Maptile or AdditionalMapTile is clicked.
     public bool isAdClicked = true;
 
@@ -107,12 +110,14 @@ public class GameManager : MonoBehaviour {
         InitiateMiniMap();
         InitiateMap();
         InitiateUnit();
+        InitiateMinimapCamera();
     }
 
 	// Use this for initialization
 	void Start() {
         CheckToDo();
         managementcontroller = ManagementController.GetManagementController();
+
 	}
     void Update()
     {
@@ -305,120 +310,6 @@ public class GameManager : MonoBehaviour {
         UIController.GetUIController().MakeQuestQueue();
     }
 
-    bool IsSpyNear(CivModel.Position pt) {
-        int A = pt.A;
-        int B = pt.B;
-        int C = pt.C;
-        // in range 1
-        if (CheckSpy(A + 1, B - 1, C))
-            return true;
-        if (CheckSpy(A + 1, B, C - 1))
-            return true;
-        if (CheckSpy(A, B + 1, C - 1))
-            return true;
-        if (CheckSpy(A - 1, B + 1, C))
-            return true;
-        if (CheckSpy(A - 1, B, C + 1))
-            return true;
-        if (CheckSpy(A, B - 1, C + 1))
-            return true;
-
-        // in range 2
-        if (CheckSpy(A + 2, B - 2, C))
-            return true;
-        if (CheckSpy(A + 2, B - 1, C - 1))
-            return true;
-        if (CheckSpy(A + 2, B, C - 2))
-            return true;
-        if (CheckSpy(A + 1, B + 1, C - 2))
-            return true;
-        if (CheckSpy(A, B + 2, C - 2))
-            return true;
-        if (CheckSpy(A - 1, B + 2, C - 1))
-            return true;
-        if (CheckSpy(A - 2, B + 2, C))
-            return true;
-        if (CheckSpy(A - 2, B + 1, C + 1))
-            return true;
-        if (CheckSpy(A - 2, B, C + 2))
-            return true;
-        if (CheckSpy(A - 1, B - 1, C + 2))
-            return true;
-        if (CheckSpy(A, B - 2, C + 2))
-            return true;
-        if (CheckSpy(A + 1, B - 2, C + 1))
-            return true;
-
-        // in range 3
-        if (CheckSpy(A + 3, B - 3, C))
-            return true;
-        if (CheckSpy(A + 3, B - 2, C - 1))
-            return true;
-        if (CheckSpy(A + 3, B - 1, C - 2))
-            return true;
-        if (CheckSpy(A + 3, B, C - 3))
-            return true;
-        if (CheckSpy(A + 2, B + 1, C - 3))
-            return true;
-        if (CheckSpy(A + 1, B + 2, C - 3))
-            return true;
-        if (CheckSpy(A, B + 3, C - 3))
-            return true;
-        if (CheckSpy(A - 1, B + 3, C - 2))
-            return true;
-        if (CheckSpy(A - 2, B + 3, C - 1))
-            return true;
-        if (CheckSpy(A - 3, B + 3, C))
-            return true;
-        if (CheckSpy(A - 3, B + 2, C + 1))
-            return true;
-        if (CheckSpy(A - 3, B + 1, C + 2))
-            return true;
-        if (CheckSpy(A - 3, B, C + 3))
-            return true;
-        if (CheckSpy(A - 2, B - 1, C + 3))
-            return true;
-        if (CheckSpy(A - 1, B - 2, C + 3))
-            return true;
-        if (CheckSpy(A, B - 3, C + 3))
-            return true;
-        if (CheckSpy(A + 1, B - 3, C + 2))
-            return true;
-        if (CheckSpy(A + 2, B - 3, C + 1))
-            return true;
-
-        return false;
-    }
-
-    // Check spy by point
-    bool CheckSpy(int A, int B, int C){
-        if (C < 0 || C >= Game.Terrain.Height)
-            return false;
-        if (0 <= B + (C + Math.Sign(C)) / 2 && B + (C + Math.Sign(C)) / 2 < Game.Terrain.Width) {
-            if(Game.Terrain.GetPoint(A,B,C).Unit != null) {
-                if (Game.Terrain.GetPoint(A, B, C).Unit is CivModel.Hwan.Spy || Game.Terrain.GetPoint(A, B, C).Unit is CivModel.Finno.Spy) {
-                    if (Game.Terrain.GetPoint(A, B, C).Unit.Owner != Game.PlayerInTurn)
-                        return true;
-                }
-            }
-        }
-        else {
-            A = A - Game.Terrain.Width;
-            B = B + Game.Terrain.Width;
-            if (Game.Terrain.GetPoint(A, B, C).Unit != null)
-            {
-                if (Game.Terrain.GetPoint(A, B, C).Unit is CivModel.Hwan.Spy || Game.Terrain.GetPoint(A, B, C).Unit is CivModel.Finno.Spy)
-                {
-                    if (Game.Terrain.GetPoint(A, B, C).Unit.Owner != Game.PlayerInTurn)
-                        return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-
     // Initialize Tile Map
 	private void InitiateMap() {
 		_tiles = new GameObject[_game.Terrain.Width, _game.Terrain.Height];
@@ -516,6 +407,11 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
+    private void InitiateMinimapCamera()
+    {
+        minimap_camera.orthographicSize = 58.3f * _game.Terrain.Width / 128;
+        minimap_camera.transform.position = new Vector3(110 * _game.Terrain.Width / 128, -55, -60 * _game.Terrain.Height / 80);
+    }
     // Initialize Turn Attributes of Model
     // Default: Player[0] is User and the others are AI
     private void InitiateTurn() {
@@ -547,13 +443,13 @@ public class GameManager : MonoBehaviour {
         isThereTodos = false;
         // Only For Testing!
 
-        /*
+        
         foreach (CivModel.Unit unit in this.Game.PlayerInTurn.Units)
             if (!unit.RemainAP.Equals(0) && !unit.SkipFlag)
             {
                 isThereTodos = true;
                 return;
-            }*/
+            }
     }
 
     // Input: CivModel.Terrain.Point and Position of Y
@@ -603,7 +499,7 @@ public class GameManager : MonoBehaviour {
     {
         Vector3 tilePos = GameManager.Instance.Tiles[point.Position.X, point.Position.Y].transform.position;
         float x = tilePos.x;
-        float z = tilePos.z - (Camera.main.transform.position.y / Mathf.Tan(60 * Mathf.Deg2Rad));
+        float z = tilePos.z - (Camera.main.transform.position.y / Mathf.Tan(45 * Mathf.Deg2Rad));
 
         Camera.main.transform.position = new Vector3(x, Camera.main.transform.position.y, z);
     }
@@ -621,6 +517,39 @@ public class GameManager : MonoBehaviour {
                     UIManager.Instance.updateSelectedInfo(unit);
                 }
             }
+        }
+    }
+    public void FocusOnNextActableUnit()
+    {
+        int tryNumber = (GameManager.Instance._standbyActorIndex == -1) ? 1 : 2;
+
+        for (int j = 0; j < tryNumber; ++j)
+        {
+            if (GameManager.Instance._standbyActorIndex == -1)
+            {
+                GameManager.Instance._standbyActors = Game.PlayerInTurn.Actors.ToArray();
+            }
+
+            int idx = GameManager.Instance._standbyActorIndex + 1;
+            for (; idx < GameManager.Instance._standbyActors.Length; ++idx)
+            {
+                var actor = GameManager.Instance._standbyActors[idx];
+                if (actor is CivModel.Unit && actor.RemainAP > 0 && !actor.SkipFlag
+                    && actor.IsControllable && actor.PlacedPoint.HasValue
+                    && actor.MovePath == null)
+                {
+                    GameManager.Instance._standbyActorIndex = idx;
+                    GameManager.Instance.selectedActor = _standbyActors[idx];
+                    GameManager.Instance.isThereTodos = true;
+                    Focus(GameManager.Instance.selectedActor);
+                    UIManager.Instance.updateSelectedInfo(GameManager.Instance.selectedActor);
+                    return;
+                }
+            }
+
+            GameManager.Instance.selectedActor = null;
+            GameManager.Instance._standbyActorIndex = -1;
+            GameManager.Instance.isThereTodos = false;
         }
     }
 
@@ -792,5 +721,122 @@ public class GameManager : MonoBehaviour {
         AlarmedProduction.Clear();
     }
 
+    bool IsSpyNear(CivModel.Position pt)
+    {
+        int A = pt.A;
+        int B = pt.B;
+        int C = pt.C;
+        // in range 1
+        if (CheckSpy(A + 1, B - 1, C))
+            return true;
+        if (CheckSpy(A + 1, B, C - 1))
+            return true;
+        if (CheckSpy(A, B + 1, C - 1))
+            return true;
+        if (CheckSpy(A - 1, B + 1, C))
+            return true;
+        if (CheckSpy(A - 1, B, C + 1))
+            return true;
+        if (CheckSpy(A, B - 1, C + 1))
+            return true;
 
+        // in range 2
+        if (CheckSpy(A + 2, B - 2, C))
+            return true;
+        if (CheckSpy(A + 2, B - 1, C - 1))
+            return true;
+        if (CheckSpy(A + 2, B, C - 2))
+            return true;
+        if (CheckSpy(A + 1, B + 1, C - 2))
+            return true;
+        if (CheckSpy(A, B + 2, C - 2))
+            return true;
+        if (CheckSpy(A - 1, B + 2, C - 1))
+            return true;
+        if (CheckSpy(A - 2, B + 2, C))
+            return true;
+        if (CheckSpy(A - 2, B + 1, C + 1))
+            return true;
+        if (CheckSpy(A - 2, B, C + 2))
+            return true;
+        if (CheckSpy(A - 1, B - 1, C + 2))
+            return true;
+        if (CheckSpy(A, B - 2, C + 2))
+            return true;
+        if (CheckSpy(A + 1, B - 2, C + 1))
+            return true;
+
+        // in range 3
+        if (CheckSpy(A + 3, B - 3, C))
+            return true;
+        if (CheckSpy(A + 3, B - 2, C - 1))
+            return true;
+        if (CheckSpy(A + 3, B - 1, C - 2))
+            return true;
+        if (CheckSpy(A + 3, B, C - 3))
+            return true;
+        if (CheckSpy(A + 2, B + 1, C - 3))
+            return true;
+        if (CheckSpy(A + 1, B + 2, C - 3))
+            return true;
+        if (CheckSpy(A, B + 3, C - 3))
+            return true;
+        if (CheckSpy(A - 1, B + 3, C - 2))
+            return true;
+        if (CheckSpy(A - 2, B + 3, C - 1))
+            return true;
+        if (CheckSpy(A - 3, B + 3, C))
+            return true;
+        if (CheckSpy(A - 3, B + 2, C + 1))
+            return true;
+        if (CheckSpy(A - 3, B + 1, C + 2))
+            return true;
+        if (CheckSpy(A - 3, B, C + 3))
+            return true;
+        if (CheckSpy(A - 2, B - 1, C + 3))
+            return true;
+        if (CheckSpy(A - 1, B - 2, C + 3))
+            return true;
+        if (CheckSpy(A, B - 3, C + 3))
+            return true;
+        if (CheckSpy(A + 1, B - 3, C + 2))
+            return true;
+        if (CheckSpy(A + 2, B - 3, C + 1))
+            return true;
+
+        return false;
+    }
+
+    // Check spy by point
+    bool CheckSpy(int A, int B, int C)
+    {
+        if (C < 0 || C >= Game.Terrain.Height)
+            return false;
+        if (0 <= B + (C + Math.Sign(C)) / 2 && B + (C + Math.Sign(C)) / 2 < Game.Terrain.Width)
+        {
+            if (Game.Terrain.GetPoint(A, B, C).Unit != null)
+            {
+                if (Game.Terrain.GetPoint(A, B, C).Unit is CivModel.Hwan.Spy || Game.Terrain.GetPoint(A, B, C).Unit is CivModel.Finno.Spy)
+                {
+                    if (Game.Terrain.GetPoint(A, B, C).Unit.Owner != Game.PlayerInTurn)
+                        return true;
+                }
+            }
+        }
+        else
+        {
+            A = A - Game.Terrain.Width;
+            B = B + Game.Terrain.Width;
+            if (Game.Terrain.GetPoint(A, B, C).Unit != null)
+            {
+                if (Game.Terrain.GetPoint(A, B, C).Unit is CivModel.Hwan.Spy || Game.Terrain.GetPoint(A, B, C).Unit is CivModel.Finno.Spy)
+                {
+                    if (Game.Terrain.GetPoint(A, B, C).Unit.Owner != Game.PlayerInTurn)
+                        return true;
+                }
+            }
+        }
+
+        return false;
+    }
 }

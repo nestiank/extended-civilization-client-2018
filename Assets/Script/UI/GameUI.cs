@@ -20,6 +20,7 @@ public class GameUI : MonoBehaviour {
     private ManagementController managementcontroller;
     private SpecialResourceView specialResourceView;
 
+    bool checkButtonText = true;
     void Awake()
     {
         if (Instance == null)
@@ -50,7 +51,7 @@ public class GameUI : MonoBehaviour {
                 EndTurn.GetComponentInChildren<Text>().text = "유닛이 명령을 기다리고 있습니다";
                 EndTurn.GetComponentInChildren<Text>().fontSize = 30;
             }
-            else
+            else if(checkButtonText)
             {
                 EndTurn.GetComponentInChildren<Text>().text = "다음 턴";
                 EndTurn.GetComponentInChildren<Text>().fontSize = 40;
@@ -136,24 +137,54 @@ public class GameUI : MonoBehaviour {
 
     }
 
+    private void NextTurn()
+    {
+        GameManager.Instance.Game.EndTurn();
+        GameManager.Instance.Game.StartTurn();
+        
+        //Proceeds AI's Turns
+        while (GameManager.Instance.Game.PlayerInTurn.IsAIControlled)
+        {
+            GameManager.Instance.Game.PlayerInTurn.DoAITurnAction().GetAwaiter().GetResult();
+            GameManager.Instance.Game.EndTurn();
+            GameManager.Instance.Game.StartTurn();
+        }
+        checkButtonText = true;
+        EndTurn.GetComponentInChildren<Button>().interactable = true;
+
+        AlarmManager.Instance.updateAlarmQueue();
+
+        GameManager.Instance.UpdateMap();
+        GameManager.Instance.UpdateUnit();
+        GameManager.Instance.UpdateMinimap();
+        UIManager.Instance.ButtonInteractChange();
+
+        GameManager.Instance.CheckCompletedProduction();
+
+        managementcontroller.MakeProductionQ();
+        managementcontroller.MakeDeploymentQ();
+        uicontroller.MakeQuestQueue();
+
+        GameManager.Instance.CheckNewQuest();
+    }
+
     public void onClickNextTurn()
     {
         if (GameManager.Instance.isThereTodos)
         {
-            GameManager.Instance.FocusOnActableUnit();
+            GameManager.Instance.FocusOnNextActableUnit();
         }
         else
         {
             if (GameManager.Instance.Game.PlayerInTurn == GameManager.Instance.Game.Players[GameInfo.UserPlayer])
             {
-                EndTurn.GetComponentInChildren<Text>().text = "다른 플레이어가 턴 진행 중입니다.";
-                EndTurn.GetComponentInChildren<Text>().fontSize = 30;
-                EndTurn.GetComponentInChildren<Button>().enabled = false;
-
+                /*
                 GameManager.Instance.Game.EndTurn();
                 GameManager.Instance.Game.StartTurn();
 
-
+                EndTurn.GetComponentInChildren<Text>().text = "다른 플레이어가 턴 진행 중입니다.";
+                EndTurn.GetComponentInChildren<Text>().fontSize = 30;
+                EndTurn.GetComponentInChildren<Button>().interactable = false;
 
                 // Proceeds AI's Turns
                 while (GameManager.Instance.Game.PlayerInTurn.IsAIControlled)
@@ -161,24 +192,13 @@ public class GameUI : MonoBehaviour {
                     GameManager.Instance.Game.PlayerInTurn.DoAITurnAction().GetAwaiter().GetResult();
                     GameManager.Instance.Game.EndTurn();
                     GameManager.Instance.Game.StartTurn();
-                }
+                } */
+                checkButtonText = false;
+                EndTurn.GetComponentInChildren<Text>().text = "다른 플레이어가 턴 진행 중입니다.";
+                EndTurn.GetComponentInChildren<Text>().fontSize = 30;
+                EndTurn.GetComponentInChildren<Button>().interactable = false;
+                Invoke("NextTurn", 0.2f);
             }
-            AlarmManager.Instance.updateAlarmQueue();
-
-            GameManager.Instance.UpdateMap();
-            GameManager.Instance.UpdateUnit();
-            GameManager.Instance.UpdateMinimap();
-            //UIManager.Instance.UpdateUnitInfo(); Done in UpdateUnit
-            UIManager.Instance.ButtonInteractChange();
-
-            GameManager.Instance.CheckCompletedProduction();
-
-            managementcontroller.MakeProductionQ();
-            managementcontroller.MakeDeploymentQ();
-            uicontroller.MakeQuestQueue();
-
-            GameManager.Instance.CheckNewQuest();
-
         }
     }
 }

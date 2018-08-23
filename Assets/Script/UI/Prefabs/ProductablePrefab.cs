@@ -148,4 +148,49 @@ public class ProductablePrefab : MonoBehaviour, IPointerClickHandler {
         string clicked_unit_name = clicked.pointerPress.transform.GetChild(2).GetComponent<Text>().text;
         clicked.pointerPress.transform.parent.parent.parent.parent.parent.GetChild(4).GetChild(0).GetChild(0).GetComponent<Text>().text = clicked_unit_name;
     }
+
+    private string mkUnitDescription(string unitname)
+    {
+        switch(unitname)
+        {
+            case "이비자":
+            case "Kimchi Factory":
+            case "라티푼디움":
+            case "환 제국 도시 연구소":
+            case "성심당":
+            case "환 제국 도시":
+            case "미세먼지 공장":
+            case "게르마늄 광산":
+            case "옥타곤":
+            case "Unknown: AncientFinnoLabortoryProductionFactory":
+            case "자일리톨 생산지":
+            case "고대 수오미 제국 도시":
+            case "자경단"://환핀중복
+            case "5차 산업혁명 공장"://환핀중복
+            case "불가사의": //환핀중복
+            case "5차 산업혁명 요새"://환핀중복
+                break;
+            case "EMU 궁기병":
+            case "소서러":
+            case "코끼리 장갑병":
+            case "Autism Beam Drone":
+            case "Genghis Khan":
+            case "저궤도 우주 함대":
+            case "유니콘 기사단":
+            case "프로토 닌자":
+            case "Jackie Chan":
+            case "개척자"://환핀중복
+            case "탈중앙화된 군인"://환핀중복
+            case "스파이"://환핀중복
+            case "제다이 기사단"://환핀중복
+            default:
+                break;
+        }
+        return "";
+    }
+        
+
+    
+
+
 }
