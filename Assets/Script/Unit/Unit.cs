@@ -87,19 +87,22 @@ public class Unit : MonoBehaviour
         if (_inSkillState) SkillStateExit();
         _inMoveState = true;
 
-        if (GameManager.Instance.selectedActor == null)
+        Actor selectedActor = GameManager.Instance.selectedActor;
+        if (selectedActor == null)
         {
             Debug.Log("Selected Actor is NULL");
             return;
         }
 
-        else if (GameManager.Instance.selectedActor is CivModel.Unit)
+        else if (selectedActor is CivModel.Unit)
         {
             var player = GameManager.Instance.Game.Players[GameInfo.UserPlayer];
-
+            bool checkMovingAttack = false;
             // Select movable tiles
-            _parameterPoints = CivModel.Path.ActorMovePath.GetReachablePoint(GameManager.Instance.selectedActor, true)
-                .Where(x => x != GameManager.Instance.selectedActor.PlacedPoint)
+            if (selectedActor.MovingAttackAct != null)
+                checkMovingAttack = true;
+            _parameterPoints = CivModel.Path.ActorMovePath.GetReachablePoint(selectedActor, checkMovingAttack)
+                .Where(x => x != selectedActor.PlacedPoint)
                 .Select(x => (CivModel.Terrain.Point?)x).ToArray();
             for (int i = 0; i < _parameterPoints.Length; i++)
             {
@@ -112,7 +115,7 @@ public class Unit : MonoBehaviour
                 //if the tile has an enemy unit or an enemy tilebuilding.
                 else
                 {
-                    if (IsEnemyActor(player, _parameterPoints[i].Value))
+                    if (IsEnemyActor(player, _parameterPoints[i].Value) && selectedActor.MovingAttackAct != null)
                     {
                         CivModel.Position pos = _parameterPoints[i].Value.Position;
                         GameManager.Instance.Tiles[pos.X, pos.Y].GetComponent<HexTile>().FlickerRed();
@@ -120,7 +123,7 @@ public class Unit : MonoBehaviour
                     }
                 }
             }
-            IEnumerator _coroutine = MoveUnit(GameManager.Instance.selectedActor);
+            IEnumerator _coroutine = MoveUnit(selectedActor);
             StartCoroutine(_coroutine);
         }
     }
