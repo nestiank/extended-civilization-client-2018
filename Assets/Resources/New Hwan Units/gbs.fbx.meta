@@ -1,0 +1,217 @@
+fileFormatVersion: 2
+guid: 14b82c975ad4def49b60b62fd400c39f
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: //RootNode
+    400000: //RootNode
+    2100000: board_2011071116240723_5
+    2100002: board_2011071116240723_1
+    2100004: board_2011071116240723_1_1
+    2100006: board_2011071116240723_6
+    2100008: FrontColor
+    2100010: Color_B24
+    2100012: Metal_Seamed
+    2100014: board_2011093023244906_1
+    2100016: _Metal_Seamed_1
+    2100018: Brick_Rough_Dark
+    2100020: board_2011071116240723_1_2
+    2100022: board_2011071116240723_4
+    2100024: board_2011071116240723_3
+    2100026: M_0046_Gold
+    2100028: M_0020_Red
+    2100030: Material__1661
+    2100032: Wood_Cherry_Original
+    2100034: board_2011071116240723_2
+    2100036: img_4872_pgs2173_1
+    2100038: _Burnt_Umber_1
+    2100040: M_0022_Maroon
+    2300000: //RootNode
+    3300000: //RootNode
+    4300000: Geobuksun
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Brick_Rough_Dark
+    second: {fileID: 2100000, guid: c4d84182260ab4d45bd57da8cf67dc91, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Color_B24
+    second: {fileID: 2100000, guid: 76214a51487e8c64da212e6001546e7d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: FrontColor
+    second: {fileID: 2100000, guid: 6a131c5384f06f2439d03bc4a58454c0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_0020_Red
+    second: {fileID: 2100000, guid: 3c9250ca87eebb34ea10ccae33938708, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_0022_Maroon
+    second: {fileID: 2100000, guid: b023bf60a20993b41aa215681f0bedd7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_0046_Gold
+    second: {fileID: 2100000, guid: 2940df78bc0d4ab42ab41302edf2c4c4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material__1661
+    second: {fileID: 2100000, guid: b5250ead504abc84a8cf888a9afbeb71, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Metal_Seamed
+    second: {fileID: 2100000, guid: ab27d70fca6233e49b340aab3b5766be, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Wood_Cherry_Original
+    second: {fileID: 2100000, guid: f3b8c14220edf704f98b6eb670db3c96, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _Burnt_Umber_1
+    second: {fileID: 2100000, guid: 9a38b374a39136842b28402053691f84, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _Metal_Seamed_1
+    second: {fileID: 2100000, guid: 88d8ffdae0a58e74788fd75a967495b3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: board_2011071116240723_1
+    second: {fileID: 2100000, guid: be88b900de04de848bfe0f47e7051e91, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: board_2011071116240723_1_1
+    second: {fileID: 2100000, guid: efebbb79e25fb0c459cfdac151524442, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: board_2011071116240723_1_2
+    second: {fileID: 2100000, guid: 6ddd02a9fd0fd7846b1b28b2f5661cd4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: board_2011071116240723_2
+    second: {fileID: 2100000, guid: f53cf7d333669ac428f2ad683da63b1e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: board_2011071116240723_3
+    second: {fileID: 2100000, guid: b027a05f08d51f145b05ac82302656b2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: board_2011071116240723_4
+    second: {fileID: 2100000, guid: e74c2295c25e82446b08c557a723c88b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: board_2011071116240723_5
+    second: {fileID: 2100000, guid: 089279a18c7b01d44b2007e97c7a1183, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: board_2011071116240723_6
+    second: {fileID: 2100000, guid: 0f2a6b62347005f4cac1bec43f1fe469, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: board_2011093023244906_1
+    second: {fileID: 2100000, guid: 8dd98e83ad6cce04ea7ec1b17716c183, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: img_4872_pgs2173_1
+    second: {fileID: 2100000, guid: 5f87aa77ad8db604a8a4b39f9782ab55, type: 2}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

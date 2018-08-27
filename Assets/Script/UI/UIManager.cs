@@ -27,6 +27,7 @@ public class UIManager : MonoBehaviour
     public GameObject CityTab, CityBuildingTab, NormalBuildingTab;  // Building production
 
     public GameObject skillSet;
+    public GameObject skillDescription;
     public GameObject unitInfo;
 
     public GameObject Actions;
@@ -37,6 +38,7 @@ public class UIManager : MonoBehaviour
     public GameObject unitName;
     public GameObject unitAttack;
     public GameObject unitDefence;
+    public GameObject unitHP;
     public GameObject unitEffect;
     public GameObject actionPoint;
     public GameObject healthPoint;
@@ -108,31 +110,28 @@ public class UIManager : MonoBehaviour
                     
                     if (tile.isFirstClick)
                     {
-                        GameManager.Instance.selectedActor = tile.point.Unit;
+                        GameManager.Instance.SelectActor(tile.point.Unit);
                         tile.isFirstClick = false;
                         GameManager.Instance.selectedGameObject = GameManager.GetUnitGameObject(tile.point);
                     }
                     else
                     {
-                        GameManager.Instance.selectedActor = tile.point.TileBuilding;
+                        GameManager.Instance.SelectActor(tile.point.TileBuilding);
                         tile.isFirstClick = true;
                         GameManager.Instance.selectedGameObject = selectedActor;
                     }
-                    GameManager.Focus(tile.point);
                 }
                 else if (tile.point.TileBuilding != null)
                 {
-                    GameManager.Instance.selectedActor = tile.point.TileBuilding;
+                    GameManager.Instance.SelectActor(tile.point.TileBuilding);
                     tile.isFirstClick = true;
                     GameManager.Instance.selectedGameObject = selectedActor;
-                    GameManager.Focus(tile.point);
                 }
                 else if (tile.point.Unit != null)
                 {
-                    GameManager.Instance.selectedActor = tile.point.Unit;
+                    GameManager.Instance.SelectActor(tile.point.Unit);
                     tile.isFirstClick = false;
                     GameManager.Instance.selectedGameObject = GameManager.GetUnitGameObject(tile.point);
-                    GameManager.Focus(tile.point);
                 }
                 // If neither Unit nor TileBuilding exists on the selected tile
                 else
@@ -140,13 +139,11 @@ public class UIManager : MonoBehaviour
                     GameManager.Instance.selectedActor = null;
                 }
 
-                if (GameManager.Instance.selectedActor is CivModel.Unit)
-                    GameManager.Instance.selectedActor.SkipFlag = false;
-
+               
                 //if (GameManager.Instance.selectedActor != null)
                 //Debug.Log(GameManager.Instance.selectedActor.ToString());
 
-                    // Set Unit Information
+                // Set Unit Information
                 UpdateUnitInfo();
 
                 // Change Button Interaction correponds to the selected Actor
@@ -170,6 +167,7 @@ public class UIManager : MonoBehaviour
             questUI.SetActive(false);
             mapUI.SetActive(true);
         }
+        skillDescription.transform.position = Input.mousePosition;
     }
     // Set Unit Information
     public void UpdateUnitInfo()
@@ -179,17 +177,18 @@ public class UIManager : MonoBehaviour
             if (GameManager.Instance.selectedActor != null)
             {
                 unitInfo.SetActive(true);
-
+                actionPoint.SetActive(true);
+                skillSet.GetComponent<RectTransform>().anchoredPosition = new Vector2(140, 192.5f);
                 if (GameManager.Instance.selectedActor is CivModel.Actor)
                 {
                     UnitPortrait.sprite = Resources.Load(("Portraits/" + (ProductionFactoryTraits.GetPortName(GameManager.Instance.selectedActor)).ToLower()), typeof(Sprite)) as Sprite;
                     unitName.GetComponent<Text>().text = GameManager.Instance.selectedActor.TextName; //ProductionFactoryTraits.GetName(GameManager.Instance.selectedActor);
                 }
 
-                unitAttack.GetComponent<Text>().text = GameManager.Instance.selectedActor.AttackPower.ToString();
-                unitDefence.GetComponent<Text>().text = GameManager.Instance.selectedActor.DefencePower.ToString();
-                unitEffect.GetComponent<Text>().text = GameManager.Instance.selectedActor.RemainHP.ToString() + "/" + GameManager.Instance.selectedActor.MaxHP;
-                actionPoint.GetComponent<Text>().text = GameManager.Instance.selectedActor.RemainAP.ToString() + "/" + GameManager.Instance.selectedActor.MaxAP;
+                unitAttack.GetComponent<Text>().text = "공격력: " + GameManager.Instance.selectedActor.AttackPower.ToString();
+                unitDefence.GetComponent<Text>().text = "방어력: " + GameManager.Instance.selectedActor.DefencePower.ToString();
+                unitHP.GetComponent<Text>().text = GameManager.Instance.selectedActor.RemainHP.ToString() + "/" + GameManager.Instance.selectedActor.MaxHP;
+                actionPoint.GetComponent<Text>().text = "행동력: " + GameManager.Instance.selectedActor.RemainAP.ToString() + "/" + GameManager.Instance.selectedActor.MaxAP;
                 healthPoint.GetComponent<RectTransform>().sizeDelta = new Vector2(30, 280 * (float)GameManager.Instance.selectedActor.RemainHP / (float)GameManager.Instance.selectedActor.MaxHP);
                 if (GameManager.Instance.selectedActor.RemainHP / GameManager.Instance.selectedActor.MaxHP * 100 > 66)
                     healthPoint.GetComponent<Image>().color = Color.green;
@@ -197,14 +196,27 @@ public class UIManager : MonoBehaviour
                     healthPoint.GetComponent<Image>().color = Color.yellow;
                 else
                     healthPoint.GetComponent<Image>().color = Color.red;
+                if (GameManager.Instance.selectedActor.PassiveSkills == null)
+                    unitEffect.SetActive(false);
+                else
+                {
+                    string _passive = "";
+                    for (int i = 0; i < GameManager.Instance.selectedActor.PassiveSkills.Count; i++)
+                    {
+                        _passive = _passive + GameManager.Instance.selectedActor.PassiveSkills[i].SkillName + "\n";
+                    }
+                    unitEffect.GetComponent<Text>().text = _passive;
+                }
 
-                // CityBase Portrait 및 CityBuilding 리스트 표시
+                // CityBase 한정
                 if(GameManager.Instance.selectedActor is CivModel.CityBase)
                 {
                     unitName.GetComponent<Text>().text = ((CityBase)GameManager.Instance.selectedActor).CityName;
                     UnitPortrait.sprite = CityBuilding.GetPortraiteImage((CivModel.CityBase)GameManager.Instance.selectedActor);
                     cityBuildingInfo.SetActive(true);
                     cityBuildingInfo.GetComponentInChildren<Text>().text = CityBuilding.ListCityBuildings(((CityBase)GameManager.Instance.selectedActor).InteriorBuildings);
+                    actionPoint.SetActive(false);
+                    skillSet.GetComponent<RectTransform>().anchoredPosition = new Vector2(1, 192.5f);
                 }
                 else
                 {
@@ -396,12 +408,14 @@ public class UIManager : MonoBehaviour
     public void ButtonInteractChange()
     {
         // Hide Actions Tab
-        if(GameManager.Instance.selectedActor == null || GameManager.Instance.selectedActor.Owner != GameManager.Instance.Game.PlayerInTurn)
+        if(GameManager.Instance.selectedActor == null || GameManager.Instance.selectedActor.Owner != GameManager.Instance.Game.PlayerInTurn || GameManager.Instance.selectedActor is CityBase)
         {
             Actions.SetActive(false);
+            skillSet.SetActive(false);
         } else
         {
             Actions.SetActive(true);
+            skillSet.SetActive(true);
         }
         // Move Button
         if(GameManager.Instance.selectedActor is CivModel.Unit && GameManager.Instance.selectedActor.Owner == GameManager.Instance.Game.PlayerInTurn && GameManager.Instance.selectedActor.RemainAP != 0)

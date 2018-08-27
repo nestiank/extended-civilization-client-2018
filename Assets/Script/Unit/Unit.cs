@@ -339,7 +339,7 @@ public class Unit : MonoBehaviour
                     CivModel.Position pos = _parameterPoints[i].Value.Position;
                     GameManager.Instance.Tiles[pos.X, pos.Y].GetComponent<HexTile>().FlickerRed();
                     GameManager.Instance.AdditionalTiles[pos.X, pos.Y].GetComponent<HexTile>().FlickerRed();
-                    Debug.Log(pos.X + " " + pos.Y + " Filcker Red");
+                    //Debug.Log(pos.X + " " + pos.Y + " Filcker Red");
                 }
                 else
                 {

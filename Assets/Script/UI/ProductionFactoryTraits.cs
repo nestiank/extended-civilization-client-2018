@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CivModel;
 
 using static CivModel.Finno.FinnoPlayerNumber;
 using static CivModel.Hwan.HwanPlayerNumber;
@@ -126,7 +127,7 @@ public class ProductionFactoryTraits : MonoBehaviour
             case "AncientFinnoFIRFactoryProductionFactory":
                 result = "5차 산업혁명 공장";
                 break;
-            case "AncientFinnoLabortoryFactoryProductionFactory":
+            case "AncientFinnoLabortoryProductionFactory":
                 result = "고대 핀란드 도시 연구소 ";
                 break;
             case "AncientFinnoXylitolProductionRegionProductionFactory":
@@ -642,4 +643,104 @@ public class ProductionFactoryTraits : MonoBehaviour
         }
         return result;
     }
+
+
+    public static string GetActorDescription(CivModel.IProductionFactory factory)
+    {
+        //Debug.Log(factory.ResultType);
+        string result = "";
+
+        if (factory.ResultType.IsSubclassOf(typeof(CivModel.Unit)))
+        {
+            var proto = GameManager.Instance.Game.GetPrototype<UnitPrototype>(factory.ResultType);
+
+            string skillList = "";
+            skillList += "\n패시브 스킬\n";
+            foreach (var skill in proto.PassiveSkills)
+            {
+                skillList += skill.SkillName + "\n -" + skill.SkillDescription + "\n";
+            }
+            skillList += "액티브 스킬\n";
+            foreach (var skill in proto.ActiveSkills)
+            {
+                skillList += skill.SkillName + "\n -" + skill.SkillDescription + "\n";
+            }
+
+            result = "유닛 이름 : " + proto.TextName
+                                       + "\n유닛 HP : " + proto.MaxHP
+                                       + "\n유닛 공격력 : " + proto.AttackPower
+                                       + "\n유닛 방어력 : " + proto.DefencePower
+                                       + "\n생산 비용"
+                                       + "\n -금 : " + proto.TotalGoldCost
+                                       + "\n -노동력 : " + proto.TotalLaborCost
+                                       + skillList;
+
+        } else if (factory.ResultType.IsSubclassOf(typeof(CivModel.CityBase))) {
+            var proto = GameManager.Instance.Game.GetPrototype<CityPrototype>(factory.ResultType);
+
+            string skillList = "";
+            skillList += "\n패시브 스킬\n";
+            foreach (var skill in proto.PassiveSkills)
+            {
+                skillList += skill.SkillName + "\n -" + skill.SkillDescription + "\n";
+            }
+            skillList += "액티브 스킬\n";
+            foreach (var skill in proto.ActiveSkills)
+            {
+                skillList += skill.SkillName + "\n -" + skill.SkillDescription + "\n";
+            }
+
+            result = "건물 이름 : " + proto.TextName
+                                       + "\n건물 HP : " + proto.MaxHP
+                                       + "\n건물 방어력 : " + proto.DefencePower
+                                       + "\n생산 비용"
+                                       + "\n -금 : " + proto.TotalGoldCost
+                                       + "\n -노동력 : " + proto.TotalLaborCost
+                                       + skillList;
+
+        } else if (factory.ResultType.IsSubclassOf(typeof(CivModel.TileBuilding))) {
+            var proto = GameManager.Instance.Game.GetPrototype<TileBuildingPrototype>(factory.ResultType);
+
+            string skillList = "";
+            skillList += "\n패시브 스킬\n";
+            foreach (var skill in proto.PassiveSkills)
+            {
+                skillList += skill.SkillName + "\n -" + skill.SkillDescription + "\n";
+            }
+            skillList += "액티브 스킬\n";
+            foreach (var skill in proto.ActiveSkills)
+            {
+                skillList += skill.SkillName + "\n -" + skill.SkillDescription + "\n";
+            }
+
+            result = "건물 이름 : " + proto.TextName
+                                       + "\n건물 HP : " + proto.MaxHP
+                                       + "\n건물 방어력 : " + proto.DefencePower
+                                       + "\n생산 비용"
+                                       + "\n -금 : " + proto.TotalGoldCost
+                                       + "\n -노동력 : " + proto.TotalLaborCost
+                                       + skillList;
+
+        }
+        else if (factory.ResultType.IsSubclassOf(typeof(CivModel.InteriorBuilding))) {
+            var proto = GameManager.Instance.Game.GetPrototype<InteriorBuildingPrototype>(factory.ResultType);
+
+            string skillList = "";
+            skillList += "\n패시브 스킬\n";
+            foreach (var skill in proto.PassiveSkills)
+            {
+                skillList += skill.SkillName + "\n -" + skill.SkillDescription + "\n";
+            }
+
+            result = "건물 이름 : " + proto.TextName
+                                       + "\n생산 비용"
+                                       + "\n -금 : " + proto.TotalGoldCost
+                                       + "\n -노동력 : " + proto.TotalLaborCost
+                                       + skillList;
+
+        }
+
+        return result;
+    }
+
 }

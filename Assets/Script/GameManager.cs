@@ -441,8 +441,6 @@ public class GameManager : MonoBehaviour {
     public void CheckToDo()
     {
         isThereTodos = false;
-        // Only For Testing!
-
         
         foreach (CivModel.Unit unit in this.Game.PlayerInTurn.Units)
             if (!unit.RemainAP.Equals(0) && !unit.SkipFlag)
@@ -551,6 +549,28 @@ public class GameManager : MonoBehaviour {
             GameManager.Instance._standbyActorIndex = -1;
             GameManager.Instance.isThereTodos = false;
         }
+    }
+
+    public void SelectActor(Actor actor)
+    {
+        var actors = Game.PlayerInTurn.Actors.ToArray();
+        int idx = Array.IndexOf(actors, actor);
+
+        if (idx == -1)
+        {
+            GameManager.Instance.selectedActor = actor;
+            Focus(GameManager.Instance.selectedActor);
+        }
+        if (!actor.IsControllable)
+            return;
+
+        GameManager.Instance.selectedActor = actor;
+        actor.SkipFlag = false;
+
+        _standbyActors = actors;
+        _standbyActorIndex = idx;
+        GameManager.Instance.isThereTodos = true;
+        Focus(GameManager.Instance.selectedActor);
     }
 
     // Called When a Player about to Deploy Something

@@ -166,6 +166,10 @@ public class GameUI : MonoBehaviour {
         uicontroller.MakeQuestQueue();
 
         GameManager.Instance.CheckNewQuest();
+
+        GameManager.Instance.CheckToDo();
+        if (GameManager.Instance.isThereTodos)
+            GameManager.Instance.FocusOnNextActableUnit();
     }
 
     public void onClickNextTurn()
@@ -176,6 +180,11 @@ public class GameUI : MonoBehaviour {
         }
         else
         {
+            foreach (CivModel.Unit unit in GameManager.Instance.Game.PlayerInTurn.Units)
+            {
+                unit.SkipFlag = false;
+            }
+
             if (GameManager.Instance.Game.PlayerInTurn == GameManager.Instance.Game.Players[GameInfo.UserPlayer])
             {
                 /*
