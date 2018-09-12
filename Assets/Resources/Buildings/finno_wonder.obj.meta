@@ -1,0 +1,130 @@
+fileFormatVersion: 2
+guid: 918de43fc2df5994791678a2d70c17e3
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: back_rocks
+    100002: far_back_stones
+    100004: //RootNode
+    100006: front_rocks
+    100008: middle_rocks
+    100010: rockLP020
+    100012: rockLP058
+    100014: small_rocks
+    400000: back_rocks
+    400002: far_back_stones
+    400004: //RootNode
+    400006: front_rocks
+    400008: middle_rocks
+    400010: rockLP020
+    400012: rockLP058
+    400014: small_rocks
+    2100000: back_rocksMat
+    2100002: far_back_stonesMat
+    2100004: front_rocksMat
+    2100006: middle_rocksMat
+    2100008: rockLP020Mat
+    2100010: rockLP058Mat
+    2100012: small_rocksMat
+    2300000: back_rocks
+    2300002: far_back_stones
+    2300004: front_rocks
+    2300006: middle_rocks
+    2300008: rockLP020
+    2300010: rockLP058
+    2300012: small_rocks
+    3300000: back_rocks
+    3300002: far_back_stones
+    3300004: front_rocks
+    3300006: middle_rocks
+    3300008: rockLP020
+    3300010: rockLP058
+    3300012: small_rocks
+    4300000: back_rocks
+    4300002: far_back_stones
+    4300004: front_rocks
+    4300006: middle_rocks
+    4300008: rockLP020
+    4300010: rockLP058
+    4300012: small_rocks
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
