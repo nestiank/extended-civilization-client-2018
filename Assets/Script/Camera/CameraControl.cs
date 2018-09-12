@@ -28,14 +28,15 @@ public class CameraControl : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-
+		//The earth is round
         if (Camera.main.transform.position.x < 0)
             Camera.main.transform.position = new Vector3(Camera.main.transform.position.x + Mathf.Sqrt(3) * GameManager.Instance.Game.Terrain.Width, Camera.main.transform.position.y, Camera.main.transform.position.z);
         if (Camera.main.transform.position.x > Mathf.Sqrt(3) * GameManager.Instance.Game.Terrain.Width)
             Camera.main.transform.position = new Vector3(Camera.main.transform.position.x - Mathf.Sqrt(3) * GameManager.Instance.Game.Terrain.Width, Camera.main.transform.position.y, Camera.main.transform.position.z);
 
-        if (!QuestUI.activeSelf && !ManagementUI.activeSelf)
+        if (!QuestUI.activeSelf && !ManagementUI.activeSelf && !UIManager.Instance.isTutorialActivated && !UIManager.Instance.AskToQuit.activeSelf)
         {
+			//Camera scaler
             if (Input.GetAxis("Mouse ScrollWheel") < 0 && ViewFieldSquareControl.ViewInstance.zoom_counter < 2)
             {
                 if (!EventSystem.current.IsPointerOverGameObject())
@@ -49,14 +50,12 @@ public class CameraControl : MonoBehaviour {
             }
 
 
-
+			//Camera movement by putting mouse on edge
             if (Input.mousePosition.x > screen_width - boundary && !Input.GetMouseButton(0))
                 Camera.main.transform.Translate(5 * speed * Time.deltaTime, 0, 0);
 
             if (Input.mousePosition.x < 0 + boundary && !Input.GetMouseButton(0))
                 Camera.main.transform.Translate(-5 * speed * Time.deltaTime, 0, 0);
-
-
 
             if (Input.mousePosition.y > screen_height - boundary && !Input.GetMouseButton(0))
             {
@@ -66,26 +65,26 @@ public class CameraControl : MonoBehaviour {
             else if (Camera.main.transform.position.z > -10 - (Camera.main.transform.position.y - 10) / Mathf.Sqrt(3))
                 Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, -10 - (Camera.main.transform.position.y - 10) / Mathf.Sqrt(3));
 
-
-
             if (Input.mousePosition.y < 0 + boundary && !Input.GetMouseButton(0))
             {
-                if (Camera.main.transform.position.z > -130)
+                if (Camera.main.transform.position.z > -95)
                     Camera.main.transform.Translate(0, -3 * speed * Time.deltaTime * Mathf.Sqrt(2), -3 * speed * Time.deltaTime * Mathf.Sqrt(2));
             }
-            else if (Camera.main.transform.position.z < -130)
-                Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, -130);
+            else if (Camera.main.transform.position.z < -95)
+                Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, -95);
 
+			//Camera movement by mouse dragging
             if (Input.GetMouseButton(1) && !EventSystem.current.IsPointerOverGameObject())
             {
                 mouse_position = new Vector3(Input.GetAxis("Mouse X"), 0, Input.GetAxis("Mouse Y"));
                 Camera.main.transform.position -= mouse_position;
             }
 
+			//Camera movement by clicking minimap
             if (is_mouse_on_minimap() && MapUI.activeSelf)
             {
                 float adjust_by_zoom;
-                adjust_by_zoom = 24.5f - (2 - ViewFieldSquareControl.ViewInstance.zoom_counter) * 6;
+                adjust_by_zoom = 35 - (2 - ViewFieldSquareControl.ViewInstance.zoom_counter) * 8;
 
                 if (Input.GetMouseButton(0))
                 {

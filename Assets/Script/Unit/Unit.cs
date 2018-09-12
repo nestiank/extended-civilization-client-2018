@@ -20,6 +20,9 @@ public class Unit : MonoBehaviour
     // Associated With the Model, But as it's a pointer, Access is Required.
     public CivModel.Unit unitModel;
 
+    // additional unit of this unit
+    public Unit pairUnit;
+
     public int unitOwnerNumber;
 
     // Unit States. Move, Attack and Skill
@@ -37,6 +40,8 @@ public class Unit : MonoBehaviour
     private CivModel.Terrain.Point?[] _parameterPoints;
     private List<CivModel.Terrain.Point> _skillParameterPoints = new List<CivModel.Terrain.Point>();
 
+    public int skillCooldown = 0;
+
     // Change Unit position to given CivModel.Terrain.Point value
     // Default y position is 1.25f
     public void SetPoints(CivModel.Terrain.Point p1)
@@ -45,7 +50,6 @@ public class Unit : MonoBehaviour
         this.unityPoint = GameManager.ModelPntToUnityPnt(p1, 0);
         this.transform.position = this.unityPoint;
         this.unitOwnerNumber = this.unitModel.Owner.PlayerNumber;
-        // SetMaterial();
     }
     // Change Unit position to given CivModel.Terrain.Point value
     public void SetPoints(CivModel.Terrain.Point p1, Vector3 p2)
@@ -53,19 +57,6 @@ public class Unit : MonoBehaviour
         this.point = p1;
         this.unityPoint = new Vector3(p2.x, p2.y, p2.z);
         this.transform.position = this.unityPoint;
-        // SetMaterial();
-    }
-    // Set Material of the Unit
-    // Materials are stored in the GameManager Class of the Unity Editor
-    private void SetMaterial()
-    {
-        foreach (Material m in GameManager.Instance.materials)
-        {
-            if (m == GameManager.Instance.materials[(int)UnitEnum.UnitToEnum(point.Unit)])
-            {
-                GetComponent<Renderer>().material = m;
-            }
-        }
     }
 
     // There are enter, exit methods for move and attack states. Enter methods are public, exit methods are default.
@@ -153,12 +144,12 @@ public class Unit : MonoBehaviour
                     if (unitToMove.MovingAttackAct != null && IsEnemyActor(player,destPoint))
                     {
                         MovePath = MoveOrMoveAttack(unitToMove, destPoint, unitToMove.MovingAttackAct);
-                        //unitToMove.MovingAttackAct.Act(destPoint);
                         MoveStateExit();
                         if (MovePath != null && !MovePath.IsInvalid)
                         {
-                            yield return MoveorMovingAttackAnimation(MovePath, 0.2f, unitToMove.MovingAttackAct);
-                            yield return AttackAnimation(unitToMove, destPoint);
+                            
+                            yield return UnitAnimation.MoveorMovingAttackAnimation(this, MovePath, 0.2f, unitToMove.MovingAttackAct);
+                            yield return UnitAnimation.AttackAnimation(this, destPoint);
                             unitToMove.MovePath = MovePath;
                             MovePath.ActFullWalkForRemainAP();
                         }
@@ -169,11 +160,10 @@ public class Unit : MonoBehaviour
                     else if (unitToMove.MoveAct != null)
                     {
                         MovePath = MoveOrMoveAttack(unitToMove, destPoint, unitToMove.MoveAct);
-                        //unitToMove.MoveAct.Act(destPoint);
                         MoveStateExit();
                         if (MovePath != null && !MovePath.IsInvalid)
                         {
-                            yield return MoveorMovingAttackAnimation(MovePath, 0.2f, unitToMove.MoveAct);
+                            yield return UnitAnimation.MoveorMovingAttackAnimation(this, MovePath, 0.2f, unitToMove.MoveAct);
                             unitToMove.MovePath = MovePath;
                             MovePath.ActFullWalkForRemainAP();
                         }
@@ -214,76 +204,7 @@ public class Unit : MonoBehaviour
         {
             MovePath = null;
         }
-        /*
-        if (MovePath != null && !MovePath.IsInvalid)
-        {
-            unitToMove.MovePath = MovePath;
-            MovePath.ActFullWalkForRemainAP();
-        }*/
         return MovePath;
-    }
-
-    IEnumerator MoveorMovingAttackAnimation(IMovePath path, float secondsPerMove, CivModel.IActorAction finalAction)
-    {
-        float timer = 0;
-        for (int i = 1; i < path.Path.Count() - 1; i++)
-        {
-            Vector3 destPointsPos = GameManager.ModelPntToUnityPnt(path.Path.ElementAt(i), 0);
-            float distance = (transform.position - destPointsPos).magnitude;
-            Quaternion lookDir = Quaternion.LookRotation(destPointsPos - transform.position, transform.up);
-            /*
-            // hard coding for not-uniform-basis models
-            if(path.Actor is CivModel.Unit && (CivModel.Unit)path.Actor is CivModel.Hwan.LEOSpaceArmada)
-            {
-                lookDir = lookDir * Quaternion.Euler(0, -43, 0);
-            }*/
-            Quaternion initDir = transform.rotation;
-            while(true)
-            {
-                transform.rotation = Quaternion.Lerp(initDir, lookDir, timer);
-                timer += Time.deltaTime * 3;
-                if(timer > 1) break;
-                yield return null;
-            }
-            timer = 0;
-            while (timer < secondsPerMove)
-            {
-                transform.position = Vector3.MoveTowards(transform.position, destPointsPos, distance * Time.deltaTime / secondsPerMove);
-                timer += Time.deltaTime;
-                yield return null;
-            }
-            timer = 0;
-        }
-        if(finalAction == finalAction.Owner.MovingAttackAct)
-            yield return null;
-        else
-        {
-            Vector3 destPointsPos = GameManager.ModelPntToUnityPnt(path.Path.ElementAt(path.Path.Count()-1), 0);
-            float distance = (transform.position - destPointsPos).magnitude;
-            Quaternion lookDir = Quaternion.LookRotation(destPointsPos - transform.position, transform.up);
-            /*
-            // hard coding for not-uniform-basis models
-            if (path.Actor is CivModel.Unit && (CivModel.Unit)path.Actor is CivModel.Hwan.LEOSpaceArmada)
-            {
-                lookDir = lookDir * Quaternion.Euler(0, -43, 0);
-            }*/
-            Quaternion initDir = transform.rotation;
-            while (true)
-            {
-                transform.rotation = Quaternion.Lerp(initDir, lookDir, timer);
-                timer += Time.deltaTime * 3;
-                if (timer > 1) break;
-                yield return null;
-            }
-            timer = 0;
-            while (timer < secondsPerMove)
-            {
-                transform.position = Vector3.MoveTowards(transform.position, destPointsPos, distance * Time.deltaTime / secondsPerMove);
-                timer += Time.deltaTime;
-                yield return null;
-            }
-            timer = 0;
-        }
     }
 
     public void MoveStateExit()
@@ -366,7 +287,7 @@ public class Unit : MonoBehaviour
                     UIManager.Instance.updateSelectedInfo(unitToAttack);
                     if (unitToAttack.HoldingAttackAct != null && unitToAttack.HoldingAttackAct.IsActable(destPoint))
                     {
-                        yield return AttackAnimation(unitToAttack, destPoint);
+                        yield return UnitAnimation.AttackAnimation(this, destPoint);
                         unitToAttack.HoldingAttackAct.Act(destPoint);
                         MoveStateExit();
                         GameManager.Instance.UpdateUnit();
@@ -385,44 +306,6 @@ public class Unit : MonoBehaviour
         }
     }
 
-    IEnumerator AttackAnimation(CivModel.Actor unitToAttack, CivModel.Terrain.Point unitTarget)
-    {
-        float timer = 0;
-        Vector3 attackUnitPos = transform.position;
-        Vector3 targetUnitPos = GameManager.ModelPntToUnityPnt(unitTarget, 0);
-        float distance = (attackUnitPos + new Vector3(0, 2, 0) - targetUnitPos).magnitude;
-        /*
-        // move up
-        while (timer < 0.4f)
-        {
-            transform.position = Vector3.MoveTowards(transform.position, attackUnitPos + new Vector3(0, 2, 0), 2 * Time.deltaTime / 0.4f);
-            timer += Time.deltaTime;
-            yield return null;
-        }
-        // hit
-        while (timer < 0.5f)
-        {
-            transform.position = Vector3.MoveTowards(transform.position, targetUnitPos, distance * Time.deltaTime / 0.1f);
-            timer += Time.deltaTime;
-            yield return null;
-        }
-        // hit back
-        while (timer < 0.7f)
-        {
-            transform.position = Vector3.MoveTowards(transform.position, attackUnitPos + new Vector3(0, 2, 0), distance * Time.deltaTime / 0.2f);
-            timer += Time.deltaTime;
-            yield return null;
-        }
-        // move down
-        while (timer < 1.1f)
-        {
-            transform.position = Vector3.MoveTowards(transform.position, attackUnitPos, distance * Time.deltaTime / 0.4f);
-            timer += Time.deltaTime;
-            yield return null;
-        }*/
-        yield return null;
-    }
-
     public void SkillStateEnter(int index)
     {
         // State change
@@ -431,7 +314,6 @@ public class Unit : MonoBehaviour
         if (_inAttackState) MoveStateExit();
         _inSkillState = true;
         _currentSkill = index;
-
 
         // If SpecialActs[_currentSkill] is not parametered skill, this skill is immediately activated.
         if (!GameManager.Instance.selectedActor.SpecialActs[_currentSkill].IsParametered)
@@ -465,9 +347,11 @@ public class Unit : MonoBehaviour
                     UIManager.Instance.spyContent.GetComponent<Text>().text = text;
                 }
                 // 공통적인 부분
+                StartCoroutine(UnitAnimation.SkillAnimation(this, GameManager.Instance.selectedPoint));
+                AddSkillCooldown();
                 GameManager.Instance.selectedActor.SpecialActs[_currentSkill].Act(null);
                 GameManager.Instance.UpdateUnit();
-                // UIManager.Instance.UpdateUnitInfo(); Done in UpdateUnit
+                UIManager.Instance.UpdateUnitInfo();
             }
             else
             {
@@ -517,7 +401,7 @@ public class Unit : MonoBehaviour
         while (true)
         {
             // 새로운 Point 을 선택했을 때
-            if (Input.GetMouseButtonUp(0) && !EventSystem.current.IsPointerOverGameObject())
+            if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
             {
                 // Flicker하고 있는 Tile을 선택했을 때
                 if (GameManager.Instance.selectedTile.isFlickering)
@@ -526,17 +410,18 @@ public class Unit : MonoBehaviour
                     UIManager.Instance.updateSelectedInfo(unitToSkill);
                     if (unitToSkill.SpecialActs[_currentSkill].IsActable(destPoint))
                     {
+                        bool canAct = false;
                         try
                         {
                             unitToSkill.SpecialActs[_currentSkill].Act(destPoint);
-
+                            canAct = true;
                         }
                         catch (System.Exception e) { Debug.Log(e); }
-                        finally
-                        {
-                            SkillStateExit();
-                            GameManager.Instance.UpdateUnit();
-                        }
+                        if (canAct)
+                            yield return UnitAnimation.SkillAnimation(this, destPoint);
+                        AddSkillCooldown();
+                        SkillStateExit();
+                        GameManager.Instance.UpdateUnit();
                         break;
                     }
                     else
@@ -571,5 +456,45 @@ public class Unit : MonoBehaviour
         }
         _skillParameterPoints.Clear();
         UIManager.Instance.ButtonInteractChange();
+        UIManager.Instance.UpdateUnitInfo();
     }
+
+
+    // invoke every turn for skill cooldown check
+    public void UpdateSkillCooldown()
+    {
+        if (skillCooldown > 0) skillCooldown--;
+    }
+
+    private void AddSkillCooldown()
+    {
+        if (unitModel is CivModel.Hwan.LEOSpaceArmada)
+            skillCooldown += 2;
+
+        else if (unitModel is CivModel.Finno.ElephantCavalry)
+            skillCooldown += 1;
+
+        else if (unitModel is CivModel.Hwan.UnicornOrder)
+            skillCooldown += 1;
+
+        else if (unitModel is CivModel.Hwan.ProtoNinja)
+            skillCooldown += 2;
+
+        else if (unitModel is CivModel.Finno.AutismBeamDrone)
+            skillCooldown += 2;
+
+        else if (unitModel is CivModel.Hwan.JediKnight || unitModel is CivModel.Finno.JediKnight)
+            skillCooldown += 2;
+
+        else if (unitModel is CivModel.Hwan.JackieChan)
+            skillCooldown += 4;
+
+        skillCooldown++;
+
+        // 땜빵
+        if (pairUnit == null)
+            return;
+        pairUnit.skillCooldown = skillCooldown;
+    }
+
 }

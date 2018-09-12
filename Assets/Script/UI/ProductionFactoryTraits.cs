@@ -580,14 +580,18 @@ public class ProductionFactoryTraits : MonoBehaviour
                         result = "hwan_decentralized_soldier";
                     else if (unit.Owner == GameManager.Instance.Game.GetPlayerFinno())
                         result = "finno_decentralized_soldier";
-                    else result = name;
+                    else result = "jap_decentralized_soldier";
                 }
                 break;
             case "JackieChan":
                 result = "hwan_jackie";
                 break;
             case "LEOSpaceArmada":
-                result = "hwan_spaceship";
+                {
+                    if (unit.Owner == GameManager.Instance.Game.GetPlayerHwan())
+                        result = "hwan_spaceship";
+                    else result = "jap_spaceship";
+                }
                 break;
             case "ProtoNinja":
                 {
@@ -626,17 +630,57 @@ public class ProductionFactoryTraits : MonoBehaviour
                 result = "finno_genghis";
                 break;
             case "ArmedDivision":
-                result = "기갑사단";
+                result = "jap_armored_division";
                 break;
             case "InfantryDivision":
-                result = "보병사단";
+                result = "jap_infantry_division";
                 break;
             case "Padawan":
-                result = "파다완";
+                result = "jap_padawan";
                 break;
             case "ZapNinja":
-                result = "닌자";
+                result = "jap_pseudo_ninja";
                 break;
+
+            // 2. Normal Buildings
+
+            case "HwanEmpireFIRFortress": // 환 5차산업혁명요새
+                result = "Normal Buildings/hwan_FIR_fort";
+                break;
+            case "HwanEmpireIbiza": // 이비자
+                result = "Normal Buildings/hwan_ibiza";
+                break;
+            case "HwanEmpireKimchiFactory": // 김치팩토리
+                result = "Normal Buildings/hwan_kimchi_factory";
+                break;
+            case "HwanEmpireLatifundium": // 라티푼티움
+                result = "Normal Buildings/hwan_latifundium";
+                break;
+            case "AncientFinnoFineDustFactory": // 미세먼지공장
+                result = "Normal Buildings/finno_fine_dust_factory";
+                break;
+            case "AncientFinnoFIRFortress": // 피노 5차산업혁명요새
+                result = "Normal Buildings/finno_FIR_fort";
+                break;
+            case "AncientFinnoGermaniumMine": // 게르마늄광산
+                result = "Normal Buildings/finno_germanium_mine";
+                break;
+            case "AncientFinnoOctagon": // 옥타곤
+                result = "Normal Buildings/finno_ocatagon";
+                break;
+            case "Preternaturality": // 불가사의
+                result = "Normal Buildings/wonders";
+                break;
+            case "Casino": // 카지노
+                result = "Normal Buildings/Casino";
+                break;
+            case " ZapFactory": // 잡국 공장
+                result = "Normal Buildings/ZapFactory";
+                break;
+            case "FIRFortress": // 잡국 공장
+                result = "Normal Buildings/FIRFortress";
+                break;
+
             default:
                 result = name;
                 break;

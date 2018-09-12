@@ -9,37 +9,41 @@ using UnityEngine.EventSystems;
 using System.Linq;
 
 
-public class GameManager : MonoBehaviour {
+public class GameManager : MonoBehaviour
+{
 
     // Game Model Instance Singleton
-	private CivModel.Game _game;
-	public CivModel.Game Game { get { return _game; } }
+    private CivModel.Game _game;
+    public CivModel.Game Game { get { return _game; } }
 
     // GameManager Class Instance Singleton
-	private static GameManager _manager = null;
-	public static GameManager Instance { get { return _manager; } }
+    private static GameManager _manager = null;
+    public static GameManager Instance { get { return _manager; } }
 
     // Tiles Instance Singleton
-	public GameObject HextilePrefab;
-	private GameObject[,] _tiles;
-	public GameObject[,] Tiles { get { return _tiles; } }
+    public GameObject HextilePrefab;
+    private GameObject[,] _tiles;
+    public GameObject[,] Tiles { get { return _tiles; } }
 
     private GameObject[,] _additional_tiles;
     public GameObject[,] AdditionalTiles { get { return _additional_tiles; } }
 
     // Minimap Tiles Instance Singleton
-	public GameObject MinimaptilePrefab;
-	private GameObject[,] _minimap_tiles;
-	public GameObject[,] Minimap_tiles { get { return _minimap_tiles; } }
+    public GameObject MinimaptilePrefab;
+    private GameObject[,] _minimap_tiles;
+    public GameObject[,] Minimap_tiles { get { return _minimap_tiles; } }
 
     // List of Units
-	public GameObject UnitPrefab;
-	private List<GameObject> _units = new List<GameObject>();
-	public List<GameObject> Units { get { return _units; } }
+    public GameObject UnitPrefab;
+    private List<GameObject> _units = new List<GameObject>();
+    public List<GameObject> Units { get { return _units; } }
     private List<GameObject> _additional_units = new List<GameObject>();
     public List<GameObject> Additional_Units { get { return _additional_units; } }
+    // CivModel.Unit, Unit, Additional Unit dictionary
+    public Dictionary<CivModel.Unit, KeyValuePair<Unit, Unit>> UnitDic;
 
     // Deploy State Singleton
+    public GameObject DeployRay;
     private bool _inDepState = false;
     public bool DepState { get { return _inDepState; } }
 
@@ -47,11 +51,8 @@ public class GameManager : MonoBehaviour {
     private Production _deployment;
     public Production Deployment { get { return _deployment; } }
 
-    // List of Unit Materials. Stored in Unity Editor
-    public Material[] materials;
-
     // Class Variable which stores CivModel.Terrain.Point Component of Selected Point
-	public CivModel.Terrain.Point selectedPoint;
+    public CivModel.Terrain.Point selectedPoint;
     // Class Variable which stores HexTile Component of Selected Tile
     public HexTile selectedTile;
 
@@ -81,7 +82,15 @@ public class GameManager : MonoBehaviour {
 
     private ManagementController managementcontroller;
 
-	void Awake() {
+    public GameObject QuestVoice;
+    public GameObject DoYouKnows;
+    public GameObject BGMs;
+    public GameObject HolySound;
+    void EstimateResource() {
+
+    }
+
+    void Awake() {
 		// Singleton
 		if (_manager != null) {
 			Destroy(gameObject);
@@ -93,17 +102,27 @@ public class GameManager : MonoBehaviour {
 
 		var factories = new IGameSchemeFactory[]
 		{
-			new CivModel.Common.GameSchemeFactory(),
 			new CivModel.Hwan.GameSchemeFactory(),
 			new CivModel.Finno.GameSchemeFactory(),
 			new CivModel.Quests.GameSchemeFactory(),
 			new CivModel.Zap.GameSchemeFactory(),
 			new CivModel.AI.GameSchemeFactory()
 		};
-        string[] pathStr = { "Assets", "map.txt" };
-        string path = Path.Combine(pathStr);
-		_game = new CivModel.Game(path, factories);
-		_game.StartTurn();
+
+        string mapFile = Application.streamingAssetsPath + "/mapx.75.txt";
+        Debug.Log(mapFile);
+
+        string[] protoFiles =
+        {
+            Application.streamingAssetsPath + "/package/finno/package.xml",
+            Application.streamingAssetsPath + "/package/hwan/package.xml",
+            Application.streamingAssetsPath + "/package/zap/package.xml",
+            Application.streamingAssetsPath + "/package/quests/package.xml",
+        };
+        var protoArray = protoFiles.Select(x => File.OpenText(x)).ToArray();
+
+        _game = new CivModel.Game(mapFile, protoArray, factories);
+        _game.StartTurn();
 
         InitiateTurn();
 
@@ -111,13 +130,15 @@ public class GameManager : MonoBehaviour {
         InitiateMap();
         InitiateUnit();
         InitiateMinimapCamera();
+        UnitAnimation.AnimationParticleObjectPool();
     }
 
 	// Use this for initialization
 	void Start() {
         CheckToDo();
         managementcontroller = ManagementController.GetManagementController();
-
+        GameUI.Instance.updatePanel();
+		Focus(_game.PlayerInTurn.Cities.First());
 	}
     void Update()
     {
@@ -152,7 +173,6 @@ public class GameManager : MonoBehaviour {
                 tile.SetPoints(point);
                 tile.SetTerrain();
                 tile.SetBuilding();
-                tile.UpdateColor();
                 // The earth is round.
                 HexTile additional_tile = _additional_tiles[i, j].GetComponent<HexTile>();
                 Vector3 pos = ModelPntToUnityPnt(point, -0.05f);
@@ -164,11 +184,13 @@ public class GameManager : MonoBehaviour {
                 additional_tile.SetPoints(point, ad_pos);
                 additional_tile.SetTerrain();
                 additional_tile.SetBuilding();
-                additional_tile.UpdateColor();
             }
             // Check if there exists quest that has completed.
             CheckCompletedQuest();
         }
+
+        GameUI.Instance.updatePanel();
+
     }
 
     // Unit Postion Fix, Deletion and Insertion
@@ -209,7 +231,7 @@ public class GameManager : MonoBehaviour {
                     0,
                     true);
             }
-
+            UnitDic.Remove(unit.GetComponent<Unit>().unitModel);
             _units.Remove(unit);
             Destroy(unit);
             GameObject additionalUnitToDelete = _additional_units.Find(x => x.name.Equals("Additional" + unit.name));
@@ -262,6 +284,10 @@ public class GameManager : MonoBehaviour {
                         ad_unit.GetComponent<Unit>().unitOwnerNumber = unt.Owner.PlayerNumber;
                         _additional_units.Add(ad_unit);
                         ad_unit.GetComponent<Unit>().unitModel.SkipFlag = true;
+                        UnitDic.Add(unt, new KeyValuePair<Unit, Unit>
+                        (unit.GetComponent<Unit>(), ad_unit.GetComponent<Unit>()));
+                        unit.GetComponent<Unit>().pairUnit = ad_unit.GetComponent<Unit>();
+                        ad_unit.GetComponent<Unit>().pairUnit = unit.GetComponent<Unit>();
                     }
                 }
                 
@@ -308,6 +334,8 @@ public class GameManager : MonoBehaviour {
         UIManager.Instance.UpdateUnitInfo();
         // Update Quest Queue
         UIController.GetUIController().MakeQuestQueue();
+
+        GameUI.Instance.updatePanel();
     }
 
     // Initialize Tile Map
@@ -369,6 +397,7 @@ public class GameManager : MonoBehaviour {
     // Initialize Units of Model
 	private void InitiateUnit() {
 		int plyrIdx = 0;
+        UnitDic =  new Dictionary<CivModel.Unit, KeyValuePair<Unit, Unit>>();
 		foreach (CivModel.Player plyr in Game.Players) {
 			int untIdx = 0;
 			foreach (CivModel.Unit unt in plyr.Units) {
@@ -390,7 +419,7 @@ public class GameManager : MonoBehaviour {
                     unit.AddComponent<Unit>();
                     additional_unit.AddComponent<Unit>();
 
-					unit.name = String.Format("Unit({0},{1})", plyrIdx, untIdx);
+                    unit.name = String.Format("Unit({0},{1})", plyrIdx, untIdx);
                     additional_unit.name = String.Format("AdditionalUnit({0},{1})", plyrIdx, untIdx);
                     unit.GetComponent<Unit>().unitModel = unt;
                     additional_unit.GetComponent<Unit>().unitModel = unt;
@@ -400,12 +429,16 @@ public class GameManager : MonoBehaviour {
                     additional_unit.GetComponent<Unit>().unitOwnerNumber = unt.Owner.PlayerNumber;
 					_units.Add(unit);
                     _additional_units.Add(additional_unit);
-				}
+                    UnitDic.Add( unt, new KeyValuePair<Unit, Unit>
+                        (unit.GetComponent<Unit>(), additional_unit.GetComponent<Unit>()) );
+                    unit.GetComponent<Unit>().pairUnit = additional_unit.GetComponent<Unit>();
+                    additional_unit.GetComponent<Unit>().pairUnit = unit.GetComponent<Unit>();
+                }
 				untIdx++;
 			}
 			plyrIdx++;
 		}
-	}
+    }
 
     private void InitiateMinimapCamera()
     {
@@ -581,7 +614,7 @@ public class GameManager : MonoBehaviour {
         // State change
         if (depList.First() == null || _inDepState) return;
         _inDepState = true;
-
+        List<GameObject> PlaceablePoints = new List<GameObject>();
         // Represent Tiles which are available to place Actor
         CivModel.Terrain terrain = Instance.Game.Terrain;
         for (int i = 0; i < terrain.Width; i++)
@@ -591,22 +624,30 @@ public class GameManager : MonoBehaviour {
                 CivModel.Terrain.Point point = terrain.GetPoint(i, j);
                 if (depList.First().IsPlacable(point))
                 {
-                    Instance.Tiles[point.Position.X, point.Position.Y].GetComponent<HexTile>().FlickerBlue();
-                    Instance.AdditionalTiles[point.Position.X, point.Position.Y].GetComponent<HexTile>().FlickerBlue();
+                    GameObject tile = Instance.Tiles[point.Position.X, point.Position.Y];
+                    GameObject additionaltile = Instance.AdditionalTiles[point.Position.X, point.Position.Y];
+                    PlaceablePoints.Add(tile);
+                    PlaceablePoints.Add(additionaltile);
+                    Instantiate(DeployRay, tile.transform);
+                    Instantiate(DeployRay, additionaltile.transform);
+                    tile.GetComponent<HexTile>().isFlickerForSelect = true;
+                    additionaltile.GetComponent<HexTile>().isFlickerForSelect = true;
+                    //Instance.Tiles[point.Position.X, point.Position.Y].GetComponent<HexTile>().FlickerBlue();
+                    //Instance.AdditionalTiles[point.Position.X, point.Position.Y].GetComponent<HexTile>().FlickerBlue();
                 }
             }
         }
 
         CivModel.Terrain.Point StartPoint = Instance.selectedPoint;
-        IEnumerator _coroutine = DeployUnit(StartPoint, depList);
+        IEnumerator _coroutine = DeployUnit(StartPoint, depList, PlaceablePoints);
         StartCoroutine(_coroutine);
     }
 
-    IEnumerator DeployUnit(CivModel.Terrain.Point point, List<Production> depList)
+    IEnumerator DeployUnit(CivModel.Terrain.Point point, List<Production> depList, List<GameObject> PlaceablePoints)
     {
         while (true)
         {
-            if (!EventSystem.current.IsPointerOverGameObject() && Input.GetMouseButtonUp(0))
+            if (!EventSystem.current.IsPointerOverGameObject() && Input.GetMouseButtonDown(0))
             {
                 if (Instance.selectedTile == null)
                     yield return new WaitUntil(() => Instance.selectedTile != null);
@@ -614,27 +655,30 @@ public class GameManager : MonoBehaviour {
                 CivModel.Terrain.Point destPoint = Instance.selectedPoint;
 
                 // Flicker하고 있는 Tile을 선택했을 때
-                if (Instance.selectedTile.isFlickering)
+                if (Instance.selectedTile.isFlickerForSelect)
                 {
+                    Debug.Log("flicker");
                     if (depList.First().IsPlacable(destPoint))
                     {
-                        foreach(Production dep in depList)
+                        Debug.Log("deploy");
+                        foreach (Production dep in depList)
                         {
                             Game.PlayerInTurn.Deployment.Remove(dep);
                             dep.Place(destPoint);
                         }
-                        DepStateExit();
+                        DepStateExit(PlaceablePoints);
                         GameManager.Instance.UpdateUnit();
                         GameManager.Instance.UpdateMap();
                         break;
                     }
                     else
                     {
-                        DepStateExit();
+                        Debug.Log("no");
+                        DepStateExit(PlaceablePoints);
                         break;
                     }
                 }
-                DepStateExit();
+                DepStateExit(PlaceablePoints);
                 break;
             }
             yield return null;
@@ -642,20 +686,32 @@ public class GameManager : MonoBehaviour {
     }
 
     // Exiting Deploy State
-    void DepStateExit()
+    void DepStateExit(List<GameObject> PlaceablePoints)
     {
         _inDepState = false;
         _deployment = null;
-        CivModel.Terrain terrain = Instance.Game.Terrain;
+
+        foreach (GameObject Point in PlaceablePoints)
+        {
+            int count = Point.transform.childCount;
+            if (count > 2)
+            {
+                Point.GetComponent<HexTile>().isFlickerForSelect = true;
+                Destroy(Point.transform.Find("DeployRay(Clone)").gameObject);
+            }
+        }
+        
+        /*
         for (int i = 0; i < terrain.Width; i++)
         {
             for (int j = 0; j < terrain.Height; j++)
             {
                 CivModel.Terrain.Point point = terrain.GetPoint(i, j);
+                
                 Instance.Tiles[point.Position.X, point.Position.Y].GetComponent<HexTile>().StopFlickering();
                 Instance.AdditionalTiles[point.Position.X, point.Position.Y].GetComponent<HexTile>().StopFlickering();
             }
-        }
+        }*/
 
         managementcontroller.MakeProductionQ();
         managementcontroller.MakeDeploymentQ();
@@ -673,7 +729,7 @@ public class GameManager : MonoBehaviour {
                 case QuestStatus.Deployed:
                     if (!NewQuestQueue.Contains(qst))
                     {
-                        Sprite questPortrait = QuestInfo.GetPortraitImage(qst);
+                        Sprite questPortrait = QuestInfo.GetRequesterPortraitImage(qst);
                         AlarmManager.Instance.AddAlarm(questPortrait,
                                                        qst.TextName + " 시작가능",
                                                        delegate {
@@ -691,7 +747,7 @@ public class GameManager : MonoBehaviour {
     // Check if there exist quests that have finished.
     public void CheckCompletedQuest()
     {
-        foreach (Quest qst in GameManager.Instance.Game.PlayerInTurn.Quests)
+        foreach (Quest qst in Instance.Game.PlayerInTurn.Quests)
         {
             switch (qst.Status)
             {
@@ -701,6 +757,8 @@ public class GameManager : MonoBehaviour {
                         Sprite questPortrait = QuestInfo.GetPortraitImage(qst);
                         UIManager.Instance.SetQuestComplete(qst);
                         UIManager.Instance.QuestComplete.SetActive(true);
+                        StartCoroutine(PlayQuestSound(qst, HolySound.GetComponent<AudioSource>().clip.length));
+                        //PlayQuestSoundVoice(qst);
                         AlarmManager.Instance.AddAlarm(questPortrait,
                                                        qst.TextName + " 완료됨",
                                                        delegate {
@@ -717,10 +775,38 @@ public class GameManager : MonoBehaviour {
         GameUI.Instance.CheckEnd();
     }
 
+    private int GetQuestNumber(Quest qst)
+    {
+        switch(QuestInfo.GetQuestName(qst))
+        {
+            case "hwan_main1":
+                return 0;
+            case "hwan_main2":
+                return 1;
+            case "hwan_main3":
+                return 2;
+            case "hwan_sub1":
+                return 3;
+            case "hwan_sub2":
+                return 4;
+            case "finno_main1":
+                return 5;
+            case "finno_main2":
+                return 6;
+            case "finno_main3":
+                return 7;
+            case "finno_sub1":
+                return 8;
+            case "finno_sub2":
+                return 9;
+            default:
+                return 10;
+        }
+    }
+
     // Check if there exist production that have finished.
     public void CheckCompletedProduction()
     {
-
         foreach (Production prod in GameManager.Instance.Game.PlayerInTurn.Deployment)
         {
             if (!AlarmedProduction.Contains(ProductionFactoryTraits.GetFacPortName(prod.Factory)))
@@ -736,9 +822,6 @@ public class GameManager : MonoBehaviour {
                 AlarmedProduction.Add(ProductionFactoryTraits.GetFacPortName(prod.Factory));
             }
         }
-
-        // If you do not want to re-alarm production, Comment this line.
-        AlarmedProduction.Clear();
     }
 
     bool IsSpyNear(CivModel.Position pt)
@@ -858,5 +941,135 @@ public class GameManager : MonoBehaviour {
         }
 
         return false;
+    }
+
+    IEnumerator PlayQuestSound(Quest qst, float delay)
+    {
+        PauseBGM();
+        PlayHolySound();
+        if (UIManager.Instance.QuestComplete.activeSelf)
+        {
+            yield return new WaitForSeconds(delay);
+            PlayQuestSoundVoice(qst);
+        }
+    }
+
+
+    private void PlayQuestSoundVoice(Quest qst)
+    {
+        if (UIManager.Instance.QuestComplete.activeSelf)
+        {
+            int n = GetQuestNumber(qst);
+            if (n == 10) return;
+            System.Random rand = new System.Random();
+            int doyouknowidx = rand.Next(0, 10);
+            PauseBGM();
+            float dyklength = PlayDoYouKnow(doyouknowidx) - 1f;
+            if (UIManager.Instance.QuestComplete.activeSelf)
+            {
+                switch (n)
+                {
+                    case 0:
+                        Invoke("PlayHM1QuestVoice", dyklength);
+                        break;
+                    case 1:
+                        Invoke("PlayHM2QuestVoice", dyklength);
+                        break;
+                    case 2:
+                        Invoke("PlayHM3QuestVoice", dyklength);
+                        break;
+                    case 3:
+                        Invoke("PlayHS1QuestVoice", dyklength);
+                        break;
+                    case 4:
+                        Invoke("PlayHS2QuestVoice", dyklength);
+                        break;
+                    case 5:
+                        Invoke("PlayFM1QuestVoice", dyklength);
+                        break;
+                    case 6:
+                        Invoke("PlayFM2QuestVoice", dyklength);
+                        break;
+                    case 7:
+                        Invoke("PlayFM3QuestVoice", dyklength);
+                        break;
+                    case 8:
+                        Invoke("PlayFS1QuestVoice", dyklength);
+                        break;
+                    case 9:
+                        Invoke("PlayFS2QuestVoice", dyklength);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    }
+
+    private void PlayHolySound()
+    {
+        HolySound.GetComponent<AudioSource>().Play();
+    }
+
+    private float PlayDoYouKnow(int idx)
+    {
+        DoYouKnows.transform.GetChild(idx).GetComponent<AudioSource>().Play();
+        return DoYouKnows.transform.GetChild(idx).GetComponent<AudioSource>().clip.length;
+    }
+
+    private void PlayHM1QuestVoice()
+    {
+        QuestVoice.transform.GetChild(0).GetComponent<AudioSource>().Play();
+    }
+    private void PlayHM2QuestVoice()
+    {
+        QuestVoice.transform.GetChild(1).GetComponent<AudioSource>().Play();
+    }
+    private void PlayHM3QuestVoice()
+    {
+        QuestVoice.transform.GetChild(2).GetComponent<AudioSource>().Play();
+    }
+    private void PlayHS1QuestVoice()
+    {
+        QuestVoice.transform.GetChild(3).GetComponent<AudioSource>().Play();
+    }
+    private void PlayHS2QuestVoice()
+    {
+        QuestVoice.transform.GetChild(4).GetComponent<AudioSource>().Play();
+    }
+    private void PlayFM1QuestVoice()
+    {
+        QuestVoice.transform.GetChild(5).GetComponent<AudioSource>().Play();
+    }
+    private void PlayFM2QuestVoice()
+    {
+        QuestVoice.transform.GetChild(6).GetComponent<AudioSource>().Play();
+    }
+    private void PlayFM3QuestVoice()
+    {
+        QuestVoice.transform.GetChild(7).GetComponent<AudioSource>().Play();
+    }
+    private void PlayFS1QuestVoice()
+    {
+        QuestVoice.transform.GetChild(8).GetComponent<AudioSource>().Play();
+    }
+    private void PlayFS2QuestVoice()
+    {
+        QuestVoice.transform.GetChild(9).GetComponent<AudioSource>().Play();
+    }
+    private void PauseBGM()
+    {
+        if (BGMs.transform.GetChild(0).GetComponent<AudioSource>().isPlaying)
+            BGMs.transform.GetChild(0).GetComponent<AudioSource>().Pause();
+        if (BGMs.transform.GetChild(0).GetComponent<AudioSource>().isPlaying)
+            BGMs.transform.GetChild(1).GetComponent<AudioSource>().Pause();
+    }
+    public void StopQuestVoice()
+    {
+        for(int i = 0; i < 10; i++)
+        {
+            if (QuestVoice.transform.GetChild(i).GetComponent<AudioSource>().isPlaying)
+                QuestVoice.transform.GetChild(i).GetComponent<AudioSource>().Stop();
+        }
     }
 }

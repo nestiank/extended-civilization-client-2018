@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using CivModel;
-using CivModel.Common;
 using System.Linq;
 
 public class SpecialResourceView : MonoBehaviour
@@ -17,7 +16,7 @@ public class SpecialResourceView : MonoBehaviour
     private List<GameObject> SRQlist;
     public GameObject SRQueue;
 
-    public CivModel.Player.SpecialResourceProxy mSRlist;
+    public IDictionary<ISpecialResource, int> mSRlist;
 
     public void begin()
     {
@@ -26,7 +25,7 @@ public class SpecialResourceView : MonoBehaviour
 
     void Awake()
     {
-        DontDestroyOnLoad(this);
+        // DontDestroyOnLoad(this);
         if (specialResourceView == null)
         {
             specialResourceView = this;

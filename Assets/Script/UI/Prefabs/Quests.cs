@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using CivModel;
-using CivModel.Common;
 
 public class Quests : MonoBehaviour {
 
@@ -51,7 +50,7 @@ public class Quests : MonoBehaviour {
 		foreach (Image img in images) {
 			switch (img.name) {
 				case "Portrait":
-					img.sprite = QuestInfo.GetPortraitImage(quest);
+					img.sprite = QuestInfo.GetRequesterPortraitImage(quest);
 					img.enabled = true;
 					break;
 				case "ResourceImage":
@@ -156,7 +155,7 @@ public class Quests : MonoBehaviour {
 		foreach (Image img in images) {
 			switch (img.name) {
 				case "Portrait":
-					img.sprite = QuestInfo.GetPortraitImage(quest);
+					img.sprite = QuestInfo.GetRequesterPortraitImage(quest);
 					img.enabled = true;
 					break;
 				case "ResourceImage":
@@ -250,7 +249,7 @@ public class Quests : MonoBehaviour {
 		foreach (Image img in images) {
 			switch (img.name) {
 				case "Portrait":
-					img.sprite = QuestInfo.GetPortraitImage(quest);
+					img.sprite = QuestInfo.GetRequesterPortraitImage(quest);
 					img.enabled = true;
 					break;
 				case "ResourceImage":

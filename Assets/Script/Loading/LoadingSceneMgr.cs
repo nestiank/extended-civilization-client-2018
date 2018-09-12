@@ -10,10 +10,14 @@ public class LoadingSceneMgr : MonoBehaviour
     public static string nextScene;
 
     [SerializeField]
-    Image progressBar;
+    Image HwanprogressBar, FinnoprogressBar, progressBar;
 
     private void Start()
     {
+		if (GameInfo.UserPlayer == 0)
+			progressBar = HwanprogressBar;
+		else
+			progressBar = FinnoprogressBar;
         StartCoroutine(LoadScene());
     }
 

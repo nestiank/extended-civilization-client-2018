@@ -21,7 +21,14 @@ public enum Units {
 	FinnoAncientSorcerer,
 	FinnoJediKnight,
 	FinnoAutismBeamDrone,
-	FinnoGenghisKhan
+	FinnoGenghisKhan,
+    ZapPioneer,
+    ZapArmoredDivision,
+    ZapPseudoNinja,
+    ZapPadawan,
+    ZapInfantry,
+    ZapDecentralizedMilitary,
+    ZapSpaceShip
 }
 
 public class UnitEnum {
@@ -77,10 +84,39 @@ public class UnitEnum {
 		else if (unit is CivModel.Finno.AutismBeamDrone) {
 			return Units.FinnoAutismBeamDrone;
 		}
-		else {
-			return Units.HwanBrainwashedEmuKnight;
-		}
-	}
+        else if (unit is CivModel.Zap.Pioneer)
+        {
+            return Units.ZapPioneer;
+        }
+        else if (unit is CivModel.Zap.ArmedDivision)
+        {
+            return Units.ZapArmoredDivision;
+        }
+        else if (unit is CivModel.Zap.InfantryDivision)
+        {
+            return Units.ZapInfantry;
+        }
+        else if (unit is CivModel.Zap.LEOSpaceArmada)
+        {
+            return Units.ZapSpaceShip;
+        }
+        else if (unit is CivModel.Zap.Padawan)
+        {
+            return Units.ZapPadawan;
+        }
+        else if (unit is CivModel.Zap.DecentralizedMilitary)
+        {
+            return Units.ZapDecentralizedMilitary;
+        }
+        else if (unit is CivModel.Zap.ZapNinja)
+        {
+            return Units.ZapPseudoNinja;
+        }
+        else
+        {
+            return Units.HwanLEO;
+        }
+    }
 
     public static GameObject GetUnitGameObject(CivModel.Unit unit) {
         
@@ -88,7 +124,7 @@ public class UnitEnum {
 
         if (unit is CivModel.Hwan.Pioneer)
         {
-            unitResourcePath = "hwan_burrow";
+            unitResourcePath = "hwan_pioneer";
         }
         else if (unit is CivModel.Hwan.BrainwashedEMUKnight)
         {
@@ -124,7 +160,7 @@ public class UnitEnum {
         }
         else if (unit is CivModel.Finno.Pioneer)
         {
-            unitResourcePath = "finno_burrow";
+            unitResourcePath = "finno_pioneer";
         }
         else if (unit is CivModel.Finno.EMUHorseArcher)
         {
@@ -158,9 +194,37 @@ public class UnitEnum {
         {
             unitResourcePath = "finno_genghis_khan";
         }
+        else if(unit is CivModel.Zap.Pioneer)
+        {
+            unitResourcePath = "jap_pioneer";
+        }
+        else if (unit is CivModel.Zap.ArmedDivision)
+        {
+            unitResourcePath = "jap_armored_division";
+        }
+        else if(unit is CivModel.Zap.InfantryDivision)
+        {
+            unitResourcePath = "jap_infantry_division";
+        }
+        else if(unit is CivModel.Zap.LEOSpaceArmada)
+        {
+            unitResourcePath = "jap_spaceship";
+        }
+        else if(unit is CivModel.Zap.Padawan)
+        {
+            unitResourcePath = "jap_padawan";
+        }
+        else if(unit is CivModel.Zap.DecentralizedMilitary)
+        {
+            unitResourcePath = "jap_decentralized_division";
+        }
+        else if(unit is CivModel.Zap.ZapNinja)
+        {
+            unitResourcePath = "jap_pseudo_ninja";
+        }
         else
         {
-            unitResourcePath = "hwan_spaceship";
+            unitResourcePath = "jap_infantry_division";
         }
 
         return Resources.Load<GameObject>("UnitModels/" + unitResourcePath);

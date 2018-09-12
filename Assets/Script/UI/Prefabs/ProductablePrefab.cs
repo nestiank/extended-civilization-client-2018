@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using CivModel;
-using CivModel.Common;
 using System.Linq;
 using UnityEngine.EventSystems;
 
@@ -96,7 +95,7 @@ public class ProductablePrefab : MonoBehaviour, IPointerClickHandler {
             switch (but.name)
             {
                 case "Deploy":
-                    but.onClick.AddListener(delegate () { ProduceItem(fac); });
+                    but.onClick.AddListener(delegate () { ProduceItem(fac); GameManager.Instance.CheckCompletedQuest(); });
                     break;
                 case "Up":
                     but.onClick.AddListener(delegate () { IncreseProduction(); });

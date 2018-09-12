@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using CivModel;
-using CivModel.Common;
 using System.Linq;
 
 // 운영/내정 관련 큐 만들어서 프리팹 생성하는 컨트롤러
@@ -14,8 +13,8 @@ public class ManagementController : MonoBehaviour {
 
     public Canvas managementUI;
 
-    private LinkedList<Production> mProduction;
-    private LinkedList<Production> mDeployment;
+    private CivObservable.NotifyingLinkedList<Production> mProduction;
+    private CivObservable.NotifyingLinkedList<Production> mDeployment;
     private IReadOnlyList<IProductionFactory> facList;
 
     private GameObject gameManagerObject;
@@ -45,14 +44,14 @@ public class ManagementController : MonoBehaviour {
         MakeDeploymentQ();
         foreach (GameObject dq in DQlist)
         {
-            dq.GetComponent<DeployPrefab>().SetButton(DQlist.IndexOf(dq));
+            dq.GetComponent<DeployPrefab>().SetButton();
         }
 
     }
 
     void Awake()
     {
-        DontDestroyOnLoad(this);
+        // DontDestroyOnLoad(this);
         if (managementcontroller == null)
         {
             managementcontroller = this;
@@ -199,7 +198,7 @@ public class ManagementController : MonoBehaviour {
                         throw new MissingComponentException();
                 }
                 //Debug.Log("SelectionList: " + ASQlist.IndexOf(qlist) + "null");
-                var SPrefab = Instantiate(productablePrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
+                var SPrefab = Instantiate(productablePrefab, new Vector3(10f, 0f, 0f), Quaternion.identity);
                 SPrefab.transform.SetParent(productableQueue.transform);
                 SPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
                 SPrefab.transform.localPosition = new Vector3(0f, 0f, 0f);
@@ -216,7 +215,7 @@ public class ManagementController : MonoBehaviour {
         {
             return null;
         }*/
-        var SPrefab = Instantiate(productablePrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
+        var SPrefab = Instantiate(productablePrefab, new Vector3(10f, 0f, 0f), Quaternion.identity);
         SPrefab.transform.SetParent(productableQueue.transform);
         SPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
         SPrefab.transform.localPosition = new Vector3(0f, 0f, 0f);
@@ -291,7 +290,7 @@ public class ManagementController : MonoBehaviour {
 
         foreach (Production prod in ProductionDic.Keys)
         {
-            var PPrefab = Instantiate(proPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
+            var PPrefab = Instantiate(proPrefab, new Vector3(10f, 0f, 0f), Quaternion.identity);
             PPrefab.transform.SetParent(proQueue.transform);
             PPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
             PPrefab.transform.localPosition = new Vector3(0f, 0f, 0f);
@@ -300,7 +299,7 @@ public class ManagementController : MonoBehaviour {
 
         if (mProduction.Count == 0)
         {
-            var PPrefab = Instantiate(proPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
+            var PPrefab = Instantiate(proPrefab, new Vector3(10f, 0f, 0f), Quaternion.identity);
             PPrefab.transform.SetParent(proQueue.transform);
             PPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
             PPrefab.transform.localPosition = new Vector3(0f, 0f, 0f);
@@ -350,7 +349,7 @@ public class ManagementController : MonoBehaviour {
 
         foreach (Production prod in DeploymentDic.Keys)
         {
-            var DPrefab = Instantiate(depPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
+            var DPrefab = Instantiate(depPrefab, new Vector3(10f, 0f, 0f), Quaternion.identity);
             DPrefab.transform.SetParent(depQueue.transform);
             DPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
             DPrefab.transform.localPosition = new Vector3(0f, 0f, 0f);
@@ -360,7 +359,7 @@ public class ManagementController : MonoBehaviour {
         if (mDeployment.Count == 0)
         {
             //Debug.Log("DeploymentList null");
-            var DPrefab = Instantiate(depPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
+            var DPrefab = Instantiate(depPrefab, new Vector3(10f, 0f, 0f), Quaternion.identity);
             DPrefab.transform.SetParent(depQueue.transform);
             DPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
             DPrefab.transform.localPosition = new Vector3(0f, 0f, 0f);
@@ -369,9 +368,10 @@ public class ManagementController : MonoBehaviour {
         }
 
         DQlist = tempList;
+
         foreach (GameObject dq in DQlist)
         {
-            dq.GetComponent<DeployPrefab>().SetButton(DQlist.IndexOf(dq));
+            dq.GetComponent<DeployPrefab>().SetButton();
         }
     }
 
@@ -384,4 +384,20 @@ public class ManagementController : MonoBehaviour {
         }
         return managementcontroller;
     }
+
+	public void onClickAutoSet()
+	{
+		var _player = GameManager.Instance.Game.PlayerInTurn;
+		if(_player.Happiness <= 50)
+		{
+			GameManager.Instance.Game.PlayerInTurn.EconomicInvestmentRatio = 2;
+		}
+		else
+		{
+			GameManager.Instance.Game.PlayerInTurn.EconomicInvestmentRatio = 1;
+		}
+		var _const = GameManager.Instance.Game.Constants;
+		double taxrate = _const.GoldCoefficient;
+	}
+	
 }

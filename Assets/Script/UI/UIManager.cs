@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using CivModel;
-using CivModel.Common;
 using System.Linq;
+
+using static CivModel.Hwan.HwanPlayerNumber;
+using static CivModel.Finno.FinnoPlayerNumber;
 
 public class UIManager : MonoBehaviour
 {
@@ -17,6 +20,9 @@ public class UIManager : MonoBehaviour
     public GameObject questUI;
     public GameObject selectedActor;
     public GameObject SpecialSpec;
+	public GameObject Menu;
+	public GameObject AskToQuit;
+    public GameObject ActivatedUI;
 
     public GameObject spyPanel;
     public GameObject spyContent;
@@ -44,10 +50,25 @@ public class UIManager : MonoBehaviour
     public GameObject healthPoint;
     public GameObject cityBuildingInfo;
 
+    public GameObject MainTutorial;
+    public GameObject ProductionTutorial;
+    public GameObject QuestTutorial;
+
+    public GameObject UltimateView;
+    public GameObject UltimateText;
+
+	public GameObject HwanMenuButton, FinnoMenuButton;
+    public GameObject MenuButton;
+
+
+    private bool isFirstProduction = true;
+    private bool isFirstQuest = true;
+    public bool isTutorialActivated = true;
+
     public Image UnitPortrait;
 
     public GameObject QuestComplete;
-
+    public GameObject BGMs;
     // RayCast For Selection
     public Ray ray;
     public RaycastHit hit;
@@ -86,6 +107,22 @@ public class UIManager : MonoBehaviour
         QuestComplete.SetActive(false);
         spyPanel.SetActive(false);
         skillSet_x = skillSet.GetComponent<RectTransform>().sizeDelta.x;
+        ActivatedUI = mapUI;
+        TutorialManagement(ActivatedUI);
+        UltimateView.SetActive(false);
+
+		HwanMenuButton.SetActive(false);
+		FinnoMenuButton.SetActive(false);
+		if (GameInfo.UserPlayer == 0)
+		{
+			HwanMenuButton.SetActive(true);
+			MenuButton = HwanMenuButton;
+		}
+		else
+		{
+			FinnoMenuButton.SetActive(true);
+			MenuButton = FinnoMenuButton;
+		}
     }
 
     // Update is called once per frame
@@ -94,12 +131,16 @@ public class UIManager : MonoBehaviour
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         // Selecting Actor(Tile, Unit) of the Game
-        if (!EventSystem.current.IsPointerOverGameObject() && Input.GetMouseButtonUp(0))
+        if (!EventSystem.current.IsPointerOverGameObject() && Input.GetMouseButtonDown(0) && !isTutorialActivated)
         {
-            if (Physics.Raycast(ray, out hit))
+            // layer mask to index-11~14 layers
+            int layermask = (1 << 11) + (1 << 12) + (1 << 13) + (1 << 14);
+            layermask = ~layermask;
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, layermask))
             {
                 selectedActor = hit.transform.gameObject;
                 HexTile tile = selectedActor.GetComponent<HexTile>();
+                if (tile == null) return;
                 // Update selectedTile
                 GameManager.Instance.selectedTile = tile;
                 // Update selectedPoint using tile information
@@ -168,6 +209,15 @@ public class UIManager : MonoBehaviour
             mapUI.SetActive(true);
         }
         skillDescription.transform.position = Input.mousePosition;
+
+        if (isTutorialActivated)
+            if (Input.GetMouseButtonDown(0))
+            {
+                MainTutorial.SetActive(false);
+                ProductionTutorial.SetActive(false);
+                QuestTutorial.SetActive(false);
+                isTutorialActivated = false;
+            }
     }
     // Set Unit Information
     public void UpdateUnitInfo()
@@ -203,24 +253,35 @@ public class UIManager : MonoBehaviour
                     string _passive = "";
                     for (int i = 0; i < GameManager.Instance.selectedActor.PassiveSkills.Count; i++)
                     {
-                        _passive = _passive + GameManager.Instance.selectedActor.PassiveSkills[i].SkillName + "\n";
+                        _passive += GameManager.Instance.selectedActor.PassiveSkills[i].SkillName + "\n";
                     }
                     unitEffect.GetComponent<Text>().text = _passive;
                 }
 
-                // CityBase 한정
-                if(GameManager.Instance.selectedActor is CivModel.CityBase)
+                
+                if(GameManager.Instance.selectedActor is CivModel.TileBuilding)
                 {
-                    unitName.GetComponent<Text>().text = ((CityBase)GameManager.Instance.selectedActor).CityName;
-                    UnitPortrait.sprite = CityBuilding.GetPortraiteImage((CivModel.CityBase)GameManager.Instance.selectedActor);
-                    cityBuildingInfo.SetActive(true);
-                    cityBuildingInfo.GetComponentInChildren<Text>().text = CityBuilding.ListCityBuildings(((CityBase)GameManager.Instance.selectedActor).InteriorBuildings);
-                    actionPoint.SetActive(false);
-                    skillSet.GetComponent<RectTransform>().anchoredPosition = new Vector2(1, 192.5f);
-                }
-                else
-                {
-                    cityBuildingInfo.SetActive(false);
+                    // CityBase 한정
+                    if (GameManager.Instance.selectedActor is CivModel.CityBase)
+                    {
+                        unitName.GetComponent<Text>().text = ((CityBase)GameManager.Instance.selectedActor).CityName;
+                        UnitPortrait.sprite = CityBuilding.GetPortraiteImage((CivModel.CityBase)GameManager.Instance.selectedActor);
+                        cityBuildingInfo.SetActive(true);
+                        cityBuildingInfo.GetComponentInChildren<Text>().text = CityBuilding.ListCityBuildings(((CityBase)GameManager.Instance.selectedActor).InteriorBuildings);
+                        actionPoint.SetActive(false);
+                        skillSet.GetComponent<RectTransform>().anchoredPosition = new Vector2(1, 192.5f);
+                        string _providing = "";
+                        if (((CityBase)GameManager.Instance.selectedActor).ProvidedGold != 0) _providing += "골드 생산량: " + ((CityBase)GameManager.Instance.selectedActor).ProvidedGold + "\n";
+                        if (((CityBase)GameManager.Instance.selectedActor).ProvidedHappiness != 0) _providing += "행복도 생산량: " + ((CityBase)GameManager.Instance.selectedActor).ProvidedHappiness + "\n";
+                        if (((CityBase)GameManager.Instance.selectedActor).ProvidedLabor != 0) _providing += "노동력 생산량: " + ((CityBase)GameManager.Instance.selectedActor).ProvidedLabor;
+                        unitEffect.GetComponent<Text>().text += _providing;
+                    }
+                    else
+                    {
+                        cityBuildingInfo.SetActive(false);
+                        UnitPortrait.sprite = Resources.Load(("Portraits/" + (ProductionFactoryTraits.GetPortName(GameManager.Instance.selectedActor)).ToLower()), typeof(Sprite)) as Sprite;
+                        unitName.GetComponent<Text>().text = GameManager.Instance.selectedActor.TextName; //ProductionFactoryTraits.GetName(GameManager.Instance.selectedActor);
+                    }
                 }
 
             }
@@ -274,15 +335,53 @@ public class UIManager : MonoBehaviour
             if (go != managementUI) managementUI.SetActive(false);
             if (go != diplomacyUI) diplomacyUI.SetActive(false);
             if (go != questUI) questUI.SetActive(false);
+            ActivatedUI = go;
+            if (go == questUI && isFirstQuest)
+            {
+                TutorialManagement(ActivatedUI);
+                isFirstQuest = false;
+            }
+            if (go == managementUI && isFirstProduction)
+            {
+                TutorialManagement(ActivatedUI);
+                isFirstProduction = false;
+            }
         }
         else
             if (go != mapUI)
         {
             go.SetActive(false);
             mapUI.SetActive(true);
+            ActivatedUI = mapUI;
         }
-        
     }
+
+	public void onClickMenu()
+	{
+		if (Menu.activeSelf)
+			Menu.SetActive(false);
+		else
+			Menu.SetActive(true);
+	}
+
+	//only exclusive to game quit button
+	public void onClickYesNo(GameObject but)
+	{
+		if (but.name == "Yes")
+		{
+			Application.Quit();
+		}
+		else if (but.name == "No")
+			AskToQuit.SetActive(false);
+	}
+
+	public void onClickMenuButton(GameObject but)
+	{
+		if (but.name == "QuitGame")
+		{
+			AskToQuit.SetActive(true);
+		}
+	}
 
     // On Click Move Button
     public void onClickMove()
@@ -333,6 +432,11 @@ public class UIManager : MonoBehaviour
         ButtonInteractChange();
         GameManager.Instance.CheckToDo();
         GameManager.Instance.FocusOnNextActableUnit();
+       if(GameManager.Instance.selectedActor == null)
+        {
+            unitInfo.SetActive(false);
+            Actions.SetActive(false);
+        }
     }
 
     public void SpecialMouseOver()
@@ -342,6 +446,93 @@ public class UIManager : MonoBehaviour
     public void SpecialMouseExit()
     {
         SpecialSpec.SetActive(false);
+    }
+
+    public void MyUltimateMouseOver()
+    {
+        UltimateView.SetActive(true);
+        var component = UltimateText.GetComponent<Text>();
+
+        var player = GameManager.Instance.Game.PlayerInTurn;
+
+        CivModel.Quest quest = null;
+
+        // Player가 환인경우
+        if (player == GameManager.Instance.Game.GetPlayerHwan())
+        {
+            quest = player.Quests.OfType<CivModel.Quests.QuestHwanVictory>().FirstOrDefault();
+        }
+        // Player가 피노인경우
+        else
+        {
+            quest = player.Quests.OfType<CivModel.Quests.QuestFinnoVictory>().FirstOrDefault();
+        }
+
+        if (quest != null)
+        {
+            var str = quest.Progresses
+                .Where(p => p.Enabled)
+                .Aggregate("", (s, p) => s + p.Description + " [" + p.Value + "/" + p.MaxValue + "]\n")
+                .TrimEnd();
+
+            component.text = str;
+        }
+    }
+
+    public void OppositeUltimateMouseOver()
+    {
+        UltimateView.SetActive(true);
+        var component = UltimateText.GetComponent<Text>();
+
+        var player = GameManager.Instance.Game.PlayerInTurn;
+
+        CivModel.Quest quest = null;
+
+        // Player가 환인경우
+        if (player == GameManager.Instance.Game.GetPlayerHwan())
+        {
+            player = GameManager.Instance.Game.GetPlayerFinno();
+            quest = player.Quests.OfType<CivModel.Quests.QuestFinnoVictory>().FirstOrDefault();
+        }
+        // Player가 피노인경우
+        else
+        {
+            player = GameManager.Instance.Game.GetPlayerHwan();
+            quest = player.Quests.OfType<CivModel.Quests.QuestHwanVictory>().FirstOrDefault();
+        }
+
+        if (quest != null)
+        {
+            var str = quest.Progresses
+                .Where(p => p.Enabled)
+                .Aggregate("", (s, p) => s + p.Description + " [" + p.Value + "/" + p.MaxValue + "]\n")
+                .TrimEnd();
+
+            component.text = str;
+        }
+    }
+
+    public void UltimateMouseOver()
+    {
+        UltimateView.SetActive(true);
+        var component = UltimateText.GetComponent<Text>();
+
+        var player = GameManager.Instance.Game.GetPlayerHwan();
+        var quest = player.Quests.OfType<CivModel.Quests.QuestHwanVictory>().FirstOrDefault();
+        if (quest != null)
+        {
+            var str = quest.Progresses
+                .Where(p => p.Enabled)
+                .Aggregate("", (s, p) => s + p.Description + " [" + p.Value + "/" + p.MaxValue + "]\n")
+                .TrimEnd();
+
+            component.text = str;
+        }
+    }
+
+    public void UltimateMouseExit()
+    {
+        UltimateView.SetActive(false);
     }
 
     //// Management UI (Production Selection) ////
@@ -469,8 +660,9 @@ public class UIManager : MonoBehaviour
                     SkillInfo si;
                     if (skillIdx < GameManager.Instance.selectedActor.ActiveSkills.Count)
                         si = GameManager.Instance.selectedActor.ActiveSkills[skillIdx];
+                    
                     else si = new SkillInfo { SkillName = "null", SkillDescription = "" };
-                    skillsBtn[skillIdx].GetComponentInChildren<Text>().text = si.SkillName;
+                    skillsBtn[skillIdx].GetComponentsInChildren<Image>().Last().sprite = SkillButton.GetSkillIcon(GameManager.Instance.selectedActor, skillIdx);
                 }
 
                 foreach (var skill in skillsBtn.Skip(skillIdx))
@@ -478,14 +670,59 @@ public class UIManager : MonoBehaviour
                     skill.gameObject.SetActive(false);
                 }
 
-                if (GameManager.Instance.selectedActor is CivModel.Unit && GameManager.Instance.selectedActor.RemainAP.CompareTo(0) == 0)
+                if (GameManager.Instance.selectedActor is CivModel.Unit)
                 {
-                    Button[] skillsBtnNoAP = skillSet.GetComponentsInChildren<Button>();
-                    foreach (var skill in skillsBtnNoAP)
+                    if(GameManager.Instance.selectedActor.RemainAP.CompareTo(0) == 0)
                     {
-                        skill.interactable = false;
+                        Button[] skillsBtnNoAP = skillSet.GetComponentsInChildren<Button>();
+                        foreach (var skill in skillsBtnNoAP)
+                        {
+                            skill.interactable = false;
+                        }
                     }
+                    GameObject unitGameObject = GameManager.GetUnitGameObject(GameManager.Instance.selectedPoint);
+                    if (unitGameObject != null)
+                    {
+                        Unit unit = unitGameObject.GetComponent<Unit>();
+                        if (unit.skillCooldown > 0)
+                        {
+                            Button[] skillsBtnNoAP = skillSet.GetComponentsInChildren<Button>();
+                            foreach (var skill in skillsBtnNoAP)
+                            {
+                                skill.interactable = false;
+                            }
+                        }
+                    }
+                    
                 }
+            }
+        }
+
+        if (GameManager.Instance.selectedActor is CivModel.CityBase && GameManager.Instance.selectedActor.Owner == GameManager.Instance.Game.PlayerInTurn)
+        {
+            skillSet.SetActive(true);
+
+            skillSet.GetComponent<RectTransform>().sizeDelta = new Vector2(skillSet_x * GameManager.Instance.selectedActor.SpecialActs.Count / 3
+                , skillSet.GetComponent<RectTransform>().sizeDelta.y);
+            Button[] skillsBtn = skillSet.GetComponentsInChildren<Button>();
+            foreach (var skill in skillsBtn)
+            {
+                skill.gameObject.SetActive(true);
+                skill.interactable = true;
+            }
+            int skillIdx;
+            for (skillIdx = 0; skillIdx < GameManager.Instance.selectedActor.SpecialActs.Count; ++skillIdx)
+            {
+                SkillInfo si;
+                if (skillIdx < GameManager.Instance.selectedActor.ActiveSkills.Count)
+                    si = GameManager.Instance.selectedActor.ActiveSkills[skillIdx];
+                else si = new SkillInfo { SkillName = "null", SkillDescription = "" };
+                skillsBtn[skillIdx].GetComponentsInChildren<Image>().Last().sprite = SkillButton.GetSkillIcon(GameManager.Instance.selectedActor, skillIdx);
+            }
+
+            foreach (var skill in skillsBtn.Skip(skillIdx))
+            {
+                skill.gameObject.SetActive(false);
             }
         }
     }
@@ -493,7 +730,7 @@ public class UIManager : MonoBehaviour
     // Update Unit Info & selectedActor information according to the given actor
     public void updateSelectedInfo(CivModel.Actor actor)
     {
-        GameManager.Instance.selectedActor = actor;
+        GameManager.Instance.SelectActor(actor);
         var pt = actor.PlacedPoint.Value;
         GameManager.Instance.selectedPoint = pt;
         foreach (GameObject unit in GameManager.Instance.Units)
@@ -517,11 +754,20 @@ public class UIManager : MonoBehaviour
         Text text = QuestComplete.GetComponentInChildren<Text>();
         Qstimage.sprite = QuestInfo.GetPortraitImage(qst);
         text.text = qst.CompleteNotice;
+        MenuButton.SetActive(false);
     }
 
     public void QuestCompleteExit()
     {
         QuestComplete.SetActive(false);
+        MenuButton.SetActive(true);
+        GameManager.Instance.StopQuestVoice();
+        if (GameManager.Instance.HolySound.GetComponent<AudioSource>().isPlaying)
+            GameManager.Instance.HolySound.GetComponent<AudioSource>().Stop();
+            if (GameInfo.UserPlayer == 0)
+            BGMs.transform.GetChild(0).GetComponent<AudioSource>().UnPause();
+        if (GameInfo.UserPlayer == 1)
+            BGMs.transform.GetChild(1).GetComponent<AudioSource>().UnPause();
     }
 
     public void OnClickBack()
@@ -529,5 +775,38 @@ public class UIManager : MonoBehaviour
         spyPanel.SetActive(false);
     }
 
-
+    //activate tutorial based on input tab
+    public void TutorialManagement(GameObject ActivatedUI)
+    {
+        if(ActivatedUI == mapUI)
+        {
+            MainTutorial.SetActive(true);
+            ProductionTutorial.SetActive(false);
+            questUI.SetActive(false);
+        }
+        else if (ActivatedUI == managementUI)
+        {
+            MainTutorial.SetActive(false);
+            ProductionTutorial.SetActive(true);
+            QuestTutorial.SetActive(false);
+        }
+        else
+        {
+            MainTutorial.SetActive(false);
+            ProductionTutorial.SetActive(false);
+            QuestTutorial.SetActive(true);
+        }
+        isTutorialActivated = true;
+    }
+    public void onTutotialButtonClicked()
+    {
+        if(!isTutorialActivated)
+            TutorialManagement(ActivatedUI);
+        else
+        {
+            MainTutorial.SetActive(false);
+            ProductionTutorial.SetActive(false);
+            QuestTutorial.SetActive(false);
+        }
+    }
 }

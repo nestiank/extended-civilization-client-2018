@@ -18,7 +18,7 @@ public class ViewFieldSquareControl : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        Scaler = new Vector3(0.22f, 0.22f, 0.22f);
+        Scaler = new Vector3(0.32f, 0.32f, 0.32f);
         _zoom_counter = 2;
     }
 

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using CivModel;
-using CivModel.Common;
 
 public class InvestmentController : MonoBehaviour {
 
@@ -13,10 +12,10 @@ public class InvestmentController : MonoBehaviour {
     public GameObject TechInv;
     public GameObject Logistics;
 
-    private Slider taxSlider;
-    private Slider eiSlider;
-    private Slider tiSlider;
-    private Slider logiSlider;
+    public Slider taxSlider;
+    public Slider eiSlider;
+    public Slider tiSlider;
+    public Slider logiSlider;
 
     private Text taxRateText;
     private Text eiRateText;
@@ -116,62 +115,79 @@ public class InvestmentController : MonoBehaviour {
         }
     }
 
+    public void OnValueChanged()
+    {
+        GameUI.Instance.updatePanel();
+    }
+
     public void ChangeTaxValue(float adden)
     {
         taxSlider.value += adden;
+        GameUI.Instance.updatePanel();
     }
     public void ChangeEIValue(float adden)
     {
         eiSlider.value += adden;
+        GameUI.Instance.updatePanel();
     }
     public void ChangeTIValue(float adden)
     {
         tiSlider.value += adden;
+        GameUI.Instance.updatePanel();
     }
     public void ChangeLogiValue(float adden)
     {
         logiSlider.value += adden;
+        GameUI.Instance.updatePanel();
     }
 
     public void ChangeTaxPlus(float adden)
     {
         taxSlider.value += 0.01f;
         if (taxSlider.value > 1) taxSlider.value = 1;
+        GameUI.Instance.updatePanel();
     }
     public void ChangeEIPlus(float adden)
     {
         eiSlider.value += 0.01f;
         if (taxSlider.value > 2) taxSlider.value = 2;
+        GameUI.Instance.updatePanel();
     }
     public void ChangeTIPlus(float adden)
     {
         tiSlider.value += 0.01f;
         if (taxSlider.value > 2) taxSlider.value = 2;
+        GameUI.Instance.updatePanel();
     }
     public void ChangeLogiPlus(float adden)
     {
         logiSlider.value += 0.01f;
         if (taxSlider.value > 1) taxSlider.value = 1;
+        GameUI.Instance.updatePanel();
     }
 
     public void ChangeTaxMinus(float adden)
     {
         taxSlider.value -= 0.01f;
         if (taxSlider.value < 0) taxSlider.value = 0;
+        GameUI.Instance.updatePanel();
     }
     public void ChangeEIMinus(float adden)
     {
         eiSlider.value -= 0.01f;
         if (eiSlider.value < 0) eiSlider.value = 0;
+        GameUI.Instance.updatePanel();
     }
     public void ChangeTIMinus(float adden)
     {
         tiSlider.value -= 0.01f;
         if (taxSlider.value < 0) taxSlider.value = 0;
+        GameUI.Instance.updatePanel();
     }
     public void ChangeLogiMinus(float adden)
     {
         logiSlider.value -= 0.01f;
         if (taxSlider.value < 0) taxSlider.value = 0;
+        GameUI.Instance.updatePanel();
     }
 }

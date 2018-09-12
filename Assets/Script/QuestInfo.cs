@@ -17,7 +17,7 @@ public class QuestInfo : MonoBehaviour {
 	}
 
 	static public string GetRequesterCountry(Quest qst) {
-        return qst.Requester.PlayerName;
+        return qst.Requester?.PlayerName ?? "(없음)";
 	}
 
     static public string GetQuestName(Quest qst)
@@ -64,9 +64,49 @@ public class QuestInfo : MonoBehaviour {
         {
             questName = "finno_main1";
         }
+        else if(qst is QuestHwanTuto1)
+        {
+            questName = "hwan_tuto1";
+        }
+        else if(qst is QuestHwanTuto2)
+        {
+            questName = "hwan_tuto2";
+        }
+        else if(qst is QuestHwanTuto3)
+        {
+            questName = "hwan_tuto3";
+        }
+        else if(qst is QuestHwanTuto4)
+        {
+            questName = "hwan_tuto4";
+        }
+        else if(qst is QuestHwanTuto5)
+        {
+            questName = "hwan_tuto5";
+        }
+        else if(qst is QuestFinnoTuto1)
+        {
+            questName = "finno_tuto1";
+        }
+        else if (qst is QuestFinnoTuto2)
+        {
+            questName = "finno_tuto2";
+        }
+        else if (qst is QuestFinnoTuto3)
+        {
+            questName = "finno_tuto3";
+        }
+        else if (qst is QuestFinnoTuto4)
+        {
+            questName = "finno_tuto4";
+        }
+        else if (qst is QuestFinnoTuto5)
+        {
+            questName = "finno_tuto5";
+        }
         else
         {
-            questName = "hwan_main1";
+            questName = "invisible";
             Debug.Log("Unknown Quest: " + qst.TextName);
         }
 
@@ -78,6 +118,42 @@ public class QuestInfo : MonoBehaviour {
 		return Resources.Load<Sprite>("Quests/" + questName);
 	}
 
+    static public Sprite GetRequesterPortraitImage(Quest qst) {
+        if (qst.Requester == null)
+            return Resources.Load<Sprite>("Quests/lemuria");
+
+        int requesterNumber = qst.Requester.PlayerNumber;
+        string requesterName = "";
+
+        switch (requesterNumber)
+        {
+            case 0:
+                requesterName = "hwan"; break;
+            case 1:
+                requesterName = "finno"; break;
+            case 2:
+                requesterName = "egypt"; break;
+            case 3:
+                requesterName = "atlantis"; break;
+            case 4:
+                requesterName = "fish"; break;
+            case 5:
+                requesterName = "emu"; break;
+            case 6:
+                requesterName = "shied"; break;
+            case 7:
+                requesterName = "lemuria"; break;
+            case 8:
+                requesterName = "easter"; break;
+            default:
+                requesterName = GetQuestName(qst);
+                Debug.Log("Unknown Requester");
+                break;
+        }
+        return Resources.Load<Sprite>("Quests/" + requesterName);
+    }
+    
+
     static public Sprite GetExplainImage(Quest qst)
     {
         string questName = GetQuestName(qst);
@@ -87,5 +163,7 @@ public class QuestInfo : MonoBehaviour {
 	static public string GetResourceImage(Quest qst) {
 		return "";
 	}
+
+    
 
 }

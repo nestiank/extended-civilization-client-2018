@@ -4,11 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using CivModel;
-using CivModel.Common;
 
 public class DeployPrefab : MonoBehaviour
 {
-
     private Text[] textarguments;
     private Image unitPrt;
     private Button[] buttons;
@@ -47,6 +45,7 @@ public class DeployPrefab : MonoBehaviour
 
     public GameObject MakeItem(Production prod, int numOfUnit)
     {
+        _deployment = prod; 
         string nameofProduction = ProductionFactoryTraits.GetFactoryName(prod.Factory);
         unitPrt.sprite = Resources.Load(("Portraits/" + (ProductionFactoryTraits.GetFacPortName(prod.Factory)).ToLower()), typeof(Sprite)) as Sprite;
         this.numOfUnit = numOfUnit;
@@ -68,6 +67,7 @@ public class DeployPrefab : MonoBehaviour
 
     public GameObject MakeItem()
     {
+        _deployment = null;
         unitPrt.enabled = false;
         foreach (Text txt in textarguments)
         {
@@ -93,9 +93,9 @@ public class DeployPrefab : MonoBehaviour
 
     }
 
-    public void SetButton(int i)
+    public void SetButton()
     {
-        if (i == -1)
+        if (_deployment == null)
         {
             foreach (Button but in buttons)
             {
@@ -104,19 +104,14 @@ public class DeployPrefab : MonoBehaviour
         }
         else
         {
-            LinkedListNode<Production> dep = GameManager.Instance.Game.PlayerInTurn.Deployment.First;
-            for (int k = 0; k < i; k++)
-            {
-                dep = dep.Next;
-            }
             foreach (Button but in buttons)
             {
                 switch (but.name)
                 {
                     case "Deploy":
-                        if (dep != null)
+                        if (_deployment != null)
                         {
-                            if (ProductionFactoryTraits.isCityBuilding(dep.Value.Factory))
+                            if (ProductionFactoryTraits.isCityBuilding(_deployment.Factory))
                             {
                                 but.onClick.AddListener(delegate ()
                                 {
@@ -126,7 +121,7 @@ public class DeployPrefab : MonoBehaviour
 
                                     while (nodeToDep != null)
                                     {
-                                        if (ProductionFactoryTraits.GetFactoryName(nodeToDep.Value.Factory) == ProductionFactoryTraits.GetFactoryName(dep.Value.Factory))
+                                        if (ProductionFactoryTraits.GetFactoryName(nodeToDep.Value.Factory) == ProductionFactoryTraits.GetFactoryName(_deployment.Factory))
                                         {
                                             prodToDepList.Add(nodeToDep.Value);
                                         }
@@ -147,7 +142,7 @@ public class DeployPrefab : MonoBehaviour
                     case "IndividualDeploy":
                         but.onClick.AddListener(delegate () {
                             List<Production> prodToDepList = new List<Production>();
-                            prodToDepList.Add(dep.Value);
+                            prodToDepList.Add(_deployment);
                             DeployItem(prodToDepList);
                         });
                         break;

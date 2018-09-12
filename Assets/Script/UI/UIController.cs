@@ -24,10 +24,12 @@ public class UIController : MonoBehaviour {
     public GameObject QstExplain;
     public GameObject QstExplainBtn;
 
+    public GameObject _tutorialbutton;
+
 	private Text[] questInfotexts;
 
 	void Awake() {
-		DontDestroyOnLoad(this);
+		// DontDestroyOnLoad(this);
 		if (uicontroller == null) {
 			uicontroller = this;
 		}
@@ -79,63 +81,67 @@ public class UIController : MonoBehaviour {
 		questList = GameManager.Instance.Game.PlayerInTurn.Quests;
 		// Debug.Log("Quest: " + questList.Count);
 		foreach (Quest qst in questList) {
-			switch (qst.Status) {
-				case QuestStatus.Deployed:
-					var dqPrefab = Instantiate(DQPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
-					dqPrefab.transform.SetParent(DQQueue.transform, false);
-					dqPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
-					dqPrefab.transform.localPosition = new Vector3(0f, 0f, 0f);
-					dqPrefab.name = "DQuest";
-					tempDList.Add(dqPrefab.GetComponent<Quests>().MakeDItem(qst));
-					break;
-				case QuestStatus.Accepted:
-					var aqPrefab = Instantiate(AQPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
-					aqPrefab.transform.SetParent(AQQueue.transform, false);
-					aqPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
-					aqPrefab.transform.localPosition = new Vector3(0f, 0f, 0f);
-					aqPrefab.name = "AQuest";
-					tempAList.Add(aqPrefab.GetComponent<Quests>().MakeAItem(qst));
-					break;
-				case QuestStatus.Completed:
-					var cqPrefab = Instantiate(CQPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
-					cqPrefab.transform.SetParent(CQQueue.transform, false);
-					cqPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
-					cqPrefab.transform.localPosition = new Vector3(0f, 0f, 0f);
-					cqPrefab.name = "CQuest";
-					tempCList.Add(cqPrefab.GetComponent<Quests>().MakeCItem(qst));
-					break;
-				case QuestStatus.Disabled:
-					break;
+            if (qst.IsVisible)
+            {
+                switch (qst.Status)
+                {
+                    case QuestStatus.Deployed:
+                        var dqPrefab = Instantiate(DQPrefab, new Vector3(10f, 0f, 0f), Quaternion.identity);
+                        dqPrefab.transform.SetParent(DQQueue.transform, false);
+                        dqPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
+                        dqPrefab.transform.localPosition = new Vector3(10f, 0f, 0f);
+                        dqPrefab.name = "DQuest";
+                        tempDList.Add(dqPrefab.GetComponent<Quests>().MakeDItem(qst));
+                        break;
+                    case QuestStatus.Accepted:
+                        var aqPrefab = Instantiate(AQPrefab, new Vector3(10f, 0f, 0f), Quaternion.identity);
+                        aqPrefab.transform.SetParent(AQQueue.transform, false);
+                        aqPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
+                        aqPrefab.transform.localPosition = new Vector3(10f, 0f, 0f);
+                        aqPrefab.name = "AQuest";
+                        tempAList.Add(aqPrefab.GetComponent<Quests>().MakeAItem(qst));
+                        break;
+                    case QuestStatus.Completed:
+                        var cqPrefab = Instantiate(CQPrefab, new Vector3(10f, 0f, 0f), Quaternion.identity);
+                        cqPrefab.transform.SetParent(CQQueue.transform, false);
+                        cqPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
+                        cqPrefab.transform.localPosition = new Vector3(10f, 0f, 0f);
+                        cqPrefab.name = "CQuest";
+                        tempCList.Add(cqPrefab.GetComponent<Quests>().MakeCItem(qst));
+                        break;
+                    case QuestStatus.Disabled:
+                        break;
 
-				default:
-					Debug.Log("Undefined Status");
-					throw new System.Exception("Undefined Status");
-			}
+                    default:
+                        Debug.Log("Undefined Status");
+                        throw new System.Exception("Undefined Status");
+                }
+            }
 		}
 
 		if (tempDList.Count == 0) {
-			var dqPrefab = Instantiate(DQPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
+			var dqPrefab = Instantiate(DQPrefab, new Vector3(10f, 0f, 0f), Quaternion.identity);
 			dqPrefab.transform.SetParent(DQQueue.transform, false);
 			dqPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
-			dqPrefab.transform.localPosition = new Vector3(0f, 0f, 0f);
+			dqPrefab.transform.localPosition = new Vector3(10f, 0f, 0f);
 			dqPrefab.name = "DQuest_null";
 			tempDList.Add(dqPrefab.GetComponent<Quests>().MakeDItem());
 		}
 		DQQlist = tempDList;
 		if (tempAList.Count == 0) {
-			var aqPrefab = Instantiate(AQPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
+			var aqPrefab = Instantiate(AQPrefab, new Vector3(10f, 0f, 0f), Quaternion.identity);
 			aqPrefab.transform.SetParent(AQQueue.transform, false);
 			aqPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
-			aqPrefab.transform.localPosition = new Vector3(0f, 0f, 0f);
+			aqPrefab.transform.localPosition = new Vector3(10f, 0f, 0f);
 			aqPrefab.name = "AQuest_null";
 			tempAList.Add(aqPrefab.GetComponent<Quests>().MakeAItem());
 		}
 		AQQlist = tempAList;
 		if (tempCList.Count == 0) {
-			var cqPrefab = Instantiate(CQPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
+			var cqPrefab = Instantiate(CQPrefab, new Vector3(10f, 0f, 0f), Quaternion.identity);
 			cqPrefab.transform.SetParent(CQQueue.transform, false);
 			cqPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
-			cqPrefab.transform.localPosition = new Vector3(0f, 0f, 0f);
+			cqPrefab.transform.localPosition = new Vector3(10f, 0f, 0f);
 			cqPrefab.name = "CQuest_null";
 			tempCList.Add(cqPrefab.GetComponent<Quests>().MakeCItem());
 		}
@@ -214,11 +220,15 @@ public class UIController : MonoBehaviour {
     public void onClickExplain()
     {
         QstExplain.SetActive(true);
+        _tutorialbutton.SetActive(false);
+        UIManager.Instance.MenuButton.SetActive(false);
     }
 
     public void onClickExplainExit()
     {
         QstExplain.SetActive(false);
+        _tutorialbutton.SetActive(true);
+        UIManager.Instance.MenuButton.SetActive(true);
     }
 
     public void SetQstExplain(Quest qst)

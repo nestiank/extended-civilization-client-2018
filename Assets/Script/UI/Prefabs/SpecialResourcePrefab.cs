@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using CivModel;
-using CivModel.Common;
 
 public class SpecialResourcePrefab : MonoBehaviour {
     private Text[] textarguments;

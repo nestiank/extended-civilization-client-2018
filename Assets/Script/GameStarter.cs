@@ -14,12 +14,6 @@ public class GameStarter : MonoBehaviour
         GameInfo.SetPlayer(CivModel.Hwan.HwanPlayerNumber.Number);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     public void StartHwan()
     {
         GameInfo.SetPlayer(CivModel.Hwan.HwanPlayerNumber.Number);

@@ -31,42 +31,8 @@ public class HexTile : MonoBehaviour
 	void Start() {
         SetTerrain();
 		SetBuilding();
-        SetColor();
-        terrains.GetChild((int)point.Type).GetComponent<Renderer>().material.color += color;
     }
-
-    //Set tile's color depending on owner.
-    private void SetColor()
-    {
-        var owner = point.TileOwner;
-        if (owner == GameManager.Instance.Game.Players[0])
-            color = Color.red / 2;
-        else if (owner == GameManager.Instance.Game.Players[1])
-            color = Color.blue * 1.5f;
-        else if (owner == GameManager.Instance.Game.Players[2])
-            color = Color.yellow / 3;
-        else if (owner == GameManager.Instance.Game.Players[3])
-            color = Color.cyan / 3;
-        else if (owner == GameManager.Instance.Game.Players[4])
-            color = Color.gray;
-        else if (owner == GameManager.Instance.Game.Players[5])
-            color = Color.magenta;
-        else if (owner == GameManager.Instance.Game.Players[6])
-            color = Color.magenta * 2;
-        else if (owner == GameManager.Instance.Game.Players[7])
-            color = Color.yellow / 2;
-        else if (owner == GameManager.Instance.Game.Players[8])
-            color = Color.green / 2;
-        else
-            color = new Color(0, 0, 0, 0);
-    }
-
-    public void UpdateColor()
-    {
-        terrains.GetChild((int)point.Type).GetComponent<Renderer>().material.color -= color;
-        SetColor();
-        terrains.GetChild((int)point.Type).GetComponent<Renderer>().material.color += color;
-    }
+    
     // Change Tile position to given CivModel.Terrain.Point value
     // Default y position is -.0.05f
     public void SetPoints(CivModel.Terrain.Point p1) {
@@ -81,14 +47,12 @@ public class HexTile : MonoBehaviour
 
 	// Render Tile Terrain
 	public void SetTerrain() {
-        terrains = transform.GetChild(0).transform;
-		if (terrains != null) {
-            foreach (Transform child in terrains) {
-                child.gameObject.SetActive(false);
-            }
-
-			terrains.GetChild((int)point.Type).gameObject.SetActive(true);
-		}
+        int type = (int)point.Type;
+        int owner = GetPlayerNumber();
+        for(int i = 0; i < 8; i++)
+            for(int j = 0; j < 10; j++)
+                transform.GetChild(0).GetChild(i).GetChild(j).gameObject.SetActive(false);
+        transform.GetChild(0).GetChild(type).GetChild(owner).gameObject.SetActive(true);
 	}
 
     // Render Tile Building
@@ -134,13 +98,33 @@ public class HexTile : MonoBehaviour
 			side = buildings.GetChild(1);
 			side.GetChild(4).gameObject.SetActive(true);
 		}
+        else if(building is CivModel.Hwan.Preternaturality) {
+            side = buildings.GetChild(0);
+            side.GetChild(5).gameObject.SetActive(true);
+        }
+        else if(building is CivModel.Finno.Preternaturality) {
+            side = buildings.GetChild(0);
+            side.GetChild(5).gameObject.SetActive(true);
+        }
 	}
+
+    // Set player number which model didn't implemented
+    public int GetPlayerNumber()
+    {
+        var owner = point.TileOwner;
+        if (owner == null) return 9;
+        else
+            for (int i = 0; i < 9; i++)
+                if (owner == GameManager.Instance.Game.Players[i])
+                    return i;
+        return 9;
+    }
 
     // Flicker Tile with White Color
     public void FlickerWhite()
     {
         isFlickerForSelect = true;
-        if (terrains.GetChild((int)point.Type).GetComponent<Renderer>() == null)
+        if (transform.GetChild(0).GetChild((int)point.Type).GetChild(GetPlayerNumber()).GetComponent<Renderer>() == null)
             return;
         _coroutine = Flicker(Color.white);
         StartCoroutine(_coroutine);
@@ -148,9 +132,9 @@ public class HexTile : MonoBehaviour
     // Flicker Tile with Cyan Color
     public void FlickerCyan() {
         isFlickerForSelect = true;
-		//Debug.Log(gameObject.name + " is flickering with cyan");
-		if (terrains.GetChild((int)point.Type).GetComponent<Renderer>() == null)
-			return;
+        //Debug.Log(gameObject.name + " is flickering with cyan");
+        if (transform.GetChild(0).GetChild((int)point.Type).GetChild(GetPlayerNumber()).GetComponent<Renderer>() == null)
+            return;
 		_coroutine = Flicker(Color.cyan);
 		StartCoroutine(_coroutine);
 	}
@@ -159,7 +143,7 @@ public class HexTile : MonoBehaviour
     {
         isFlickering = true;
         //Debug.Log(gameObject.name + " is flickering with blue");
-        if (terrains.GetChild((int)point.Type).GetComponent<Renderer>() == null)
+        if (transform.GetChild(0).GetChild((int)point.Type).GetChild(GetPlayerNumber()).GetComponent<Renderer>() == null)
             return;
         _coroutine = Flicker(Color.blue);
         StartCoroutine(_coroutine);
@@ -170,7 +154,7 @@ public class HexTile : MonoBehaviour
     {
         isFlickering = true;
         //Debug.Log(gameObject.name + " is flickering with red");
-        if (terrains.GetChild((int)point.Type).GetComponent<Renderer>() == null)
+        if (transform.GetChild(0).GetChild((int)point.Type).GetChild(GetPlayerNumber()).GetComponent<Renderer>() == null)
             return;
         _coroutine = Flicker(Color.red);
         StartCoroutine(_coroutine);
@@ -182,20 +166,18 @@ public class HexTile : MonoBehaviour
         isFlickering = false;
         isFlickerForSelect = false;
         //Debug.Log(gameObject.name + " stopped flickering");
-        if (terrains.GetChild((int)point.Type).GetComponent<Renderer>() == null)
+        if (transform.GetChild(0).GetChild((int)point.Type).GetChild(GetPlayerNumber()).GetComponent<Renderer>() == null)
             return;
         if (_coroutine == null)
             return;
         StopCoroutine(_coroutine);
-        Material mat = terrains.GetChild((int)point.Type).GetComponent<Renderer>().material;
-        mat.SetColor("_Color", Color.white);
-        terrains.GetChild((int)point.Type).GetComponent<Renderer>().material.color += color;
+        transform.GetChild(0).GetChild((int)point.Type).GetChild(GetPlayerNumber()).GetComponent<Renderer>().material.SetColor("_Color", Color.white);
     }
 
     // Make tile flicker with color c.
     IEnumerator Flicker(Color c)
     {
-        Material mat = terrains.GetChild((int)point.Type).GetComponent<Renderer>().material;
+        Material mat = transform.GetChild(0).GetChild((int)point.Type).GetChild(GetPlayerNumber()).GetComponent<Renderer>().material;
         Color delta = Color.white - c;
 
         while (true)

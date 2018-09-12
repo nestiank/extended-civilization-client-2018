@@ -108,8 +108,8 @@ public class ResourceInfo : MonoBehaviour {
         }
         else
         {
-            resourceSpriteName = "finno_crystal";
-            Debug.Log("Unknown Quest: " + qst.TextName);
+            resourceSpriteName = "questionmark";
+            //Debug.Log("Unknown Quest: " + qst.TextName);
         }
         return Resources.Load<Sprite>("SpecialResource/" + resourceSpriteName);
     }
